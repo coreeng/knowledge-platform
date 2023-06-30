@@ -1,0 +1,8 @@
+<ul>
+	{{- range (seq 0 (sub (len .Params) 1) ) }}
+	<li>
+		{{- $myArg := $.Get . }}
+		{{ printf `%s` $myArg }}
+	</li>
+	{{- end }}
+</ul>

@@ -1,0 +1,5 @@
+{{ $watermarkImage := .Get "image" }}
+
+<div style="position: fixed; top: 120px; right: 120px; opacity: 0.5;">
+  <img src="{{ $watermarkImage }}" alt="Watermark" style="width: 100px;">
+</div>
