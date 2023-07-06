@@ -34,7 +34,7 @@ jobs:
 
   additional_step:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'pull_request'
     steps:
       - name: Set up Java
         uses: actions/setup-java@v3
