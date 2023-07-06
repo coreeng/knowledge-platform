@@ -1,3 +1,10 @@
 .idea
 *.iml
 .*lock
+
+# Ignore Gradle project-specific cache directory
+bootcamp-initialisation/.gradle
+bootcamp-initialisation/bootcamp-initialize
+
+# Ignore Gradle build output directory
+bootcamp-initialisation/build
