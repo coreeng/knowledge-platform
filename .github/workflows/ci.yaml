@@ -43,4 +43,5 @@ jobs:
           java-version: '16'
       - name: Bootcamp initialisation smoke test
         run: |
-          ls
+          ls -al
+          echo "End of file listing"
