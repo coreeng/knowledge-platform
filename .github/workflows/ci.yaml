@@ -43,6 +43,6 @@ jobs:
           java-version: '16'
       - name: Bootcamp initialisation smoke test
         run: |
-          cd bootcamp-initialization
+          cd bootcamp-initialisation
           ./buildCliTool.sh
           ./bootcamp-initialize --git-token=$GIT_TOKEN --org=coreeng --modules=p2p-fast-feedback --bootcampee-repo=bootcamp-initialisation-smoke-test
