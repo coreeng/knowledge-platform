@@ -36,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -43,5 +45,7 @@ jobs:
           java-version: '16'
       - name: Bootcamp initialisation smoke test
         run: |
-          ls -al
-          echo "End of file listing"
+          ls
+          cd bootcamp-initialisation
+          ./buildCliTool.sh
+          ./bootcamp-initialize --git-token=$GIT_TOKEN --org=coreeng --modules=p2p-fast-feedback --bootcampee-repo=bootcamp-initialisation-smoke-test
