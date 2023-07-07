@@ -1,11 +1,12 @@
-- path: bootcamp-content/content/_index.md
-  pages:
-    - path: bootcamp-content/content/bootcamp/_index.md
-      pages:
-        - path: bootcamp-content/content/bootcamp/modules/_index.md
-          pages:
-            - path: bootcamp-content/content/bootcamp/modules/cloud-iac/_index.md
-              pages:
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/background.md
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/epic-core-platform.md
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/epic-iac-setup.md
+
+
+
+
+
+
+
+
+
+
+
+                    cecg_bootcamp_module
