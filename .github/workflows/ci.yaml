@@ -60,11 +60,19 @@ jobs:
           echo "Repository: $repository"
           
           issues_count=$(curl -s -H "Authorization: Bearer $GIT_TOKEN" "https://api.github.com/repos/$repository/issues?state=all" | jq length)
-          echo "Number of issues: $issues_count"
           
           if [[ $issues_count -ne 4 ]]; then
-            echo "Failed: Number of issues is not equal to 4"
+            echo "Failed: Expected number of issues: 4, got: $issues_count"
             exit 1
           fi
           
           echo "Expected number of issues: 4, got: $issues_count"
+          
+          echo "Cleaning up.."
+          
+          issues_response=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$repository/issues?state=all")
+          issue_numbers=$(echo "$issues_response" | jq '.[].number')
+
+          for issue_number in $issue_numbers; do
+            curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/$repository/issues/$issue_number"
+          done
