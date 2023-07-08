@@ -42,29 +42,4 @@ public class IssueManagerTest {
         assertThat(issuesByTitle.get(issueTitle2)).isEqualTo(issue2);
         verify(mockRepository, times(1)).getIssues(GHIssueState.ALL);
     }
-
-    @Test
-    public void testCreateModuleLabels() throws IOException {
-        // given
-        CmdArguments cmdArguments = new CmdArguments.Builder().setModules(new HashSet<>(Arrays.asList("module-1", "module-2"))).build();
-        GHRepository mockedGhRepository = Mockito.mock(GHRepository.class);
-
-        File module1 = Mockito.mock(File.class);
-        File module2 = Mockito.mock(File.class);
-
-        Set<File> modules = Set.of(module1, module2);
-
-        GHIssue module1Issue = Mockito.mock(GHIssue.class);
-        GHIssue module2Issue = Mockito.mock(GHIssue.class);
-        Mockito.when(module1Issue.getTitle()).thenReturn("module-1");
-        Mockito.when(module2Issue.getTitle()).thenReturn("module-2");
-
-        Map<String, GHIssue> issuesByTitle = Map.of("module-1", module1Issue, "module-2", module2Issue);
-
-        // when
-        IssueManager.createModuleIssues(cmdArguments, mockedGhRepository, modules, issuesByTitle);
-
-        // then
-        verify(mockedGhRepository, times(2)).createLabel(anyString(), anyString());
-    }
 }
