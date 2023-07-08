@@ -11,6 +11,10 @@ dependencies {
     implementation 'com.google.guava:guava:23.0'
     implementation 'org.kohsuke:github-api:1.302'
     implementation 'commons-cli:commons-cli:1.4'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+
 }
 
 shadowJar {

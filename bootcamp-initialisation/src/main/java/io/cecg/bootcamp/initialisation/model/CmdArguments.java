@@ -8,8 +8,8 @@ public class CmdArguments {
     private final String org;
     private final String gitToken;
     private final Set<String> modules;
+    private final String moduleLocation;
     private final boolean helpRequest;
-    private final boolean modulesRequest;
 
     private CmdArguments(Builder builder) {
         this.bootcampeeRepo = builder.bootcampeeRepo;
@@ -17,7 +17,7 @@ public class CmdArguments {
         this.gitToken = builder.gitToken;
         this.modules = builder.modules;
         this.helpRequest = builder.helpRequest;
-        this.modulesRequest = builder.modulesRequest;
+        this.moduleLocation = builder.moduleLocation;
     }
 
     public String getBootcampeeRepo() {
@@ -36,12 +36,12 @@ public class CmdArguments {
         return new HashSet<>(modules);
     }
 
-    public boolean isHelpRequest() {
-        return helpRequest;
+    public String getModuleLocation() {
+        return moduleLocation;
     }
 
-    public boolean isModulesRequest() {
-        return modulesRequest;
+    public boolean isHelpRequest() {
+        return helpRequest;
     }
 
     public static class Builder {
@@ -49,8 +49,8 @@ public class CmdArguments {
         private String org;
         private String gitToken;
         private Set<String> modules;
+        private String moduleLocation;
         private boolean helpRequest;
-        private boolean modulesRequest;
 
         public Builder() {
             this.modules = new HashSet<>();
@@ -71,15 +71,16 @@ public class CmdArguments {
             return this;
         }
 
-        public Builder setModulesRequest(boolean modulesRequest) {
-            this.modulesRequest = modulesRequest;
-            return this;
-        }
-
         public Builder setModules(Set<String> modules) {
             this.modules = modules;
             return this;
         }
+
+        public Builder setModuleLocation(String moduleLocation) {
+            this.moduleLocation = moduleLocation;
+            return this;
+        }
+
         public Builder setHelpRequest(boolean helpRequest) {
             this.helpRequest = helpRequest;
             return this;
