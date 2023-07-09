@@ -8,7 +8,6 @@ on:
     branches:
       - master
 
-
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
@@ -38,7 +37,6 @@ jobs:
           echo "Github link: $github_link"
           
           repository=$(echo "$github_link" | awk -F'/' '{print $4 "/" $5}')
-          echo "Repository: $repository"
           
           issues_count=$(curl -s -H "Authorization: Bearer $GIT_TOKEN" "https://api.github.com/repos/$repository/issues?state=all" | jq length)
           
