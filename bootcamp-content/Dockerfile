@@ -10,7 +10,7 @@ RUN tar -zxvf hugo.tar.gz
 RUN apk add --no-cache git
 
 # The source files are copied to /site
-COPY bootcamp-content /site
+COPY . /site
 WORKDIR /site
 
 ENTRYPOINT ["../hugo"]

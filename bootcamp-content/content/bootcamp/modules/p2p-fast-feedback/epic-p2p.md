@@ -13,7 +13,7 @@ Understand how the same P2P can be used for application that use difference tech
 ## Requirements
 
 * Share the same P2P between the Java and Go reference applications 
-  * Have both forked, or one forked twice
+  * Have both copied into your own private repository, or one copied twice
 * Custom steps for each application should be in the Make file rather than in the pipeline definition so we achieve a single action used across different apps with specific implementation living in the app itself
 
 ## Questions / Defuzz / Decisions
@@ -30,7 +30,7 @@ Name the repo `bootcamp-p2p-<github handle>`
 Pull out the P2P in a common action used by both repos.
 
 #### Q: Which two repos? 
-A: You can use two forks with different names or fork both the java and golang application
+A: You can copy the same reference application and assign different names or copy both the java and golang application
 
 
 ## Deliverables (For Epic)

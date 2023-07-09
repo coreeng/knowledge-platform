@@ -2,9 +2,27 @@
 *.iml
 .*lock
 
-# Ignore Gradle project-specific cache directory
-bootcamp-initialisation/.gradle
 bootcamp-initialisation/bootcamp-initialize
 
-# Ignore Gradle build output directory
-bootcamp-initialisation/build
+.gradle
+build
+functional/bin
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+db-data/*
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+reference-application-go/tekton/git-credentials.yaml
+reference-application-go/tekton/minikube-credentials.yaml

@@ -10,7 +10,7 @@ Learn about the steps for a mature path to production via the bootcamp reference
 
 ## Requirements
 
-* Fork either the Java or Go bootcamp reference application as a private repo in the same organisation with the name `reference-application-(java|go)-<github handle>`
+* Copy either the Java or Go bootcamp reference application as a private repo in the same organisation with the name `reference-application-(java|go)-<github handle>`
 * Checkout and verify workstation setup by running it locally, including building, running functional and non-functional tests 
 * Update the registry to one that that can be used by your local cluster
 * Deploy the application to a local Kubernetes cluster and run the functional tests 

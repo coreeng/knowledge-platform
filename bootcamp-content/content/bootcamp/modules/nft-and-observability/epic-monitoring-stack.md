@@ -12,7 +12,7 @@ chapter = false
 
 * Grafana / Prometheus and Alert Manager setup on local Kubernetes Cluster
   * Everything to setup your environment should be in code 
-  * Scripts required for installing it should be included in your forked reference application in a new folder called `monitoring` 
+  * Scripts required for installing it should be included in your copied reference application in a new folder called `monitoring` 
 * Resource stats available for your reference application
 
 ### Additional Information

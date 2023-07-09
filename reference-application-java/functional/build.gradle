@@ -1,0 +1,22 @@
+apply plugin: 'java'
+
+dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.9.0'))
+    testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
+    testImplementation('io.cucumber:cucumber-java:7.8.+')
+    testImplementation('io.cucumber:cucumber-junit:7.8.+')
+    testImplementation('io.rest-assured:rest-assured:5.2.+')
+    testImplementation('org.junit.vintage:junit-vintage-engine:5.9.0')
+    testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.1'
+
+}
+
+// Test will be called from make target stubbed-functional
+// You can also run it manually if you have the app started
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    systemProperty 'serviceEndpoint', System.getenv("SERVICE_ENDPOINT") ? System.getenv("SERVICE_ENDPOINT")  : "http://localhost"
+}

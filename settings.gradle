@@ -1,0 +1,4 @@
+include 'reference-application-java:functional'
+include 'reference-application-java:nft'
+include 'reference-application-java:service'
+include 'bootcamp-initialisation'

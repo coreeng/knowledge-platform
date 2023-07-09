@@ -11,12 +11,12 @@ chapter = false
 * If any epic is unclear, arrange an epic defuzz with your scrum master, product owner and mentor.
 
 ### Version Control
-* For any existing repo, e.g. the reference applications, fork it into the same organisation and ensure the fork is private.
+* For any existing repo, e.g. the reference applications, it is recommended that you copy them and put them in a new private repository so you can raise PRs against them.
   * Use the name `<original repo name>-<github handle>`
 * Some epics require fresh repositories, create these as private repos in the organisation
   * Use the name `bootcamp-<github handle>-<name>`
 * Raise PRs in your repos and assign your mentor to them 
-* Normally, you will not be required to PR changes into the reference applicatons, but if you do you’ll want a fresh branch or fork of that repo without all your other changes.
+* Normally, you will not be required to PR changes into the reference applications, but if you do you’ll want a fresh branch on that repo without all your other changes.
 
 ### Remote Working
 When working remotely with each other and at client it is important to over-communicate. We recommend:
