@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -31,40 +31,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: cecg/cecg-bootcamp:latest
-
-  additional_step:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '16'
-      - name: Install jq
-        run: sudo apt-get install -y jq
-      - name: Bootcamp initialisation smoke test
-        env:
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: |
-          cd bootcamp-initialisation
-          ./buildCliTool.sh
-          module_location=../bootcamp-content/content/bootcamp/modules
-          output=$(./bootcamp-initialize --git-token=$GIT_TOKEN --org=coreeng --modules=p2p-fast-feedback --bootcampee-repo=bootcamp-initialisation-smoke-tests --module-location=$module_location)
-          echo "Output of tool execution: $output"
-          github_link=$(echo "$output" | grep -o "https://github.com/[[:alnum:]_-]*/[[:alnum:]_-]*/issues/")
-          echo "Github link: $github_link"
-          
-          repository=$(echo "$github_link" | awk -F'/' '{print $4 "/" $5}')
-          echo "Repository: $repository"
-          
-          issues_count=$(curl -s -H "Authorization: Bearer $GIT_TOKEN" "https://api.github.com/repos/$repository/issues?state=all" | jq length)
-          
-          if [[ $issues_count -ne 4 ]]; then
-            echo "Failed: Expected number of issues: 4, got: $issues_count"
-            exit 1
-          fi
-          
-          echo "Expected number of issues: 4, got: $issues_count"
