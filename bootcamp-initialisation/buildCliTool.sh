@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./gradlew clean build shadowJar
+../gradlew clean build shadowJar
 
 # Create bootcamp-initialize script
 echo '#!/bin/bash' > bootcamp-initialize
