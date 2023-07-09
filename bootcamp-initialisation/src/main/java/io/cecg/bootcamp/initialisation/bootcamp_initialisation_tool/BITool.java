@@ -99,15 +99,22 @@ public class BITool {
         try {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption("help")) {
-                String mandatoryParams = "\nMandatory parameters: \n\n" +
-                        "--git-token            ---- Needs to be a valid token with access to create repos/issues in the provided organisation.\n" +
-                        "--org                  ---- The github organisation.\n" +
-                        "--module-location      ---- The directory location for your modules. Each module is expected to have its own dedicated directory, containing the corresponding .md files.\n" +
-                        "--modules              ---- A comma separated list of modules you want to create the issues for(E.g: p2p-fast-feedback,platform-engineering).\n" +
-                        "--bootcampee-repo      ---- The repository of the bootcampee. If it doesn't exist, it will be created.";
+                String mandatoryParams = """
 
-                String optionalParams = "\nHelp options: \n\n" +
-                        "--help                 ---- Displays help text\n";
+                        Mandatory parameters:\s
+
+                        --git-token            ---- Needs to be a valid token with access to create repos/issues in the provided organisation.
+                        --org                  ---- The github organisation.
+                        --module-location      ---- The directory location for your modules. Each module is expected to have its own dedicated directory, containing the corresponding .md files.
+                        --modules              ---- A comma separated list of modules you want to create the issues for(E.g: p2p-fast-feedback,platform-engineering).
+                        --bootcampee-repo      ---- The repository of the bootcampee. If it doesn't exist, it will be created.""";
+
+                String optionalParams = """
+
+                        Help options:\s
+
+                        --help                 ---- Displays help text
+                        """;
 
                 String commandUsage = "\n\n./bootcamp-initialize --git-token=<yourToken> --org=<yourOrg> --modules=<yourCommaSeparatedModulesList> --module-location=<Your/Module/Location> --bootcampee-repo=<bootcampeeRepo>";
 
