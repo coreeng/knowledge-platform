@@ -25,7 +25,7 @@ build: ## Build the reference application
 local-stubbed-functional: ## Run functional tests locally
 	docker compose build service downstream database --no-cache
 	docker compose up -d service downstream database waitForHealthyPods
-	docker compose run --rm gradle_build sh -c 'gradle --no-daemon functional:clean functional:test'
+	docker compose run --rm gradle_build sh -c 'SERVICE_ENDPOINT="http://service:8080" gradle --no-daemon functional:clean functional:test'
 	docker compose down
 	sudo rm -rf db-data
 
@@ -38,7 +38,7 @@ local-stubbed-nft: ## Run non-functional tests locally
 
 .PHONY: stubbed-functional
 stubbed-functional: ## Perform functional tests against stubs
-	docker compose run --rm gradle_build sh -c 'gradle --no-daemon functional:clean functional:test'
+	docker compose run --rm gradle_build sh -c 'SERVICE_ENDPOINT="http://service:8080" gradle --no-daemon functional:clean functional:test'
 
 .PHONY: stubbed-nft
 stubbed-nft: ## Perform non-functional tests against stubs
@@ -64,7 +64,7 @@ run-local: ## Run the reference application locally
 
 .PHONY: docker-build
 docker-build: ## Build the reference application, and package as a Docker image
-	docker build --file Dockerfile.service --tag $(REGISTRY)/$(image_name):$(image_tag) .
+	docker build --file Dockerfile.service --tag $(image_name):$(image_tag) .
 
 .PHONY: docker-build-functional
 docker-build-functional: ## Build the functional reference application, and package as a Docker image
@@ -76,7 +76,7 @@ docker-build-nft: ## Build the non-functional-tests reference application, and p
 
 .PHONY: docker-push
 docker-push: ## Push the Docker image to an image registry
-	docker image push $(REGISTRY)/$(image_name):$(image_tag)
+	docker image push $(image_name):$(image_tag)
 
 .PHONY: docker-push-functional
 docker-push-functional: ## Push the Functional Docker image to an image registry

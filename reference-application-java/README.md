@@ -88,16 +88,16 @@ You should see:
 
 ### Install Prerequisites
 
-* A minikube cluster i.e. you've run `minikube start --insecure-registry=minikube:5000`
+* A minikube cluster i.e. you've run `minikube start`
   * You need to enable the ingress addon by executing: `minikube addons enable ingress` and then follow the instructions from the output e.g. if on mac run `minikube tunnel`
 * Kubectl or use `minikube kubectl`
 
 ### Registries
 
-You'll need a registry. For the purposes of the local development, we will be using a local registry. The Makefile
-`registry` and  `image_name` variables should be updated with your newly created registry details.
+You'll need a registry. For the purposes of the local development, we will be using a local registry and there's 2 ways to go about this.
+Both are discussed below.
 
-### Set up a local registry
+#### Set up a local registry
 
 How to set up a local registry on minikube:
 
@@ -109,6 +109,15 @@ For Mac users: please follow the instruction here: https://minikube.sigs.k8s.io/
 You will need to redirect port 5000 on the docker virtual machine over to port 5000 on the minikube machine.
 Then you will be able to access your local registry on `localhost:5000`.
 
+#### Using minikube's docker 
+
+An alternative to setting up a local registry would be to execute: `eval $(minikube -p minikube docker-env)`, which means that any
+docker commands you execute will interact with the docker daemon running inside Minikube, rather than your local Docker environment.
+The downside to this method is that you will need to execute this on any new shell you open up, but it's easier to set up.
+
+Keep in mind that if you use this method you should set an `imagePullPolicy: Never` to your `deployment-minikube.yml` for your `reference-service`,
+which would signify that the image should be expected to exist locally.
+
 #### Push the image
 
 Prerequisites:
@@ -117,12 +126,17 @@ Prerequisites:
 
 ```
 make docker-build
-make docker-push
+make docker-push (If using the second method(Minikube's docker) you can skip this. Building the image is enough
 ```
+
+If using the second method described above([Using minikube's docker](README.md#using-minikubes-docker)), you can execute
+`minikube image ls` to see whether your image is in minikube.
 
 ### Deploy the service
 
 Prerequisites:
+
+If you are using the [first method](#set-up-a-local-registry):
 
 - if your local registry is not on `minikube:5000` you will need to update the [deployment yml](service/k8s-manifests/deployment-minikube.yml)
   to pull the image from your local repository. e.g: `localhost:5000` if you are using docker machine on Mac and you followed the registry setup steps from above.
@@ -188,14 +202,15 @@ SERVICE_ENDPOINT="http://localhost:8080" k6 run ./nft/ramp-up/test.js
 
 
 ### Support for Kubernetes
-Helm charts have been created for ref-app and it's dependencies that deploy the reference-app and DB. There are chart tests that execute both the NFT and Functional tests.
+Helm charts have been created for the reference-app and it's dependencies that deploy the reference-app and DB. There are chart tests that execute both the NFT and Functional tests.
 Some parameters like the registry still need to be manually changed, like the `registry` (with localhost as default) inside the Makefile. After that you can run the commands:
+
 ```shell
 make docker-build-push-all
 make helm-deploy
 make helm-test
 ```
-You can also pass registry at runtime as an argument to Makefile, for ex: 
+You can also pass the registry at runtime as an argument to Makefile, for ex: 
 ```
 REGISTRY=minikube:5000 make <target you want to execute>
 ```

@@ -17,7 +17,9 @@ spec:
     spec:
       containers:
         - name: reference-service
-          image: minikube:5000/reference-service:latest
+          image: reference-service:latest
+          # Only uncomment when using Minikube's docker
+#          imagePullPolicy: Never
           env:
             - name: POSTGRES_HOST
               value: "reference-db-service.reference-service-showcase.svc.cluster.local"
