@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - initialization-tool
     paths:
       - "cecg-bootcamp-content/**"
   pull_request:
