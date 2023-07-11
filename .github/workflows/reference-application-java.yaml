@@ -1,4 +1,5 @@
 name: Reference-app-java-CI
+
 on:
   pull_request:
     branches:
@@ -17,7 +18,6 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build
-        working-directory: reference-application-java
         run: |
           make build
       - name: Setup minikube
