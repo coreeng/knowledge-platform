@@ -13,7 +13,7 @@ on:
       - "cecg-bootcamp-content/**"
 
 jobs:
-  docker:
+  release:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
