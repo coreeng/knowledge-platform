@@ -1,4 +1,4 @@
-FROM cecg-bootcamp
+FROM bootcamp-core
 
 # Copies your custom content -- the destination (/site/content/bootcamp/modules) needs to remain the same as that is
 # the location of the modules in the base image

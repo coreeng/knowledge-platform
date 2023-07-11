@@ -3,19 +3,31 @@ FROM alpine:3.9
 # The Hugo version
 ARG HUGO_VERSION=0.111.3
 
-ADD https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz /hugo.tar.gz
-RUN tar -zxvf hugo.tar.gz
+# Add a non-root user
+RUN addgroup -S hugo && adduser -S -G hugo hugo
 
-RUN chown 65534:65534 hugo && chmod +x hugo
+# Download and extract Hugo
+ADD https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz /hugo.tar.gz
+RUN tar -zxvf hugo.tar.gz && \
+    rm -f hugo.tar.gz && \
+    mv hugo /usr/local/bin/hugo && \
+    chmod +x /usr/local/bin/hugo
 
 # We add git to the build stage, because Hugo needs it with --enableGitInfo
 RUN apk add --no-cache git
 
-# The source files are copied to /site
-COPY . /site
+# Set the working directory
 WORKDIR /site
 
-ENTRYPOINT ["../hugo"]
-CMD ["serve", "--bind", "0.0.0.0", "--port", "8080", "--verbose", "--verboseLog"]
+# Copy the source files
+COPY . .
 
-USER 65534
+# Set ownership and permissions
+RUN chown -R hugo:hugo /site
+
+# Set the non-root user
+USER hugo
+
+# Run Hugo
+ENTRYPOINT ["hugo"]
+CMD ["serve", "--bind", "0.0.0.0", "--port", "8080", "--verbose", "--verboseLog"]
