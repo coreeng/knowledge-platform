@@ -15,6 +15,7 @@ services:
       - POSTGRES_HOST=database
     build:
       dockerfile: ./Dockerfile.service
+      context: .
     ports:
       - "8080:8080"
     healthcheck:
@@ -64,6 +65,7 @@ services:
   godog:
     build:
       dockerfile: ./Dockerfile.godog
+      context: .
     environment:
       - SERVICE_ENDPOINT=${SERVICE_ENDPOINT}
     volumes:
