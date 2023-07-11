@@ -22,6 +22,7 @@ services:
       - POSTGRES_HOST=database
     build:
       dockerfile: ./Dockerfile.service
+      context: .
     ports:
       - "8080:8080"
     healthcheck:
