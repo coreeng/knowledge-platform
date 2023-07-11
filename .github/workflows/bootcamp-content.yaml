@@ -5,18 +5,17 @@ on:
     branches:
       - master
     paths:
-      - "bootcamp-content/**"
+      - "cecg-bootcamp-content/**"
   pull_request:
     branches:
       - master
     paths:
-      - "bootcamp-content/**"
+      - "cecg-bootcamp-content/**"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    working-directory: bootcamp-content
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -32,7 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: cecg-bootcamp-content/.
           platforms: linux/amd64,linux/arm64
           push: true
           tags: cecg/cecg-bootcamp:latest
