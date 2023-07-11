@@ -7,8 +7,6 @@ on:
     paths:
       - "reference-application-java/**"
   pull_request:
-    branches:
-      - master
     paths:
       - "reference-application-java/**"
 
