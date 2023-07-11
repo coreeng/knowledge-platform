@@ -16,6 +16,12 @@ jobs:
       - name: Build
         working-directory: reference-application-go
         run: |
+          pwd=$(pwd)
+          ls=$(ls)
+          echo 'PWD'
+          echo $pwd
+          echo 'LS'
+          echo $ls
           make build
       - name: Stubbed-Functional
         working-directory: reference-application-go
