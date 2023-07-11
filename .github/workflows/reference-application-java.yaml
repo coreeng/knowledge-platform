@@ -5,12 +5,12 @@ on:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "reference-application-java/**"
   pull_request:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "reference-application-java/**"
 
 jobs:
   Stubbed-tests:
