@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - initialization_tool
     paths:
       - "cecg-bootcamp-content/**"
   pull_request:
@@ -16,7 +15,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/master' || github.ref == '/refs/heads/initialization_tool'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
