@@ -17,53 +17,29 @@ type Page struct {
 	Weight int     `yaml:"weight,omitempty"`
 }
 
-func assignWeights(page *Page, prevSiblingWeight int, isParent bool) int {
-	if page == nil {
-		return prevSiblingWeight
-	}
-
-	weight := prevSiblingWeight
-
-	if isParent {
-		weight = prevSiblingWeight + 1
-	} else if prevSiblingWeight > 0 {
-		weight = prevSiblingWeight + 1
-	}
-
-	page.Weight = weight
-
-	childWeight := 0
-	for _, child := range page.Pages {
-		childWeight = assignWeights(child, childWeight, true)
-	}
-
-	return weight
-}
-
 func main() {
+
 	// Read the YAML file
-	yamlFilePath := "structure/content_structure.yaml"
-	yamlData, err := os.ReadFile(yamlFilePath)
+	yamlFilePath := "content_structure.yaml"
+	//Read the structure YAML file
+	yamlData, err := readYamlFile(yamlFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-
 
 	// Replace the placeholder with the desired structure
-	yamlData , err = replacePlaceholder(yamlData)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Save the modified YAML data back to the file
-	err = os.WriteFile(yamlFilePath, yamlData, os.ModePerm)
+	yamlData, err = replacePlaceholder(yamlData)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Save the modified YAML data back to the file
+	err = writeYamlFile(yamlFilePath, yamlData)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	var pages []*Page
-
 	// Unmarshal the YAML data into the page structure
 	err = yaml.Unmarshal(yamlData, &pages)
 	if err != nil {
@@ -149,6 +125,25 @@ func editMarkdownFile(filePath string, weight int) error {
 	return nil
 }
 
+func readYamlFile(yamlFilePath string) ([]byte, error) {
+	yamlData, err := os.ReadFile(yamlFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("%s not found. Must be in the same directory with the weight_generator.go", yamlFilePath)
+	}
+
+	return yamlData, nil
+}
+
+func writeYamlFile(yamlFilePath string, yamlData []byte) error {
+
+	// Save the modified YAML data back to the file
+	err := os.WriteFile(yamlFilePath, yamlData, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("cannot write yamlData to %s: %w", yamlFilePath, err)
+	}
+	return nil
+
+}
 func replacePlaceholder(yamlData []byte) ([]byte, error) {
 	placeholder := "cecg_bootcamp_module"
 	// Check if the placeholder exists in the YAML data
@@ -157,7 +152,7 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
 	}
 	// Define the desired structure to replace the placeholder
 	desiredStructure :=
-`- path: bootcamp-content/content/_index.md
+		`- path: bootcamp-content/content/_index.md
   pages:
     - path: bootcamp-content/content/bootcamp/_index.md
       pages:
@@ -204,4 +199,27 @@ func getLeadingWhitespace(line, placeholder string) string {
 		return ""
 	}
 	return line[:index]
+}
+
+func assignWeights(page *Page, prevSiblingWeight int, isParent bool) int {
+	if page == nil {
+		return prevSiblingWeight
+	}
+
+	weight := prevSiblingWeight
+
+	if isParent {
+		weight = prevSiblingWeight + 1
+	} else if prevSiblingWeight > 0 {
+		weight = prevSiblingWeight + 1
+	}
+
+	page.Weight = weight
+
+	childWeight := 0
+	for _, child := range page.Pages {
+		childWeight = assignWeights(child, childWeight, true)
+	}
+
+	return weight
 }
