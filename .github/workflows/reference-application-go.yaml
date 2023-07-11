@@ -1,4 +1,5 @@
 name: Reference-app-go-CI
+
 on:
   pull_request:
     branches:
@@ -22,12 +23,6 @@ jobs:
         env:
           SERVICE_ENDPOINT: 'http://service:8080'
         run: |
-          pwd=$(pwd)
-          ls=$(ls)
-          echo 'PWD'
-          echo $pwd
-          echo 'LS'
-          echo $ls
           make local-stubbed-functional
       - name: Stubbed-NFT
         working-directory: reference-application-go
