@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "reference-application-go/**"
   pull_request:
     branches:
       - master
+    paths:
+      - "reference-application-go/**"
 
 jobs:
   docker:
