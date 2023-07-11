@@ -16,6 +16,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    working-directory: bootcamp-content
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,7 +30,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
-        working-directory: bootcamp-content
         uses: docker/build-push-action@v4
         with:
           context: .
