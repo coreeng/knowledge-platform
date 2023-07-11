@@ -3,13 +3,10 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - "reference-application-go/**"
   push:
     branches:
       - master
-    paths:
-      - "reference-application-go/**"
+      -
 jobs:
   Stubbed-tests:
     runs-on: ubuntu-latest

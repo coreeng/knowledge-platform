@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "reference-application-java/**"
   pull_request:
     branches:
       - master
-    paths:
-      - "reference-application-java/**"
 
 jobs:
   Stubbed-tests:
