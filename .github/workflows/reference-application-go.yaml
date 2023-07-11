@@ -1,4 +1,4 @@
-name: CI
+name: Reference-app-go-CI
 on:
   pull_request:
     branches:
