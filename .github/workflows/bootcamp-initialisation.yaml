@@ -36,7 +36,6 @@ jobs:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           module_location=cecg-bootcamp-content/content/bootcamp/modules
-          cd bootcamp-initialisation
           output=$(./bootcamp-initialize --git-token=$GIT_TOKEN --org=coreeng --modules=p2p-fast-feedback --bootcampee-repo=bootcamp-initialisation-smoke-tests --module-location=$module_location)
           echo "Output of tool execution: $output"
           github_link=$(echo "$output" | grep -o "https://github.com/[[:alnum:]_-]*/[[:alnum:]_-]*/issues/")
