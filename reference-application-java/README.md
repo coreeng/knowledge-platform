@@ -214,3 +214,5 @@ You can also pass the registry at runtime as an argument to Makefile, for ex:
 ```
 REGISTRY=minikube:5000 make <target you want to execute>
 ```
+
+TESTING
