@@ -5,12 +5,12 @@ on:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "bootcamp-content/**"
   pull_request:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "bootcamp-content/**"
 
 jobs:
   docker:
@@ -29,6 +29,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
+        working-directory: bootcamp-content
         uses: docker/build-push-action@v4
         with:
           context: .
