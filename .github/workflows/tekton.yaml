@@ -9,7 +9,6 @@ on:
 jobs:
   Tekton:
     runs-on: ubuntu-latest
-    if: github.repository == 'coreeng/reference-application-java'
     steps:
       - uses: actions/checkout@v2
       - name: Start minikube
