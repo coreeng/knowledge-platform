@@ -19,7 +19,7 @@ ci.yaml in [.github/workflows](.github/workflows) shows how the same GitHub acti
 
 ### Tekton
 
-[Instructions for how to setup](./tekton/README.md) a WebHook that calls a locally running Tekton.
+[Instructions for how to setup](../tekton/README.md) a WebHook that calls a locally running Tekton.
 
 ## Structure
 

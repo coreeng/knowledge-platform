@@ -8,7 +8,7 @@
 - a local docker registry in `minikube`
 - the service is deployed in `minikube`
 
-Have a look at the [Readme Minikube section](../README.md#how-to-run-the-service-in-minikube) on instructions on how to set these up.
+Have a look at the [Readme Minikube section](../reference-application-go/README.md#how-to-run-the-service-in-minikube) on instructions on how to set these up.
 
 ## Install Tekton in minikube
 
