@@ -1,19 +1,19 @@
-package io.cecg.bootcamp.initialisation.issue_manager;
+package java.io.cecg.bootcamp.initialisation.issue_manager;
 
-import io.cecg.bootcamp.initialisation.model.CmdArguments;
+import io.cecg.bootcamp.initialisation.issue_manager.IssueManager;
 import org.junit.Test;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class IssueManagerTest {

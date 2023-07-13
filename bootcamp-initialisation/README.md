@@ -24,7 +24,7 @@ The build script performs the following actions:
 
 ## Running the Tool
 
-To run the Bootcamp Initialization Tool, use the bootcamp-initialize executable created by the `buildCliTool.sh` script.
+To run the Bootcamp Initialization Tool, use the `bootcamp-initialize` executable created by the `buildCliTool.sh` script.
 
 Here's an example command to run the Bootcamp Initialization Tool:
 
@@ -38,7 +38,9 @@ The Bootcamp Initialization Tool accepts the following mandatory command-line ar
 
 `--org`: Specifies the GitHub organization.
 
-`--module-location`: This expects the directory location for your modules. Each module is expected to have its own dedicated directory, containing the corresponding .md files.
+`--module-location`: This expects the directory location for your modules. Each module is expected to have its own 
+dedicated directory, containing the corresponding .md files. Look at the [example below](#important-information) on how you should structure your
+directories.
 
 `--modules`: Specifies a comma-separated list of modules for which to create issues.
 

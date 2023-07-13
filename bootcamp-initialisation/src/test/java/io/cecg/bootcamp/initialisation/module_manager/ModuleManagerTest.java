@@ -1,6 +1,7 @@
-package io.cecg.bootcamp.initialisation.module_manager;
+package java.io.cecg.bootcamp.initialisation.module_manager;
 
 import io.cecg.bootcamp.initialisation.exception.ModuleManagerException;
+import io.cecg.bootcamp.initialisation.module_manager.ModuleManager;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

@@ -15,7 +15,6 @@ on:
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
