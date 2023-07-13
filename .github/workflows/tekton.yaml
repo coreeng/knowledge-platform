@@ -1,11 +1,11 @@
 name: Tekton-CI
+
 on:
   pull_request:
     branches: master
-    paths: "tekton/**"
   push:
     branches: master
-    paths: "tekton/**"
+
 jobs:
   Tekton:
     runs-on: ubuntu-latest
