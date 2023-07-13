@@ -43,5 +43,6 @@ jobs:
           kubectl apply -f tekton/minikube-credentials-template.yaml
           kubectl get secrets -n reference-service-ci
           kubectl apply -f tekton/example-pipelinerun-template.yaml
+          chmod +x ./tekton/await-pipelinerun.sh
           ./tekton/await-pipelinerun.sh
 
