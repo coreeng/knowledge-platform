@@ -5,12 +5,12 @@ on:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "skeletons/reference-application-go/**"
   push:
     branches:
       - master
     paths:
-      - "reference-application-go/**"
+      - "skeletons/reference-application-go/**"
 
 jobs:
   Stubbed-tests:
@@ -19,16 +19,16 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build
-        working-directory: reference-application-go
+        working-directory: skeletons/reference-application-go
         run: |
           make build
       - name: Stubbed-Functional
-        working-directory: reference-application-go
+        working-directory: skeletons/reference-application-go
         env:
           SERVICE_ENDPOINT: 'http://service:8080'
         run: |
           make local-stubbed-functional
       - name: Stubbed-NFT
-        working-directory: reference-application-go
+        working-directory: skeletons/reference-application-go
         run: |
           make local-stubbed-nft

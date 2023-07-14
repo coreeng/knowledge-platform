@@ -1,4 +1,4 @@
-name: Bootcamp-content-CI
+name: Knowledge-platform-CI
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: cecg-bootcamp-content/.
+          context: knowledge-base/.
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: cecg/cecg-bootcamp:latest
+          tags: cecg/cecg-knowledge-platform:latest
