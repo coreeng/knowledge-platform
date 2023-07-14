@@ -5,12 +5,12 @@ on:
     branches:
       - main 
     paths:
-      - "skeletons/reference-application-java/**"
+      - 'skeletons/reference-application-java/**'
   pull_request:
     branches:
       - main 
     paths:
-      - "skeletons/reference-application-java/**"
+      - 'skeletons/reference-application-java/**'
 
 jobs:
   Stubbed-tests:

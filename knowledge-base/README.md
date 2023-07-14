@@ -18,5 +18,5 @@ docker build . -t knowledge-platform
 Run it locally:
 
 ```
-
+docker run -d -p 8080:8080 knowledge-platform
 ```
