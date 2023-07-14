@@ -10,7 +10,7 @@ It is made up of:
 
 ## Running your own Knowledge Platform
 
-To get the most out of the CECG Knowledge Platform we recommend running your own version, combining our industry knowledge with your own knowledge specific to your setup.
+To get the most out of the CECG Knowledge Platform we recommend [running your own version](./custom-knowledge-platform/README.md), combining our industry knowledge with your own knowledge specific to your setup.
 
 Let's take Developer Platform Ingress as an example. The CECG knowledge base includes:
 * Features a multi-tenant developer platform should support for Ingress
@@ -23,3 +23,5 @@ Then you can add a custom bootcamp module, or knowledge section, to document how
 * Is there a CDN or GLB in front of a multi-region setup?
 
 That way your platform engineers can learn industry best practices and quickly follow it up with how your specific setup works.
+
+See [Running your own Knowledge Platform](./custom-knowledge-platform/README.md).
