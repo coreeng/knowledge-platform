@@ -3,12 +3,12 @@ name: Reference-app-java-CI
 on:
   push:
     branches:
-      - master
+      - main 
     paths:
       - "skeletons/reference-application-java/**"
   pull_request:
     branches:
-      - master
+      - main 
     paths:
       - "skeletons/reference-application-java/**"
 

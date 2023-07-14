@@ -3,12 +3,12 @@ name: Reference-app-go-CI
 on:
   pull_request:
     branches:
-      - master
+      - main 
     paths:
       - "skeletons/reference-application-go/**"
   push:
     branches:
-      - master
+      - main 
     paths:
       - "skeletons/reference-application-go/**"
 

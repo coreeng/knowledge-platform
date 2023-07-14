@@ -1,4 +1,4 @@
-FROM cecg/cecg-knowledge-platform
+FROM cecg/knowledge-platform
 
 # Copies your custom content -- the destination (/site/content/bootcamp/modules) needs to remain the same as that is
 # the location of the modules in the base image
