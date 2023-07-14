@@ -1,7 +1,7 @@
 baseURL = 'your-base-url'
 languageCode = 'en-us'
 # Title of your site
-title = 'My Bootcamp'
+title = 'My knowledge platform'
 # The theme. This needs to stay as it is.
 theme = 'hugo-theme-learn'
 enableEmoji = true

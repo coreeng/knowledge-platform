@@ -10,7 +10,7 @@ To build the Bootcamp Initialization Tool binary, follow these steps:
 
 Navigate to the project directory:
 
-`cd bootcamp-initialization`
+`cd initialisation`
 
 Run the build script:
 
@@ -19,20 +19,20 @@ Run the build script:
 The build script performs the following actions:
 
 1) Cleans the project and builds it using Gradle.
-2) Generates the bootcamp-initialize executable, which serves as a convenient means of executing the tool.
-3) Gives execute permissions to the `bootcamp-initialize` executable.
+2) Generates the `initialisation-tool` executable, which serves as a convenient means of executing the tool.
+3) Gives execute permissions to the `initialisation-tool` executable.
 
 ## Running the Tool
 
-To run the Bootcamp Initialization Tool, use the `bootcamp-initialize` executable created by the `buildCliTool.sh` script.
+To run the Initialization Tool, use the `initialisation-tool` executable created by the `buildCliTool.sh` script.
 
-Here's an example command to run the Bootcamp Initialization Tool:
+Here's an example command to run the tool:
 
-`./bootcamp-initialize --git-token=<yourToken> --org=<yourOrganization> --module-location=<directoryWithModules> --modules=<module1,module2..> --bootcampee-repo=<repo>`
+`./initialisation-tool --git-token=<yourToken> --org=<yourOrganization> --module-location=<directoryWithModules> --modules=<module1,module2..> --bootcampee-repo=<repo>`
 
 ## Command-line Arguments
 
-The Bootcamp Initialization Tool accepts the following mandatory command-line arguments:
+The Initialization Tool accepts the following mandatory command-line arguments:
 
 `--git-token`: Specifies the GitHub token with access to create repositories and issues in the provided organization.
 
@@ -51,7 +51,7 @@ directories.
 
 To display the help text and usage instructions, use the `--help` option:
 
-`./bootcamp-initialize --help`
+`./initialisation-tool --help`
 
 
 ## Important information

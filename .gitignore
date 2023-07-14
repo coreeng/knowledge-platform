@@ -2,7 +2,7 @@
 *.iml
 .*lock
 
-bootcamp-initialisation/bootcamp-initialize
+initialisation/initialisation
 
 .gradle
 build

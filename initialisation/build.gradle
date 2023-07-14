@@ -18,10 +18,10 @@ dependencies {
 }
 
 shadowJar {
-    archiveFileName = 'bootcamp-initialize.jar'
+    archiveFileName = 'initialisation.jar'
     destinationDirectory = file('build/libs')
     manifest {
-        attributes 'Main-Class': 'io.cecg.bootcamp.initialisation.Main'
+        attributes 'Main-Class': 'io.cecg.initialisation.Main'
     }
 
     exclude 'META-INF/*.SF'
