@@ -3,19 +3,19 @@ name: Bootcamp-content-CI
 on:
   push:
     branches:
-      - master
+      - main  
     paths:
-      - "cecg-bootcamp-content/**"
+      - "knowledge-platform/**"
   pull_request:
     branches:
-      - master
+      - main 
     paths:
-      - "cecg-bootcamp-content/**"
+      - "knowledge-platform/**"
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v3

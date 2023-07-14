@@ -1,4 +1,9 @@
-## CECG Bootcamp
+## Custom Knowledge Platform 
+
+The follow is an example of how to run your own custom knowledge platform.
+The steps are as follows:
+* Create a repo to host your custom content and build
+* Add a Dockerfile that extends the CECG Knowledge Platform 
 
 ### Hugo
 

@@ -1,2 +1,2 @@
-include 'bootcamp-initialisation'
+include 'initialisation'
 include 'reference-application-java'
