@@ -1,0 +1,12 @@
+FROM gradle:7.5.1-jdk17 AS build
+WORKDIR /build/
+COPY . /build/
+
+RUN gradle service:bootJar
+
+FROM registry.access.redhat.com/ubi8/openjdk-17
+WORKDIR /
+COPY --from=build /build/service/build/libs/service-*-SNAPSHOT.jar /service.jar
+COPY service/application.yaml /application.yaml
+
+CMD ["java", "-jar", "service.jar"]

@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: test-pipeline-run
+  namespace: reference-service-ci
+spec:
+  pipelineRef:
+    name: ci-pipeline
+  workspaces:
+    - name: git-credentials
+      secret:
+        secretName: git-credentials
+    - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+  params:
+    - name: repo-url
+      value: git@github.com:coreeng/reference-application-java-chbatey.git
+    - name: refspec
+      value: refs/heads/pr
+    - name: repo-name
+      value: reference-application-java-chbatey

@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:23.0'
+    implementation 'org.kohsuke:github-api:1.302'
+    implementation 'commons-cli:commons-cli:1.4'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+
+}
+
+shadowJar {
+    archiveFileName = 'initialisation.jar'
+    destinationDirectory = file('build/libs')
+    manifest {
+        attributes 'Main-Class': 'io.cecg.initialisation.Main'
+    }
+
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
