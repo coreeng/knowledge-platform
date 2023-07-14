@@ -25,3 +25,7 @@ Then you can add a custom bootcamp module, or knowledge section, to document how
 That way your platform engineers can learn industry best practices and quickly follow it up with how your specific setup works.
 
 See [Running your own Knowledge Platform](./custom-knowledge-platform/README.md).
+
+## Running locally
+
+See [running the Knowledge Platform](./knowledge-base/) without customisation.
