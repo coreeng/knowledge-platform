@@ -4,7 +4,7 @@ The CECG Knowledge Platform is how we train our platform engineers and assist ou
 
 It is made up of:
 
-* Our, client agnostic, approach to platform engineering. Specifically around building [developer platforms](./knowledge-base/content/core-platform/) and [consoldiated Path to Production](./knowledge-base/content/core-p2p/) for the tenants of the developer platform.
+* Our, client agnostic, approach to [platform engineering](./knowledge-base) aka our [Knowledge Base](./knowledge-base/). Specifically around building [developer platforms](./knowledge-base/content/core-platform/) and [consoldiated Path to Production](./knowledge-base/content/core-p2p/) for the tenants of the developer platform.
 * [Our Bootcamp](./knowledge-base/content/bootcamp/), a hands on, intensive training that all CECG engineers go through.
 * [Custom Knowledge Platform](./custom-knowledge-platform/): The ability for you to host your own version of the knowledge platform, including custom bootcamp modules specific to your setup and custom knowledge articles.
 

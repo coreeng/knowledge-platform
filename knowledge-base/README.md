@@ -9,3 +9,14 @@ The knowledge base is made up of:
 
 The site can be run locally with Docker:
 
+Build the docker image:
+
+```
+docker build . -t knowledge-platform
+```
+
+Run it locally:
+
+```
+
+```

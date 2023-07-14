@@ -3,7 +3,7 @@ title = "Core Developer Platform"
 date = 2022-12-27T17:50:10+02:00
 weight = 3
 chapter = false 
-pre = "<b>3. </b>"
+pre = ""
 +++
 
 The Core Platform is our opinionated multi-tenant Kubernetes based Platform as a Service (PaaS).
