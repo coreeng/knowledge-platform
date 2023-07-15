@@ -205,5 +205,3 @@ For a local run:
 ```
 SERVICE_ENDPOINT="http://localhost:8080" k6 run ./nft/ramp-up/test.js
 ```
-
-# Trigger GH actions

@@ -84,3 +84,5 @@ that will be recognized by the tool.
 
 However, there are some files that are not eligible for issue creation. Examples include files like `monitoring.md`, `_index.md`,
 and `background.md`. The tool will actively filter out these ineligible files.
+
+# Trigger build
