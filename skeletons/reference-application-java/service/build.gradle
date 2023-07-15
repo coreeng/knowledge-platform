@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.5'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'java'
+}
+
+group = 'io.cecg'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	implementations.exclude module: "spring-boot-starter-tomcat"
+}
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web") {
+		exclude module: "spring-boot-starter-tomcat"
+	}
+	implementation("org.springframework.boot:spring-boot-starter-jetty")
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'com.google.guava:guava:31.1-jre'
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
+	implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.7.0'
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.0'
+	implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.23'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.7.5'
+
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

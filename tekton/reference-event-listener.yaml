@@ -1,0 +1,183 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: reference-service-ci
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tekton-robot
+  namespace: reference-service-ci
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-rb
+  namespace: reference-service-ci
+subjects:
+  - kind: ServiceAccount
+    name: tekton-robot
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-roles
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tekton-cb
+subjects:
+  - kind: ServiceAccount
+    name: tekton-robot
+    namespace: reference-service-ci
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-clusterroles
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: github-listener
+  namespace: reference-service-ci
+spec:
+  triggers:
+    - name: pr-listener
+      interceptors:
+        - ref:
+            name: "github"
+          params:
+            - name: "secretRef"
+              value:
+                secretName: github-secret
+                secretKey: secretToken
+            - name: "eventTypes"
+              value: ["pull_request"]
+        - name: "only when PRs are opened"
+          ref:
+            name: "cel"
+          params:
+            - name: "filter"
+              value: "body.action in ['opened', 'synchronize', 'reopened']"
+      bindings:
+        - ref: github-pr-binding
+      template:
+        ref: ci-template
+    - name: main-listener
+      interceptors:
+        - ref:
+            name: "github"
+          params:
+            - name: "secretRef"
+              value:
+                secretName: github-secret
+                secretKey: secretToken
+            - name: "eventTypes"
+              value: ["push"]
+        - name: "pushed to main"
+          ref:
+            name: "cel"
+          params:
+            - name: "filter"
+              value: "body.ref in ['refs/heads/main']" # add any other branches here
+      bindings:
+        - ref: github-main-binding
+      template:
+        ref: ci-template
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            serviceAccountName: tekton-robot 
+            containers:
+              - resources:
+                  requests:
+                    memory: "64Mi"
+                    cpu: "250m"
+                  limits:
+                    memory: "128Mi"
+                    cpu: "500m"
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-pr-binding
+  namespace: reference-service-ci
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.pull_request.head.sha)
+    - name: gitrepositoryurl
+      value: $(body.repository.ssh_url)
+    - name: refspec
+      value: refs/pull/$(body.pull_request.number)/head
+    - name: repo-name
+      value: $(body.pull_request.head.repo.name)
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-main-binding
+  namespace: reference-service-ci
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.after)
+    - name: gitrepositoryurl
+      value: $(body.repository.ssh_url)
+    - name: refspec
+      value: $(body.ref)
+    - name: repo-name
+      value: $(body.repository.name)
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: ci-template
+  namespace: reference-service-ci
+spec:
+  params:
+    - name: gitrevision
+    - name: gitrepositoryurl
+    - name: refspec
+    - name: repo-name
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: github-pr-run-
+      spec:
+        pipelineRef:
+          name: ci-pipeline
+        workspaces:
+          - name: git-credentials
+            secret:
+              secretName: git-credentials
+          - name: shared-data
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+        params:
+          - name: repo-url
+            value: $(tt.params.gitrepositoryurl)
+          - name: refspec
+            value: $(tt.params.refspec)
+          - name: repo-name
+            value: $(tt.params.repo-name)
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-secret
+  namespace: reference-service-ci
+type: Opaque
+stringData:
+  secretToken: "1234567"
