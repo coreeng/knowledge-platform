@@ -72,5 +72,3 @@ You can easily run this project locally by navigating to the Dockerfile location
 `docker run -d -p 8080:8080 <your-tag>`
 
 Your cecg-bootcamp instance will then be available on `localhost:8080`
-
-# Trigger Action
