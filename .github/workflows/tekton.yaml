@@ -1,0 +1,48 @@
+name: Tekton-CI
+
+on:
+  pull_request:
+    branches: main
+  push:
+    branches: main
+
+jobs:
+  Tekton:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          cache: false
+      - name: Validate minikube is working
+        run: kubectl get pods -A
+      - name: Deploy Tekton to minikube
+        run:
+          tekton/install-tekton.sh
+      - name: Deploy Tekton pipeline
+        run:
+          ./tekton/install-pipeline.sh
+      - name: Validate Tekton
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          kubectl get pods -n tekton-pipelines
+          kubectl get pods -n reference-service-ci
+          export MINIKUBE_CLIENT_KEY=$(cat  ~/.minikube/profiles/minikube/client.key | base64 -w 0)
+          export MINIKUBE_CLIENT_CRT=$(cat  ~/.minikube/profiles/minikube/client.crt | base64 -w 0)
+          env
+          sed -i "s|GITHUB_REPOSITORY|$GITHUB_REPOSITORY|g" tekton/example-pipelinerun-template.yaml
+          sed -i "s|GITHUB_REF|$GITHUB_REF|g" tekton/example-pipelinerun-template.yaml
+          sed -i "s|SSH_KEY|$SSH_KEY|g" tekton/git-credentials-template.yaml
+          sed -i "s|MINIKUBE_CLIENT_KEY|$MINIKUBE_CLIENT_KEY|g" tekton/minikube-credentials-template.yaml
+          sed -i "s|MINIKUBE_CLIENT_CRT|$MINIKUBE_CLIENT_CRT|g" tekton/minikube-credentials-template.yaml
+          cat tekton/example-pipelinerun-template.yaml
+          cat tekton/git-credentials-template.yaml
+          kubectl apply -f tekton/git-credentials-template.yaml
+          kubectl apply -f tekton/minikube-credentials-template.yaml
+          kubectl get secrets -n reference-service-ci
+          kubectl apply -f tekton/example-pipelinerun-template.yaml
+          chmod +x ./tekton/await-pipelinerun.sh
+          ./tekton/await-pipelinerun.sh
+
