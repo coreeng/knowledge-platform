@@ -101,7 +101,7 @@ func editMarkdownFile(filePath string, weight int) error {
 	if len(match) > 0 {
 		// Weight found, replace the existing weight value with the new weight value
 		newContent := weightPattern.ReplaceAllString(string(content), fmt.Sprintf("${1}%d${4}", weight))
-		err = ioutil.WriteFile(filePath, []byte(newContent), os.ModePerm)
+		err = os.WriteFile(filePath, []byte(newContent), os.ModePerm)
 		if err != nil {
 			return err
 		}
@@ -112,7 +112,7 @@ func editMarkdownFile(filePath string, weight int) error {
 
 		if len(match) > 0 {
 			newContent := strings.Replace(string(content), match[0], fmt.Sprintf("%s\nweight = %d\n%s", match[0], weight, match[0]), 1)
-			err = ioutil.WriteFile(filePath, []byte(newContent), os.ModePerm)
+			err = os.WriteFile(filePath, []byte(newContent), os.ModePerm)
 			if err != nil {
 				return err
 			}
@@ -151,18 +151,18 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
 		return nil, fmt.Errorf("%s must exist in the YAML data", placeholder)
 	}
 	// Define the desired structure to replace the placeholder
-	desiredStructure :=
-		`- path: bootcamp-content/content/_index.md
+	desiredStructure := `
+- path: ../content/_index.md
   pages:
-    - path: bootcamp-content/content/bootcamp/_index.md
+    - path: ../content/bootcamp/_index.md
       pages:
-        - path: bootcamp-content/content/bootcamp/modules/_index.md
+        - path: ../content/bootcamp/modules/_index.md
           pages:
-            - path: bootcamp-content/content/bootcamp/modules/cloud-iac/_index.md
+            - path: ../content/bootcamp/modules/cloud-iac/_index.md
               pages:
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/background.md
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/epic-core-platform.md
-                - path: bootcamp-content/content/bootcamp/modules/cloud-iac/epic-iac-setup.md`
+                - path: ../content/bootcamp/modules/cloud-iac/background.md
+                - path: ../content/bootcamp/modules/cloud-iac/epic-core-platform.md
+                - path: ../content/bootcamp/modules/cloud-iac/epic-iac-setup.md`
 	lines := strings.Split(string(yamlData), "\n")
 
 	// Find the leading whitespace from the placeholder lines

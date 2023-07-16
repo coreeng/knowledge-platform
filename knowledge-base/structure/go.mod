@@ -1,4 +1,4 @@
-module cecg-bootcamp
+module structure
 
 go 1.20
 

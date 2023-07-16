@@ -1,3 +1,27 @@
+# Stage 1: Build and test stage
+FROM golang:1.18-alpine AS build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the source code to the container
+COPY content/ /content
+COPY structure/ /structure
+
+WORKDIR /structure
+# Download the Go modules
+RUN go mod download
+RUN apk add --no-cache gcc musl-dev
+
+# Build the Go program
+RUN go build -o weight_generator
+
+# Run the Go tests
+RUN go test -v ./...
+
+# Generate weights using the Go program
+RUN ./weight_generator
+
 FROM alpine:3.9
 
 # The Hugo version
@@ -21,13 +45,14 @@ WORKDIR /site
 
 # Copy the source files
 COPY . .
-
+# Copy the built Go program from the build stage
+COPY --from=build /structure/weight_generator structure/
 # Set ownership and permissions
 RUN chown -R hugo:hugo /site
 
 # Set the non-root user
 USER hugo
-
+RUN ./structure/weight_generator
 # Run Hugo
 ENTRYPOINT ["hugo"]
 CMD ["serve", "--bind", "0.0.0.0", "--port", "8080", "--verbose", "--verboseLog"]
