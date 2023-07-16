@@ -162,7 +162,95 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
               pages:
                 - path: ../content/bootcamp/modules/cloud-iac/background.md
                 - path: ../content/bootcamp/modules/cloud-iac/epic-core-platform.md
-                - path: ../content/bootcamp/modules/cloud-iac/epic-iac-setup.md`
+                - path: ../content/bootcamp/modules/cloud-iac/epic-iac-setup.md
+    - path: ../content/core-platform/_index.md
+      pages:
+        - path: ../content/core-platform/building-a-core-platform.md
+        - path: ../content/core-platform/faqs.md
+        - path: ../content/core-platform/features/_index.md
+          pages:
+              - path: ../content/core-platform/features/sprint-0/_index.md
+                pages:
+                 - path: ../content/core-platform/features/sprint-0/feature-version-control-access-control.md
+                 - path: ../content/core-platform/features/sprint-0/feature-cloud-accounts.md
+                 - path: ../content/core-platform/features/sprint-0/feature-adr-process.md
+                 - path: ../content/core-platform/features/sprint-0/feature-base-deployment-pipeline.md
+                 - path: ../content/core-platform/features/sprint-0/feature-platform-teams-ways-of-working.md
+                 - path: ../content/core-platform/features/sprint-0/feature-platform-testing-strategy.md
+                 - path: ../content/core-platform/features/sprint-0/feature-platform-ci-developer-infra-setup.md
+                 - path: ../content/core-platform/features/sprint-0/feature-golang-dev-environment.md
+              - path: ../content/core-platform/features/platform-path-to-prod/_index.md
+                pages:
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-core-platform-environments.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-monolithic-deployment.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-decoupled-platform-deployment.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-basic-promotion.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-base-infrastructure.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-platform-services-provisioning.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-provisioning-single-plane-of-glass.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-cluster-config-management.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-platform-e2e-testing.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-continuous-e2e-testing.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-regular-full-rebuild.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-segregated-sandbox.md
+                 - path: ../content/core-platform/features/platform-path-to-prod/feature-automatic-promotion.md
+              - path: ../content/core-platform/features/connected-kubernetes/_index.md
+                pages:
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-basic-cluster.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-sso-integration.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-base-networking-design.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-node-pools.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-cloud-provider-registries.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-network-connectivity.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-block-storage.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-basic-ingress.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-egressless-bootstrap.md
+                  - path: ../content/core-platform/features/connected-kubernetes/feature-autoscaling.md
+              - path: ../content/core-platform/features/multi-tenant-access/_index.md
+                pages:
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-tenant-kubernetes-access.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-cloud-based-groups.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-corporate-ad-based-rbac.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-registries.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-cluster-resource-creation.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-production-access-model.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-quality-of-service.md
+                  - path: ../content/core-platform/features/multi-tenant-access/feature-rbac-audit.md
+              - path: ../content/core-platform/features/kubernetes-network/_index.md
+                pages:
+                  - path: ../content/core-platform/features/kubernetes-network/feature-cni.md
+                  - path: ../content/core-platform/features/kubernetes-network/feature-service-mesh.md
+                  - path: ../content/core-platform/features/kubernetes-network/_index.md
+                  - path: ../content/core-platform/features/kubernetes-network/feature-default-deny.md
+                  - path: ../content/core-platform/features/kubernetes-network/feature-ipv6.md
+    #           - path: ../content/core-platform/features/ingress/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/connectivity/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/platform-observability/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/governance/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/tenant-observability/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/platform-security/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/providers-locations-and-dr/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/secrets-management/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/continuous-load/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/developer-portal/_index.md
+    #             pages:
+    #           - path: ../content/core-platform/features/persistence/_index.md
+    #     - path: ../content/core-platform/kubernetes-upgrade.md
+    #  - path: ../content/core-p2p/_index.md
+    #   pages:
+    # - path: ../content/core-engineer/_index.md
+    #   pages:
+    # - path: ../content/delivery/_index.md
+    #   pages:`
 	lines := strings.Split(string(yamlData), "\n")
 
 	// Find the leading whitespace from the placeholder lines
