@@ -47,15 +47,12 @@ WORKDIR /site
 COPY . .
 # Copy the built Go program from the build stage
 COPY --from=build /structure/weight_generator structure/
-
 # Set ownership and permissions
 RUN chown -R hugo:hugo /site
 
 # Set the non-root user
 USER hugo
 
-RUN ls
-RUN ls structure/
 RUN  cd ./structure && ./weight_generator
 # Run Hugo
 ENTRYPOINT ["hugo"]
