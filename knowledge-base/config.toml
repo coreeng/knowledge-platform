@@ -5,6 +5,6 @@ theme = 'hugo-theme-learn'
 enableEmoji = true
 [params]
   themeVariant = "cecg"
-  editURL = "https://github.com/coreeng/website-bootcamp/edit/main/static-site/content/"
+  editURL = "https://github.com/coreeng/knowledge-platform/tree/main/knowledge-base/content"
 [outputs]
 home = [ "HTML", "RSS", "JSON"]
