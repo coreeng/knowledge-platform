@@ -12,6 +12,9 @@ COPY customisation/config.toml /site/
 # the location hugo will be looking for a logo, named logo.png
 COPY customisation/logo.png /site/static/images/logo.png
 
+# When we have the final dockerfile  , we should run  tests and  the weight_generator.go that are located in baseimage
+
+
 # If you'd like to change the default css settings -- the destination (/site/static/css/) needs to remain the same as that is
 # the location hugo will be looking for these customisations.
 
