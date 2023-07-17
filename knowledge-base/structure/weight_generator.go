@@ -223,8 +223,19 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
                   - path: ../content/core-platform/features/kubernetes-network/_index.md
                   - path: ../content/core-platform/features/kubernetes-network/feature-default-deny.md
                   - path: ../content/core-platform/features/kubernetes-network/feature-ipv6.md
-    #           - path: ../content/core-platform/features/ingress/_index.md
-    #             pages:
+              - path: ../content/core-platform/features/ingress/_index.md
+                pages:
+                  - path: ../content/core-platform/features/ingress/feature-platform-ingress.md
+                  - path: ../content/core-platform/features/ingress/feature-cross-region-loadbalancing.md
+                  - path: ../content/core-platform/features/ingress/feature-edge-integration.md
+                  - path: ../content/core-platform/features/ingress/feature-segregated-ingress.md
+                  - path: ../content/core-platform/features/ingress/feature-corporate-dns-reliability.md
+                  - path: ../content/core-platform/features/ingress/feature-cluster-dns.md
+                  - path: ../content/core-platform/features/ingress/feature-tenant-dns.md
+                  - path: ../content/core-platform/features/ingress/feature-http-ingress.md
+                  - path: ../content/core-platform/features/ingress/feature-tcp-ingress.md
+                  - path: ../content/core-platform/features/ingress/feature-udp-ingress.md
+                  - path: ../content/core-platform/features/ingress/feature-ingress-scalability-testing.md
     #           - path: ../content/core-platform/features/connectivity/_index.md
     #             pages:
     #           - path: ../content/core-platform/features/platform-observability/_index.md
