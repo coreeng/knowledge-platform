@@ -6,7 +6,7 @@ chapter = false
 pre = "<b></b>"
 +++
 
-Here is an example of SLI/SLO definition that from a mini platform engagment. It appears to be sufficient for that particular engagment but YMMV. That being said you are solid if you have:
+Here is an example of SLI/SLO definition that form a mini platform engagement. It appears to be sufficient for that particular engagement but YMMV. That being said you are solid if you:
 
 * Have a clear boundary of what the platform manages, and what the tenants manage (what AWS calls the "shared responsibility model"). What the platform manages should be covered by SLOs & SLIs.
 * Use the user journey as the north star, and define the SLOs & SLIs based on how the tenants interact with the platform.
@@ -28,7 +28,7 @@ We want to define SLOs & SLIs for the platform and derive alerts based on it. By
 ## Principles
 
 * Having the right amount of SLIs & SLOs - too many causes attention fatigues, whereas too few causes oversight.
-* Excercising in a structured manner - drive the expectation using SLOs, measuring using SLIs, and implementing using metrics & alerts.
+* Exercising in a structured manner - drive the expectation using SLOs, measuring using SLIs, and implementing using metrics & alerts.
 * Perfect is the enemy of good - implement the SLOs & SLIs good enough and improve over time.
 * It’s not a close-door exercise - make sure it’s agreed with the business.
 * Alert must be actionable - if the alert is not actionable, it’s not an alert, it’s a notification.
@@ -42,7 +42,7 @@ We want to define SLOs & SLIs for the platform and derive alerts based on it. By
 
 Reliability can be characterised via availability, throughput, correctness, durability, latency, coverage, quality, freshness. In this section we will use the user journey as the north star, and define the SLOs & SLIs based on the user journey using the categories above.
 
-Notes that all of the SLOs and SLIs are measured in non-maintenance periods.
+Note that all the SLOs and SLIs are measured in non-maintenance periods.
 
 ### Control plane
 
@@ -111,12 +111,12 @@ Notes that all of the SLOs and SLIs are measured in non-maintenance periods.
 ## Decision outcome
 
 As it stands we primarily use SLO-based alerts. This helps us to narrow the scope of our alerts to the symptons that genuinely impact the service reliability that are experienced by our customers (tenants & end users in our cases). 
-By decoupling symptons from what and why, traditional system monitoring alerts (cpu, memory, disk USE on a node-by-node basis) are largely eliminated. 
+By decoupling symptoms from what and why, traditional system monitoring alerts (cpu, memory, disk USE on a node-by-node basis) are largely eliminated. 
 There are a few benefits of this approach:
 
 * It helps operators to pin-point where the investigation _should_ start (where the customer experiences are actually impacted) with minimum noises.
-* It makes the alerts more actionable vs traditonal system monitoring where CPU, OOM errors tell you nothing about whether end users are impacted, neither it's is easy to act upon.
+* It makes the alerts more actionable vs traditional system monitoring where CPU, OOM errors tell you nothing about whether end users are impacted, neither it is easy to act upon.
 * It largely reduced the alerting fatigue, as the number of alerts are reduced significantly.
-* It generally surfaces the issues earlier than traditional system monitoring alerts. For example your app might appears to be looking fine from the traditional system monitoring perspective, but alerts show excessive SLO error burn rate (e.g. 10% error budget burned over 5mins time, meaning 50min before SLO breaches). After alerts you drill down to the issue and pin-point the root cause to a OOM of the app. For this scenario traditional system alerts would have surfaced the issue much later, when the OOM flooded the entire fleet.
+* It generally surfaces the issues earlier than traditional system monitoring alerts. For example your app might appear to be looking fine from the traditional system monitoring perspective, but alerts show excessive SLO error burn rate (e.g. 10% error budget burned over 5 minutes, meaning 50min before SLO breaches). After alerts you drill down to the issue and pin-point the root cause to an OOM of the app. For this scenario traditional system alerts would have surfaced the issue much later, when the OOM flooded the entire fleet.
 
 That being said system/low-level monitoring metrics are still useful for observability and issue drill down in general. They need to be collected for observability/warning purpose, but not necessarily alerting.

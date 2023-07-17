@@ -19,7 +19,7 @@ so that customers can continue to refer to the same URL.
 Key Questions for Defuzz:
 
 * Who manages the custom domain - platform or tenant? 
-  * It can be tenant initially with a view to move the ownership to the platform
+  * It can be the tenant initially with a view to move the ownership to the platform
 
 * Who manages the SSL certs rotation - platform or tenant?
 
