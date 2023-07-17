@@ -8,7 +8,7 @@ pre = "<b>Multi-tenancy</b>"
 
 # Multi-Tenancy
 
-Core Platforms typically have many departments onboarded with each department split into many teams. Traditionally, one might consider creating a separate platform per team or tenant to deploy and maintain their services. However the concept of multi-tenancy allows us to house multiple teams and even departments within a single kubernetes cluster, while respecting each tenants limits, boundaries and autonomy. Taking this approach allows us to reduce the complexity and cardinality of our architecture by providing and maintaining a single feature-rich cluster as opposed to configurations for multiple clusters. The trade-off being that more time may be required up-front to replicate multi-cluster features within a single cluster. 
+Core Platforms typically have many departments onboarded with each department split into many teams. Traditionally, one might consider creating a separate platform per team or tenant to deploy and maintain their services. However the concept of multi-tenancy allows us to house multiple teams and even departments within a single kubernetes cluster, while respecting each tenant's limits, boundaries and autonomy. Taking this approach allows us to reduce the complexity and cardinality of our architecture by providing and maintaining a single feature-rich cluster as opposed to configurations for multiple clusters, the trade-off being that more time may be required up-front to replicate multi-cluster features within a single cluster. 
 
 ## Principles
 
