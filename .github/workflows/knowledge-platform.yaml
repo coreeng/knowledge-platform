@@ -6,11 +6,6 @@ on:
       - main  
     paths:
       - "knowledge-base/**"
-  pull_request:
-    branches:
-      - main 
-    paths:
-      - "knowledge-base/**"
 
 jobs:
   release:
