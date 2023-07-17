@@ -2,6 +2,6 @@
 title = "Delivery"
 weight = 6
 chapter = false
-pre = ""
+pre = "<b>6. </b>"
 +++
 
