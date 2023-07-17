@@ -3,7 +3,7 @@ title = "Core Pipelines"
 date = 2022-12-24T04:32:10+02:00
 weight = 4
 chapter = false
-pre = "<b>4. </b>"
+pre = ""
 +++
 
 We strive for a common path to production for all applications deployed to central platforms. 
