@@ -156,13 +156,54 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
   pages:
     - path: ../content/bootcamp/_index.md
       pages:
+        - path: ../content/bootcamp/ways-of-working/_index.md
+          pages:
+            - path: ../content/bootcamp/ways-of-working/roles.md
+            - path: ../content/bootcamp/ways-of-working/rituals-artfifacts.md
+            - path: ../content/bootcamp/ways-of-working/practices.md
+        - path: ../content/bootcamp/setup-and-access/_index.md
+          pages:
+            - path: ../content/bootcamp/setup-and-access/workstation-setup.md
+            - path: ../content/bootcamp/setup-and-access/epic-setup.md
+            - path: ../content/bootcamp/setup-and-access/epic-katas.md
+            - path: ../content/bootcamp/setup-and-access/epic-tekton.md
         - path: ../content/bootcamp/modules/_index.md
           pages:
+            - path: ../content/bootcamp/modules/p2p-fast-feedback/_index.md
+              pages:
+                - path: ../content/bootcamp/modules/p2p-fast-feedback/background.md
+                - path: ../content/bootcamp/modules/p2p-fast-feedback/epic-p2p-fastfeedback-learning-plan.md
+                - path: ../content/bootcamp/modules/p2p-fast-feedback/epic-reference-application.md
+                - path: ../content/bootcamp/modules/p2p-fast-feedback/epic-p2p.md
+                - path: ../content/bootcamp/modules/p2p-fast-feedback/epic-counter-resets.md
+            - path: ../content/bootcamp/modules/nft-and-observability/_index.md
+              pages:
+                - path: ../content/bootcamp/modules/nft-and-observability/background.md
+                - path: ../content/bootcamp/modules/nft-and-observability/epic-p2p-nft-learning-plan.md
+                - path: ../content/bootcamp/modules/nft-and-observability/epic-monitoring-stack.md
+                - path: ../content/bootcamp/modules/nft-and-observability/epic-deployed-testing.md
+                - path: ../content/bootcamp/modules/nft-and-observability/epic-resiliency.md
+            - path: ../content/bootcamp/modules/multitenant-kubernetes/_index.md
+              pages:
+                - path: ../content/bootcamp/modules/multitenant-kubernetes/background.md
+                - path: ../content/bootcamp/modules/multitenant-kubernetes/epic-kubernetes-learning.md
+                - path: ../content/bootcamp/modules/multitenant-kubernetes/epic-canary-deployments.md
+                - path: ../content/bootcamp/modules/multitenant-kubernetes/epic-multi-tenancy-rbac.md
+                - path: ../content/bootcamp/modules/multitenant-kubernetes/epic-multi-tenancy-network-isolation.md
+            - path: ../content/bootcamp/modules/platform-engineering/_index.md
+              pages:
+                - path: ../content/bootcamp/modules/platform-engineering/epic-platform-engineering-learning-plan.md
+                - path: ../content/bootcamp/modules/platform-engineering/epic-canary-operator.md
+            - path:  ../content/bootcamp/modules/debugging-containers/_index.md
+              pages:
+                - path: ../content/bootcamp/modules/debugging-containers/background.md
+                - path: ../content/bootcamp/modules/debugging-containers/epic-troubleshooting.md
             - path: ../content/bootcamp/modules/cloud-iac/_index.md
               pages:
                 - path: ../content/bootcamp/modules/cloud-iac/background.md
-                - path: ../content/bootcamp/modules/cloud-iac/epic-core-platform.md
+                - path: ../content/bootcamp/modules/cloud-iac/epic-iac-learning-plan.md
                 - path: ../content/bootcamp/modules/cloud-iac/epic-iac-setup.md
+                - path: ../content/bootcamp/modules/cloud-iac/epic-core-platform.md
     - path: ../content/core-platform/_index.md
       pages:
         - path: ../content/core-platform/building-a-core-platform.md
@@ -236,32 +277,145 @@ func replacePlaceholder(yamlData []byte) ([]byte, error) {
                   - path: ../content/core-platform/features/ingress/feature-tcp-ingress.md
                   - path: ../content/core-platform/features/ingress/feature-udp-ingress.md
                   - path: ../content/core-platform/features/ingress/feature-ingress-scalability-testing.md
-    #           - path: ../content/core-platform/features/connectivity/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/platform-observability/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/governance/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/tenant-observability/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/platform-security/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/providers-locations-and-dr/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/secrets-management/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/continuous-load/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/developer-portal/_index.md
-    #             pages:
-    #           - path: ../content/core-platform/features/persistence/_index.md
-    #     - path: ../content/core-platform/kubernetes-upgrade.md
-    #  - path: ../content/core-p2p/_index.md
-    #   pages:
-    # - path: ../content/core-engineer/_index.md
-    #   pages:
-    # - path: ../content/delivery/_index.md
-    #   pages:`
+              - path: ../content/core-platform/features/connectivity/_index.md
+                pages:
+                  - path: ../content/core-platform/features/connectivity/feature-per-tenant-egress-firewall.md
+                  - path: ../content/core-platform/features/connectivity/feature-same-cloud-provider-connectivity.md
+                  - path: ../content/core-platform/features/connectivity/feature-alternative-cloud-provider-connectivity.md
+                  - path: ../content/core-platform/features/connectivity/feature-private-third-party-connectivity.md
+                  - path: ../content/core-platform/features/connectivity/feature-advanced-source-nating.md
+                  - path: ../content/core-platform/features/connectivity/feature-inbound-workstation-access.md
+              - path: ../content/core-platform/features/platform-observability/_index.md
+                pages:
+                  - path: ../content/core-platform/features/platform-observability/feature-aggregated-platform-logs.md
+                  - path: ../content/core-platform/features/platform-observability/feature-aggregated-platform-metrics.md
+                  - path: ../content/core-platform/features/platform-observability/feature-platform-service-monitoring.md
+                  - path: ../content/core-platform/features/platform-observability/feature-platform-single-pane-of-glass.md
+                  - path: ../content/core-platform/features/platform-observability/feature-incident-management-integration.md
+              - path: ../content/core-platform/features/governance/_index.md
+                pages:
+                  - path: ../content/core-platform/features/governance/feature-policy-controller.md
+                  - path: ../content/core-platform/features/governance/feature-security-policy-enforcement.md
+                  - path: ../content/core-platform/features/governance/feature-kubernetes-best-practices.md
+                  - path: ../content/core-platform/features/governance/feature-per-tenant-policy.md
+                  - path: ../content/core-platform/features/governance/feature-retrospective-policy-validation.md
+              - path: ../content/core-platform/features/tenant-observability/_index.md
+                pages:
+                  - path: ../content/core-platform/features/tenant-observability/feature-export-aggregated-metrics.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-export-aggregated-logs.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-external-dashboarding-and-incident-management-integration.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-aggregated-metrics-store.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-aggregated-log-store.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-dashboarding.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-tracing.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-incident-management-integration.md
+                  - path: ../content/core-platform/features/tenant-observability/feature-service-interaction.md
+              - path: ../content/core-platform/features/platform-security/_index.md
+                pages:
+                  - path: ../content/core-platform/features/platform-security/feature-build-deployment-time-protection.md
+                  - path: ../content/core-platform/features/platform-security/feature-runtime-endpoint-protection.md
+                  - path: ../content/core-platform/features/platform-security/feature-runtime-misconfiguration.md
+                  - path: ../content/core-platform/features/platform-security/feature-runtime-vulnerabilities.md
+                  - path: ../content/core-platform/features/platform-security/feature-host-protection.md
+                  - path: ../content/core-platform/features/platform-security/feature-network-segregation.md
+                  - path: ../content/core-platform/features/platform-security/feature-workload-segregation.md
+                  - path: ../content/core-platform/features/platform-security/feature-corporate-integrations.md
+                  - path: ../content/core-platform/features/platform-security/feature-encryption-in-transit.md
+                  - path: ../content/core-platform/features/platform-security/feature-encryption-at-rest.md
+                  - path: ../content/core-platform/features/platform-security/feature-secure-kubernetes-setup.md
+                  - path:
+              - path: ../content/core-platform/features/providers-locations-and-dr/_index.md
+                pages:
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-single-cloud-region-multi-az.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-regular-dr-rebuild-in-new-region.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-multiple-cloud-regions.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-multi-cloud-provider.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-infrastructure-autoscaling.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-on-prem.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-hybrid.md
+                  - path: ../content/core-platform/features/providers-locations-and-dr/feature-multi-provider-registries.md
+              - path: ../content/core-platform/features/secrets-management/_index.md
+              - path: ../content/core-platform/features/continuous-load/_index.md
+              - path: ../content/core-platform/features/developer-portal/_index.md
+                pages:
+                  - path: ../content/core-platform/features/developer-portal/feature-developer-portal.md
+                  - path: ../content/core-platform/features/developer-portal/feature-service-catalog.md
+                  - path: ../content/core-platform/features/developer-portal/feature-application-blueprints.md
+              - path: ../content/core-platform/features/persistence/_index.md
+                pages: 
+                  - path: ../content/core-platform/features/persistence/feature-paired-cloud-account.md
+                  - path: ../content/core-platform/features/persistence/feature-managed-service-blueprints.md
+        - path: ../content/core-platform/kubernetes-upgrade.md
+     - path: ../content/core-p2p/_index.md
+      pages:
+    - path: ../content/core-p2p/_index.md
+      pages:
+       - path: ../content/core-p2p/p2p-consolidation.md
+       - path: ../content/core-p2p/design-a-p2p.md
+       - path: ../content/core-p2p/service-encapsulation.md
+       - path: ../content/core-p2p/testing-strategy/_index.md
+         pages:
+           - path: ../content/core-p2p/testing-strategy/unit-testing.md
+           - path: ../content/core-p2p/testing-strategy/functional-testing.md
+           - path: ../content/core-p2p/testing-strategy/non-functional-testing.md
+       - path: ../content/core-p2p/promotion.md
+       - path: ../content/core-p2p/application-architecture.md
+       - path: ../content/core-p2p/deployment-models.md
+       - path: ../content/core-p2p/features/_index.md
+         pages:
+           - path: ../content/core-p2p/features/reference-application/_index.md
+             pages:
+               - path: ../content/core-p2p/features/reference-application/feature-basic-reference-app.md
+           - path: ../content/core-p2p/features/developer-advocacy/_index.md
+             pages:
+               - path: ../content/core-p2p/features/developer-advocacy/feature-seed-community.md
+               - path: ../content/core-p2p/features/developer-advocacy/feature-chat-community.md
+               - path: ../content/core-p2p/features/developer-advocacy/feature-wiki.md
+           - path: ../content/core-p2p/features/pipeline-testing/_index.md
+           - path: ../content/core-p2p/features/p2p-monitoring/_index.md
+             pages:
+               - path: ../content/core-p2p/features/p2p-monitoring/feature-tenant-logs-forwarding.md
+               - path: ../content/core-p2p/features/p2p-monitoring/feature-aggregated-logs.md
+               - path: ../content/core-p2p/features/p2p-monitoring/feature-observability-integrations.md
+           - path: ../content/core-p2p/features/continous-integration/_index.md
+             pages:
+               - path: ../content/core-p2p/features/continous-integration/feature-tenant-onboarding.md
+               - path: ../content/core-p2p/features/continous-integration/feature-tenant-definition.md
+               - path: ../content/core-p2p/features/continous-integration/feature-pipeline-generation.md
+           - path: ../content/core-p2p/features/pipeline-security/_index.md
+             pages:
+               - path: ../content/core-p2p/features/pipeline-security/feature-vulnerability-scanning.md
+           - path: ../content/core-p2p/features/continuous-deployment/_index.md
+             pages:
+               - path: ../content/core-p2p/features/continuous-deployment/feature-change-management.md
+               - path: ../content/core-p2p/features/continuous-deployment/feature-deployment-access.md
+               - path: ../content/core-p2p/features/continuous-deployment/feature-manual-gates.md
+               - path: ../content/core-p2p/features/continuous-deployment/feature-promotion-mechanism.md
+               - path: ../content/core-p2p/features/continuous-deployment/feature-scheduled-releases.md
+           - path: ../content/core-p2p/features/artifacts/_index.md
+             pages:
+               - path: ../content/core-p2p/features/artifacts/feature-build-agent.md
+               - path: ../content/core-p2p/features/artifacts/feature-build-service.md
+               - path: ../content/core-p2p/features/artifacts/feature-immutable-artifacts.md
+               - path: ../content/core-p2p/features/artifacts/feature-tenant-provided-build-agent.md
+               - path: ../content/core-p2p/features/artifacts/feature-versioning.md
+           - path: ../content/core-p2p/features/deployment-models/_index.md
+             pages:
+               - path: ../content/core-p2p/features/deployment-models/feature-deployment-mechanism.md
+           - path: ../content/core-p2p/features/database-lifecycle/_index.md
+           - path: ../content/core-p2p/features/p2p-infra/_index.md
+             pages:
+               - path: ../content/core-p2p/features/p2p-infra/feature-managed-tool.md
+               - path: ../content/core-p2p/features/p2p-infra/feature-artifact-registry.md
+               - path: ../content/core-p2p/features/p2p-infra/feature-source-control.md
+    - path: ../content/core-engineer/_index.md
+      pages:
+        - path: ../content/core-engineer/engineering-principles.md
+        - path: ../content/core-engineer/adrs.md
+        - path: ../content/core-engineer/techniques.md
+    - path: ../content/delivery/_index.md
+      pages:
+        - path: ../content/delivery/delivery-principles.md`
 	lines := strings.Split(string(yamlData), "\n")
 
 	// Find the leading whitespace from the placeholder lines
