@@ -1,0 +1,9 @@
+- path: ../modules/user-specific-module-1/_index.md
+  pages:
+    - path: ../modules/user-specific-module-1/module-1.md
+    - path: ../modules/user-specific-module-1/background-info.md
+    - path: ../modules/user-specific-module-1/submodule/_index.md
+      pages:
+        - path: ../modules/user-specific-module-1/submodule/module-1-nesting.md
+    - path: ../modules/user-specific-module-1/epic-module-1-example.md
+cecg_bootcamp_module
