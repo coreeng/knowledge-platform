@@ -11,7 +11,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: ${{ vars.SHOULD_PUSH == 'false' }}
+    if: github.event_name == 'push'&& vars.SHOULD_PUSH == 'false'
     steps:
       - name: Test
         run: |
