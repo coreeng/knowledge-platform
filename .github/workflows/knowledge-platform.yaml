@@ -2,24 +2,21 @@ name: Knowledge-platform-CI
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "knowledge-base/**"
   pull_request:
+    branches:
+      - main
     paths:
       - "knowledge-base/**"
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && vars.SHOULD_PUSH == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.SHOULD_PUSH == 'true'
     steps:
-      - name: Test
-        run: |
-          echo "Should push : $SHOULD_PUSH"
-          echo "Should push : $vars.SHOULD_PUSH"
-          echo "Should push : {{ $SHOULD_PUSH }}"
-          echo "Should push : {{ $vars.SHOULD_PUSH }}"
-          echo "Should push : {{ vars.SHOULD_PUSH }}"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
@@ -31,3 +28,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: knowledge-base/.
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: cecg/knowledge-platform:latest
