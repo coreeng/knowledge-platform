@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Test
         run: |
-          echo "Should push : env.SHOULD_PUSH"
+          echo "Should push : $env.SHOULD_PUSH"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
