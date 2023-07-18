@@ -15,7 +15,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && $SHOULD_PUSH == 'true'
+    if: github.event_name == 'push' && env.SHOULD_PUSH == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,10 +28,3 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: knowledge-base/.
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: cecg/knowledge-platform:latest
