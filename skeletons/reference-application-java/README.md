@@ -15,8 +15,8 @@ These all need to be installed.
 
 ### GitHub Actions
 
-ci.yaml in [.github/workflows](.github/workflows) shows how GitHub actions can execute
-This same GitHub action can be used for many repos using different technologies as long as the same Make targets are defined.
+[.github/workflows](../../.github/workflows) show how GitHub actions can be re-used for many repos using different
+technologies as long as the same Make targets are defined. (java/go workflow files are identical, only the paths differ)
 
 
 ## Structure
