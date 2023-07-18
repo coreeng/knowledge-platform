@@ -15,7 +15,7 @@ Build the docker image:
 docker build . -t knowledge-platform
 ```
 
-Then run it locally:
+Run it locally:
 
 ```
 docker run -d -p 8080:8080 knowledge-platform
