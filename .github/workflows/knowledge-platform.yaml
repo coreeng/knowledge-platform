@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "knowledge-base/**"
   pull_request:
     branches:
       - main
-    paths:
-      - "knowledge-base/**"
 
 jobs:
   release:
@@ -35,3 +31,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: cecg/knowledge-platform:latest
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+          repository: coreeng/cecg-knowledge-platform-deployment
+          event-type: dispatch-event
