@@ -1,7 +1,7 @@
 +++
 title = "Bootcamp"
 date = 2022-12-22T05:07:10+02:00
-weight = 1
+weight = 100
 chapter = false 
 pre = ""
 +++
