@@ -1,7 +1,7 @@
 +++
 title = "Core Developer Platform"
 date = 2022-12-27T17:50:10+02:00
-weight = 3
+weight = 200
 chapter = false 
 pre = ""
 +++
