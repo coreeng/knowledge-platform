@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgateway
+  namespace: acceptance-criteria-pushgateway
+  labels:
+    app.kubernetes.io/name: pushgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pushgateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pushgateway
+    spec:
+      containers:
+        - name: pushgateway
+          image: prom/pushgateway
+          ports:
+            - containerPort: 9091

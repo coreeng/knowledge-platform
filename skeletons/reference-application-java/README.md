@@ -118,6 +118,9 @@ The downside to this method is that you will need to execute this on any new she
 Keep in mind that if you use this method you should set an `imagePullPolicy: Never` to your `deployment-minikube.yml` for your `reference-service`,
 which would signify that the image should be expected to exist locally.
 
+#### Change the owner label
+In your [deployment-minikube.yml](service/k8s-manifests/deployment-minikube.yml), set the owner label to your `firstName-lastName`
+
 #### Push the image
 
 Prerequisites:

@@ -3,7 +3,7 @@ module github.com/coreeng/core-reference-application-go
 go 1.19
 
 require (
-	github.com/cucumber/godog v0.12.6
+	github.com/cucumber/godog v0.12.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/lib/pq v1.10.7
 	github.com/sirupsen/logrus v1.9.0
