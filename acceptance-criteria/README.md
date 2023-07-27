@@ -19,4 +19,6 @@ which functions similarly to Cucumber in Java projects.
 The functional tests will then be containerized, allowing us to execute them as a Job in-cluster. After the job has run,
 we would have pushed some metrics to our pushgateway, depending on the success or failure of each step.
 
+At the moment, we use a `Makefile` to kick-start the acceptance criteria.
+
 See the [acceptance criteria for p2p-fast-feedback](p2p-fast-feedback) for working examples.
