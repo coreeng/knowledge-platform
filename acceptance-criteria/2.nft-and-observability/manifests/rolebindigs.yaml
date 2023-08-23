@@ -3,9 +3,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: read-cluster-role
 rules:
+  - apiGroups: [""]
+    resources: ["pods",   "namespaces", "resourcequotas", "events"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
-    verbs: ["list"]
+    verbs: ["get", "list", "watch"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -14,7 +17,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: p2p-fast-feedback-ac
+    namespace: nft-and-obs-ac
 roleRef:
   kind: ClusterRole
   name: read-cluster-role

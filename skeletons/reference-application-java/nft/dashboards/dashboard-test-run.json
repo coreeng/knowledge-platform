@@ -171,7 +171,7 @@
             "type": "prometheus",
             "uid": "Prometheus"
           },
-          "expr": "sum(rate(k6_http_reqs{test_name=~\"$test_name\"}[1s]))",
+          "expr": "rate(k6_http_reqs{test_name=~\"$test_name\"}[1m])",
           "refId": "A"
         }
       ],
@@ -331,79 +331,6 @@
         "type": "prometheus",
         "uid": "Prometheus"
       },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 0
-      },
-      "id": 8,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "expr": "count(k6_http_reqs{test_name=~\"$test_name\",expected_response=\"true\"})",
-          "refId": "A"
-        }
-      ],
-      "title": "Non-HTTP errors",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "Prometheus"
-      },
       "description": "Breakdown of response time into its constituent parts.",
       "fieldConfig": {
         "defaults": {
@@ -510,7 +437,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(k6_http_req_ending_avg{test_name=~\"$test_name\"})",
+          "expr": "sum(k6_http_req_sending_avg{test_name=~\"$test_name\"})",
           "hide": false,
           "legendFormat": "Sending",
           "range": true,
@@ -534,7 +461,7 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(k6_http_tls_handshaking_avg{test_name=~\"$test_name\"})",
+          "expr": "sum(k6_http_req_tls_handshaking_avg{test_name=~\"$test_name\"})",
           "hide": false,
           "legendFormat": "TLS handshaking",
           "range": true,

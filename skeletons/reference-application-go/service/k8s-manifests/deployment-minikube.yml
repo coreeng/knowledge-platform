@@ -5,7 +5,7 @@ metadata:
   namespace: reference-service-showcase
   labels:
     app.kubernetes.io/name: reference-service
-    owner: <yourFirstname.lastName>
+    owner: <your.git.handle>
 spec:
   replicas: 1
   selector:

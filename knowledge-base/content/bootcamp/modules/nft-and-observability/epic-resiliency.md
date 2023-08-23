@@ -15,11 +15,12 @@ chapter = false
 ## Requirements
 
 * Set resource limits for your application 
-* Support 500 virtual users 95th Percentile is < 20ms with a single replica 
+* Support 500 virtual users 95th Percentile is < 50ms with a single replica 
 * Understand the breaking point of the application with these resource limits. Requests start failing or latency rising. 
 * Horizontally scale to reach 1500 virtual users
-* Fail gracefully if the database is slow
-* Fail gracefully if the database is down
+* Handle slow downstream dependencies
+    * Respond within 500ms even if the downstream is slow or down
+    * You should return a 503 service unavailable status code 
 
 ## Questions / Defuzz / Decisions
 ...

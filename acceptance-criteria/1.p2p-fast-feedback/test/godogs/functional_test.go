@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"p2p-fast-feedback/test/godogs/pushgateway"
+	"p2p-fast-feedback/metrics"
 	"testing"
 )
 
@@ -53,7 +53,7 @@ func iListDeploymentsForTheReferenceServiceShowcaseNamespace() error {
 
 func aDeploymentIsPresent() error {
 	if len(deployments.Items) == 0 {
-		pushgateway.PushFailureMetric("deployment-present", "")
+		metrics.PushFailureMetric("deployment-present", "")
 		return fmt.Errorf("no deployments found in namespace %v", Namespace)
 	}
 
@@ -63,23 +63,23 @@ func aDeploymentIsPresent() error {
 			referenceServiceReplicas = int(*deployment.Spec.Replicas)
 			owner = deployment.Labels["owner"]
 			if owner == "" {
-				pushgateway.PushFailureMetric("deployment-present-owner", "")
+				metrics.PushFailureMetric("deployment-present-owner", "")
 			}
-			pushgateway.PushSuccessMetric("deployment-present", owner)
+			metrics.PushSuccessMetric("deployment-present", owner)
 			return nil
 		}
 		deploymentNames = append(deploymentNames, deployment.Name)
 	}
-	pushgateway.PushFailureMetric("deployment-present", owner)
+	metrics.PushFailureMetric("deployment-present", owner)
 	return fmt.Errorf("could not find a \"reference-service\" deployment, deployment names present: %v", deploymentNames)
 }
 
 func aSingleReplicaOfTheReferenceServiceIsRunning() error {
 	if referenceServiceReplicas == 1 {
-		pushgateway.PushSuccessMetric("single-replica-running", owner)
+		metrics.PushSuccessMetric("single-replica-running", owner)
 		return nil
 	}
-	pushgateway.PushFailureMetric("single-replica-running", owner)
+	metrics.PushFailureMetric("single-replica-running", owner)
 	return fmt.Errorf("more than one replica of the reference-service found")
 }
 
@@ -90,10 +90,10 @@ func anHttpClientIsSetUp() {
 
 func iReceiveASuccessfulResponse() error {
 	if response.IsSuccess() == true {
-		pushgateway.PushSuccessMetric("delete-counter-present", owner)
+		metrics.PushSuccessMetric("delete-counter-present", owner)
 		return nil
 	}
-	pushgateway.PushFailureMetric("delete-counter-present", owner)
+	metrics.PushFailureMetric("delete-counter-present", owner)
 	return fmt.Errorf("unexpected response received. Request URL: %s, Request Method: %s, Response code: %d, error: %v", response.Request.URL, response.Request.Method, response.StatusCode(), response.Error())
 }
 func iPollTheDeleteCounterEndpoint() error {
@@ -119,7 +119,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 }
 
 func TestFeatures(t *testing.T) {
-	pushgateway.Init()
+	metrics.Init()
 
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,
@@ -133,5 +133,5 @@ func TestFeatures(t *testing.T) {
 	if suite.Run() != 0 {
 		t.Fatal("non-zero status returned, failed to run feature tests")
 	}
-	pushgateway.PushTestSuiteOutcomeMetric("p2p-fast-feedback", owner)
+	metrics.PushTestSuiteOutcomeMetric("p2p-fast-feedback", owner)
 }

@@ -10,6 +10,8 @@ RUN go mod download
 
 COPY test ./test
 COPY metrics ./metrics
+COPY structs ./structs
+COPY consts ./consts
 
 RUN go install github.com/cucumber/godog/cmd/godog@latest
 

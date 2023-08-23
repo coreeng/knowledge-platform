@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nft-acceptance-criteria
+  namespace: nft-and-obs-ac
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: nft-acceptance-criteria
+          image: nft-and-obs-ac:latest
+          imagePullPolicy: Never
