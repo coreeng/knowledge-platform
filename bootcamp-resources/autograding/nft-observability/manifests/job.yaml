@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: nft-acceptance-criteria
-  namespace: nft-and-obs-ac
+  name: nft-obs-acceptance-tests
+  namespace: nft-obs-autograding
 spec:
   completions: 1
   parallelism: 1
@@ -11,6 +11,6 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: nft-acceptance-criteria
-          image: nft-and-obs-ac:latest
+        - name: nft-obs-acceptance-tests
+          image: nft-obs-acceptance-tests:latest
           imagePullPolicy: Never

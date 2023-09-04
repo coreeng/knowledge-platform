@@ -15,12 +15,12 @@ These all need to be installed.
 
 ### GitHub Actions
 
-[.github/workflows](../../.github/workflows) show how GitHub actions can be re-used for many repos using different
+[.github/workflows](../../../.github/workflows) show how GitHub actions can be re-used for many repos using different
 technologies as long as the same Make targets are defined. (java/go workflow files are identical, only the paths differ)
 
 ### Tekton
 
-[Instructions for how to setup](../../tekton/README.md) a WebHook that calls a locally running Tekton.
+[Instructions for how to setup](../../../tekton/README.md) a WebHook that calls a locally running Tekton.
 
 ## Structure
 

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pushgateway
-  namespace: acceptance-criteria-pushgateway
+  namespace: pushgateway-autograding
   labels:
     app.kubernetes.io/name: pushgateway
 spec:

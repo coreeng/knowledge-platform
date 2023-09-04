@@ -14,7 +14,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: p2p-fast-feedback-ac
+    namespace: p2p-autograding
 roleRef:
   kind: ClusterRole
   name: read-cluster-role

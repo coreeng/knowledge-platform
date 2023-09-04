@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: p2p-acceptance-criteria
-  namespace: p2p-fast-feedback-ac
+  name: p2p-acceptance-tests
+  namespace: p2p-autograding
 spec:
   completions: 1
   parallelism: 1
@@ -11,6 +11,6 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: p2p-acceptance-criteria
-          image: p2p-fast-feedback-ac:latest
+        - name: p2p-acceptance-tests
+          image: p2p-acceptance-tests:latest
           imagePullPolicy: Never

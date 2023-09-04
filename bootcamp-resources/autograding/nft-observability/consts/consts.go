@@ -31,7 +31,7 @@ const (
 	PrometheusQueryUrl         = "http://prom-kube-prometheus-stack-prometheus.default.svc.cluster.local:9090/api/v1/query"
 	ReferenceServiceDelayUrl   = "http://reference-service.reference-service-showcase/delay/%s"
 	GrafanaSearchUrl           = "http://prom-grafana.default/api/search"
-	PushGatewayUrl             = "http://pushgateway.acceptance-criteria-pushgateway:9091"
+	PushGatewayUrl             = "http://pushgateway.pushgateway-autograding:9091"
 	DeploymentOwnerLabel       = "owner"
 	PodStatusRunning           = "Running"
 	PodNameLabel               = "app.kubernetes.io/name"

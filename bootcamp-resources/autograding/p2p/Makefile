@@ -1,31 +1,31 @@
 ACCEPTANCE_CRITERIA_ROOT := $(realpath $(CURDIR)/..)
 
-.PHONY: run-nft-and-obs-ac-test
-run-nft-and-obs-ac-test: build-image cleanup-jobs apply-manifests wait-and-print-job-output
+.PHONY: run-p2p-fast-feedback-ac-test
+run-p2p-autograding: build-image cleanup-jobs apply-manifests wait-and-print-job-output
 
 .PHONY: build-image
 build-image: ## Builds the image using minikube's docker
 	@eval $$(minikube docker-env) ;\
-	docker build -t nft-and-obs-ac .
+	docker build -t p2p-acceptance-tests .
 
 .PHONY: apply-manifests
 apply-manifests: ## Applies the necessary manifests for the acceptance criteria to run
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/namespace.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/rolebindigs.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/job.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/namespace.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/rolebindigs.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/job.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/namespace.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/service.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/deployment.yaml
 
 .PHONY: cleanup-jobs
 cleanup-jobs: ## Cleans up any leftover jobs in the cluster
-	kubectl -n nft-and-obs-ac delete job nft-acceptance-criteria --ignore-not-found
+	kubectl -n p2p-autograding delete job p2p-acceptance-tests--ignore-not-found
 
 .PHONY: wait-and-print-job-output
 wait-and-print-job-output:
 	@echo "Waiting for job output.."
 	@slept=0
-	@while ! kubectl -n nft-and-obs-ac get pod -l job-name=nft-acceptance-criteria | grep -q "Running"; do \
+	@while ! kubectl -n p2p-autograding get pod -l job-name=p2p-acceptance-tests | grep -q "Running"; do \
 		sleep 1; \
 		((slept=slept+1)); \
 		if [ $$slept -eq 15 ]; then \
@@ -33,4 +33,4 @@ wait-and-print-job-output:
 			break; \
 		fi; \
 	done; \
-	kubectl -n nft-and-obs-ac logs -f job/nft-acceptance-criteria
+	kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests

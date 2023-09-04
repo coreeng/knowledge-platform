@@ -5,12 +5,12 @@ on:
     branches:
       - main 
     paths:
-      - "skeletons/reference-application-go/**"
+      - "bootcamp-resources/skeletons/reference-application-go/**"
   push:
     branches:
       - main 
     paths:
-      - "skeletons/reference-application-go/**"
+      - "bootcamp-resources/skeletons/reference-application-go/**"
 
 jobs:
   Stubbed-tests:
@@ -19,16 +19,16 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build
-        working-directory: skeletons/reference-application-go
+        working-directory: bootcamp-resources/skeletons/reference-application-go
         run: |
           make build
       - name: Stubbed-Functional
-        working-directory: skeletons/reference-application-go
+        working-directory: bootcamp-resources/skeletons/reference-application-go
         env:
           SERVICE_ENDPOINT: 'http://service:8080'
         run: |
           make local-stubbed-functional
       - name: Stubbed-NFT
-        working-directory: skeletons/reference-application-go
+        working-directory: bootcamp-resources/skeletons/reference-application-go
         run: |
           make local-stubbed-nft
