@@ -1,0 +1,21 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-cluster-role
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["list"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-cluster-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: p2p-fast-feedback-ac
+roleRef:
+  kind: ClusterRole
+  name: read-cluster-role
+  apiGroup: rbac.authorization.k8s.io

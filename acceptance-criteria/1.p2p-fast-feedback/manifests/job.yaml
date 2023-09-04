@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: p2p-acceptance-criteria
+  namespace: p2p-fast-feedback-ac
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: p2p-acceptance-criteria
+          image: p2p-fast-feedback-ac:latest
+          imagePullPolicy: Never

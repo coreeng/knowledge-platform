@@ -12,6 +12,15 @@ spec:
         value: "http://reference-service.reference-service-showcase"
       - name: K6_PROMETHEUS_REMOTE_URL
         value: http://prom-kube-prometheus-stack-prometheus.default.svc.cluster.local:9090/api/v1/write
+      - name: PUSH_GATEWAY_URL
+        value: "http://pushgateway.acceptance-criteria-pushgateway:9091"
+    resources:
+      limits:
+        cpu: 200m
+        memory: 1000Mi
+      requests:
+        cpu: 100m
+        memory: 500Mi
   script:
     configMap:
       name: ramp-up
