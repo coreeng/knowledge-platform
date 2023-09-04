@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const PushGatewayUrl = "http://pushgateway.acceptance-criteria-pushgateway:9091"
+const PushGatewayUrl = "http://pushgateway.pushgateway-autograding:9091"
 
 var stepOutcomeMetric = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{

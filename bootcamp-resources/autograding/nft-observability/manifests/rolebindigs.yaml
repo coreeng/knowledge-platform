@@ -17,7 +17,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: nft-and-obs-ac
+    namespace: nft-obs-autograding
 roleRef:
   kind: ClusterRole
   name: read-cluster-role
