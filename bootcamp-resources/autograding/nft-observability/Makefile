@@ -10,9 +10,9 @@ build-image: ## Builds the image using minikube's docker
 
 .PHONY: apply-manifests
 apply-manifests: ## Applies the necessary manifests for the acceptance criteria to run
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/namespace.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/rolebindigs.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/2.nft-and-observability/manifests/job.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/nft-observability/manifests/namespace.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/nft-observability/manifests/rolebindigs.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/nft-observability/manifests/job.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/namespace.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/service.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/deployment.yaml

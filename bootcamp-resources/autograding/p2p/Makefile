@@ -10,9 +10,9 @@ build-image: ## Builds the image using minikube's docker
 
 .PHONY: apply-manifests
 apply-manifests: ## Applies the necessary manifests for the acceptance criteria to run
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/1.p2p-fast-feedback/manifests/namespace.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/1.p2p-fast-feedback/manifests/rolebindigs.yaml
-	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/1.p2p-fast-feedback/manifests/job.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/namespace.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/rolebindigs.yaml
+	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/p2p/manifests/job.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/namespace.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/service.yaml
 	kubectl apply -f $(ACCEPTANCE_CRITERIA_ROOT)/pushgateway/deployment.yaml

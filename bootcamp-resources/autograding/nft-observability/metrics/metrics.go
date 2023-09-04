@@ -90,7 +90,7 @@ func sanitiseLabelValue(labelValue string) string {
 }
 
 func PushSuccessMetric(stepName string, participant string) {
-	pusher := push.New(consts.PushGatewayUrl, "acceptance-criteria-nft-and-obs-step-outcome")
+	pusher := push.New(consts.PushGatewayUrl, "autograding-nft-and-obs-step-outcome")
 	stepOutcomeMetric.WithLabelValues("1", stepName, participant).Set(1)
 	pusher.Collector(stepOutcomeMetric)
 
@@ -101,7 +101,7 @@ func PushSuccessMetric(stepName string, participant string) {
 }
 
 func PushFailureMetric(stepName string, participant string) {
-	pusher := push.New(consts.PushGatewayUrl, "acceptance-criteria-nft-and-obs-step-outcome")
+	pusher := push.New(consts.PushGatewayUrl, "autograding-nft-and-obs-step-outcome")
 	stepOutcomeMetric.WithLabelValues("0", stepName, participant).Set(0)
 	pusher.Collector(stepOutcomeMetric)
 
@@ -112,7 +112,7 @@ func PushFailureMetric(stepName string, participant string) {
 }
 
 func PushTestSuiteOutcomeMetric(module string, participant string) {
-	pusher := push.New(consts.PushGatewayUrl, "acceptance-criteria-nft-and-obs-satisfied")
+	pusher := push.New(consts.PushGatewayUrl, "autograding-nft-and-obs-satisfied")
 	acceptanceCriteriaSuccessMetric.WithLabelValues(module, participant).Set(1)
 	pusher.Collector(acceptanceCriteriaSuccessMetric)
 

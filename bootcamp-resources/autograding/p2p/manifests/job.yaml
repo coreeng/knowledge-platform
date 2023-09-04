@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: nft-acceptance-criteria
-  namespace: nft-and-obs-ac
+  name: p2p-autograding
+  namespace: p2p-fast-feedback-ac
 spec:
   completions: 1
   parallelism: 1
@@ -11,6 +11,6 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: nft-acceptance-criteria
-          image: nft-and-obs-ac:latest
+        - name: p2p-autograding
+          image: p2p-fast-feedback-ac:latest
           imagePullPolicy: Never
