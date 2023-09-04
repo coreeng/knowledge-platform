@@ -29,6 +29,6 @@ jobs:
         run: |
           make local-stubbed-functional
       - name: Stubbed-NFT
-        working-directory: skeletons/reference-application-go
+        working-directory: bootcamp-resources/skeletons/reference-application-go
         run: |
           make local-stubbed-nft

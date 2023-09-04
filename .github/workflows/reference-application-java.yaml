@@ -5,12 +5,12 @@ on:
     branches:
       - main 
     paths:
-      - 'skeletons/reference-application-java/**'
+      - 'bootcamp-resources/skeletons/reference-application-java/**'
   pull_request:
     branches:
       - main 
     paths:
-      - 'skeletons/reference-application-java/**'
+      - 'bootcamp-resources/skeletons/reference-application-java/**'
 
 jobs:
   Stubbed-tests:
@@ -19,16 +19,16 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build
-        working-directory: skeletons/reference-application-java
+        working-directory: bootcamp-resources/skeletons/reference-application-java
         run: |
           make build
       - name: Stubbed-Functional
-        working-directory: skeletons/reference-application-java
+        working-directory: bootcamp-resources/skeletons/reference-application-java
         env:
           SERVICE_ENDPOINT: 'http://service:8080'
         run: |
           make local-stubbed-functional
       - name: Stubbed-NFT
-        working-directory: skeletons/reference-application-java
+        working-directory: bootcamp-resources/skeletons/reference-application-java
         run: |
           make local-stubbed-nft
