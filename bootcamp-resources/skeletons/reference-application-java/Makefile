@@ -9,7 +9,7 @@ tenant_namespace = tenant-1
 
 .PHONY: help
 help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # P2P tasks
 
@@ -69,3 +69,11 @@ docker-build: ## Build the reference application, and package as a Docker image
 .PHONY: docker-push
 docker-push: ## Push the Docker image to an image registry
 	docker image push $(image_name):$(image_tag)
+
+include ../../autograding/p2p/Makefile
+include ../../autograding/nft-observability/Makefile
+
+AUTOGRADE_TASKS = $(shell grep -E '^autograde[a-zA-Z0-9_-]+:.*?$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | awk 'BEGIN {FS = ":"}; {printf "%s ", $$1}')
+
+.PHONY: autograde
+autograde: $(AUTOGRADE_TASKS) ## Run all autograding tasks

@@ -7,16 +7,15 @@ image_tag = latest
 
 .PHONY: help
 help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # P2P tasks
-
 
 .PHONY: local
 local: build local-stubbed-functional local-stubbed-nft ## Build the reference application, and run functional and non-functional tests locally
 
 .PHONY: build
-build:
+build: ## Build the project
 	docker compose run --quiet-pull --rm go_build sh -c 'go build && cd ../../ && go test ./...'
 
 .PHONY: local-stubbed-functional
@@ -64,3 +63,11 @@ docker-build: ## Build and tag the service image
 .PHONY: docker-push
 docker-push: ## Push the service image
 	docker image push $(registry)/$(image_name):$(image_tag)
+
+include ../../autograding/p2p/Makefile
+include ../../autograding/nft-observability/Makefile
+
+AUTOGRADE_TASKS = $(shell grep -E '^autograde[a-zA-Z0-9_-]+:.*?$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | awk 'BEGIN {FS = ":"}; {printf "%s ", $$1}')
+
+.PHONY: autograde
+autograde: $(AUTOGRADE_TASKS) ## Run all autograding tasks
