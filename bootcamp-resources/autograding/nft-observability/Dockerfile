@@ -1,8 +1,8 @@
-FROM golang:1.19-alpine3.17
+FROM golang:1.21-alpine3.18
 
 RUN apk update && apk add --no-cache build-base
 
-WORKDIR /acceptance-criteria
+WORKDIR /autograding
 
 COPY go.mod go.sum ./
 
