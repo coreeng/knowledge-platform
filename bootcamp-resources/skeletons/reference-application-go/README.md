@@ -210,3 +210,8 @@ For a local run:
 ```
 SERVICE_ENDPOINT="http://localhost:8080" k6 run ./nft/ramp-up/test.js
 ```
+
+### How to run autograding jobs
+
+Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules. In order to 
+run those jobs run `make autograde`.
