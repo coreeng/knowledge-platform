@@ -1,0 +1,6 @@
+namespace: "p2p-autograding"
+job:
+  name: "p2p-acceptance-tests"
+  container:
+      name: "p2p-acceptance-tests"
+      image: "cecg/p2p-autograding"
