@@ -63,11 +63,3 @@ docker-build: ## Build and tag the service image
 .PHONY: docker-push
 docker-push: ## Push the service image
 	docker image push $(registry)/$(image_name):$(image_tag)
-
-include ../../autograding/p2p/Makefile
-include ../../autograding/nft-observability/Makefile
-
-AUTOGRADE_TASKS = $(shell grep -E '^autograde[a-zA-Z0-9_-]+:.*?$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | awk 'BEGIN {FS = ":"}; {printf "%s ", $$1}')
-
-.PHONY: autograde
-autograde: $(AUTOGRADE_TASKS) ## Run all autograding tasks

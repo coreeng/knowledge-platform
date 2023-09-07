@@ -12,5 +12,5 @@ spec:
       restartPolicy: Never
       containers:
         - name: nft-obs-acceptance-tests
-          image: nft-obs-acceptance-tests:latest
+          image: cecg/nft-observability-autograding:latest
           imagePullPolicy: Never

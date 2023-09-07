@@ -69,11 +69,3 @@ docker-build: ## Build the reference application, and package as a Docker image
 .PHONY: docker-push
 docker-push: ## Push the Docker image to an image registry
 	docker image push $(image_name):$(image_tag)
-
-include ../../autograding/p2p/Makefile
-include ../../autograding/nft-observability/Makefile
-
-AUTOGRADE_TASKS = $(shell grep -E '^autograde[a-zA-Z0-9_-]+:.*?$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | awk 'BEGIN {FS = ":"}; {printf "%s ", $$1}')
-
-.PHONY: autograde
-autograde: $(AUTOGRADE_TASKS) ## Run all autograding tasks

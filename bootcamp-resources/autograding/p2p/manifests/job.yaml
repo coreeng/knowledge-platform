@@ -12,5 +12,5 @@ spec:
       restartPolicy: Never
       containers:
         - name: p2p-acceptance-tests
-          image: p2p-acceptance-tests:latest
+          image: cecg/p2p-autograding
           imagePullPolicy: Never
