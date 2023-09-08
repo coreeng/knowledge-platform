@@ -222,4 +222,4 @@ REGISTRY=minikube:5000 make <target you want to execute>
 ### How to run autograding jobs
 
 Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules. In order to
-run those jobs run `make autograde`.
+run those jobs run `make autograde-<module>`.
