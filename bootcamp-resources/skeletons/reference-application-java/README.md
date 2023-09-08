@@ -221,12 +221,19 @@ REGISTRY=minikube:5000 make <target you want to execute>
 
 ### How to run autograding jobs
 
+Pre-requisites:
+- You have a local k8 cluster running
+
 Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules.
 
-*Note*: At the moment we don't have a mechanism to publish the autograding help charts on a public repo so 
-in order to run the autograding jobs you need to first upload the existing charts into a local helm repo:
+*Note*: At the moment we don't have a mechanism to publish the autograding help charts on a public repo so
+in order to run the autograding jobs you need to first upload the existing charts into a local helm repo.
+This dependency will be removed as soon as the publishing task is tackled.
 
-- go into the autograding module of your choice in [autograding](/bootcamp-resources/autograding)
-- run `make start-helm-repo-locally`
-- run `make upload-charts-locally` to upload the respective modules charts
+Into the autograding module of your choice in [autograding](/bootcamp-resources/autograding):
+- run `make start-helm-repo-locally` (**removed when helm charts published remotely**)
+- run `make upload-charts-locally` to upload the respective modules charts (**removed when helm charts published remotely**)
+- run `make build` (**removed when image published on the cecg public repo**)
+
+Then into this directory run:
 - run `make autograde-<module>`.
