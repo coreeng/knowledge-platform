@@ -2,7 +2,6 @@ CURRENT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Charts related variables
 CHART_PATH := $(realpath $(CURRENT_PATH)/charts)
-COMMON_CHARTS_PATH := $(realpath $(CURRENT_PATH)/../charts)
 CHART_REPO_NAME := my-local-helm-repo
 CHART_REPO_PORT := 8080
 CHART_REPO := http://localhost:$(CHART_REPO_PORT)
@@ -38,7 +37,9 @@ start-helm-repo-locally: ## Start the local helm chart repo for testing
 upload-charts-locally: ## Upload charts to the local helm chart repo
 	helm repo add $(CHART_REPO_NAME) $(CHART_REPO) || true
 	cd $(CHART_PATH) && helm package .
-	cd $(CHART_PATH) && curl --data-binary "@$(CHART_NAME)-$(CHART_VERSION).tgz" http://localhost:8080/api/charts || true
+	cd  $(CHART_PATH) && curl -X "DELETE" $(CHART_REPO)/api/charts/$(CHART_NAME)/$(CHART_VERSION)
+	cd $(CHART_PATH) && curl --data-binary "@$(CHART_NAME)-$(CHART_VERSION).tgz" $(CHART_REPO)/api/charts
+	cd $(CHART_PATH)  && rm -rf *.tgz
 
 .PHONY: install-charts
 install-charts: ## Install charts
