@@ -22,9 +22,9 @@ deploy: ## Deploy the autograding resources
 	kubectl apply -f $(AUTOGRADING_NFT_OBS_PATH)/manifests/namespace.yaml
 	kubectl apply -f $(AUTOGRADING_NFT_OBS_PATH)/manifests/rolebindigs.yaml
 	kubectl apply -f $(AUTOGRADING_NFT_OBS_PATH)/manifests/job.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/namespace.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/service.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/deployment.yaml
+	kubectl apply -f $(COMMON_CHARTS_PATH)/pushgateway/namespace.yaml
+	kubectl apply -f $(COMMON_CHARTS_PATH)/pushgateway/service.yaml
+	kubectl apply -f $(COMMON_CHARTS_PATH)/pushgateway/deployment.yaml
 
 .PHONY: cleanup
 cleanup: ## Cleanup the autograding jobs if they exist

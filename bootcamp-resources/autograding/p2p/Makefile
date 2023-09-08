@@ -1,36 +1,54 @@
-AUTOGRADING_P2P_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-AUTOGRADING_ROOT_PATH := $(realpath $(AUTOGRADING_P2P_PATH)/..)
+CURRENT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Charts related variables
+CHART_PATH := $(realpath $(CURRENT_PATH)/charts)
+COMMON_CHARTS_PATH := $(realpath $(CURRENT_PATH)/../charts)
+CHART_REPO_NAME := my-local-helm-repo
+CHART_REPO_PORT := 8080
+CHART_REPO := http://localhost:$(CHART_REPO_PORT)
+CHART_VERSION:=$(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
+CHART_NAME:=$(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
+
+# Docker related variables
+DOCKER_IMAGE_NAME := cecg/p2p-autograding
 
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?# .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: autograde
-autograde: build cleanup deploy watch-autograding-job ## Run p2p autograding
+autograde: build install watch-autograding-job ## Run p2p autograding
 
 .PHONY: build
 build: ## Build the autograding image - this task is used by the github actions
-	docker build -t cecg/p2p-autograding $(AUTOGRADING_P2P_PATH)
+	@eval $$(minikube docker-env) ;\
+	docker build -t $(DOCKER_IMAGE_NAME) $(CURRENT_PATH)
 
 .PHONY: build-and-push
 build-and-push: ## Build and push the autograding image - this task is used by the github actions
-	docker build -t cecg/p2p-autograding $(AUTOGRADING_P2P_PATH)
-	docker push cecg/p2p-autograding
+	docker build -t $(DOCKER_IMAGE_NAME) $(CURRENT_PATH)
+	docker push $(DOCKER_IMAGE_NAME)
 
+.PHONY: start-helm-repo-locally
+start-helm-repo-locally: ## Start the local helm chart repo for testing
+	rm -rf ./chartstorage
+	chartmuseum --debug --port=$(CHART_REPO_PORT) --storage="local" --storage-local-rootdir="./chartstorage" > /dev/null
 
+.PHONY: upload-charts-locally
+upload-charts-locally: ## Upload charts to the local helm chart repo
+	helm repo add $(CHART_REPO_NAME) $(CHART_REPO) || true
+	cd $(CHART_PATH) && helm package .
+	cd $(CHART_PATH) && curl --data-binary "@$(CHART_NAME)-$(CHART_VERSION).tgz" http://localhost:8080/api/charts || true
 
-.PHONY: deploy
-deploy: ## Deploy the autograding resources
-	kubectl apply -f $(AUTOGRADING_P2P_PATH)/manifests/namespace.yaml
-	kubectl apply -f $(AUTOGRADING_P2P_PATH)/manifests/rolebindigs.yaml
-	kubectl apply -f $(AUTOGRADING_P2P_PATH)/manifests/job.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/namespace.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/service.yaml
-	kubectl apply -f $(AUTOGRADING_ROOT_PATH)/pushgateway/deployment.yaml
+.PHONY: install-charts
+install-charts: ## Install charts
+	helm repo update
+	helm uninstall $(CHART_NAME) || true
+	sleep 5
+	helm install $(CHART_NAME) $(CHART_REPO_NAME)/$(CHART_NAME)
 
-.PHONY: cleanup
-cleanup: ## Cleanup the autograding jobs if they exist
-	kubectl -n p2p-autograding delete job p2p-acceptance-tests --ignore-not-found
+.PHONY: install
+install: upload-charts-locally install-charts ## Install the autograding helm charts
 
 .PHONY: watch-autograding-job
 watch-autograding-job: ## Watch for the output of the autograding job
