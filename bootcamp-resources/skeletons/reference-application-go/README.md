@@ -213,5 +213,12 @@ SERVICE_ENDPOINT="http://localhost:8080" k6 run ./nft/ramp-up/test.js
 
 ### How to run autograding jobs
 
-Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules. In order to 
-run those jobs run `make autograde-<module>`.
+Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules.
+
+*Note*: At the moment we don't have a mechanism to publish the autograding help charts on a public repo so
+in order to run the autograding jobs you need to first upload the existing charts into a local helm repo:
+
+- go into the autograding module of your choice in [autograding](/bootcamp-resources/autograding)
+- run `make start-helm-repo-locally`
+- run `make upload-charts-locally` to upload the respective modules charts
+- run `make autograde-<module>`.
