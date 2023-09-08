@@ -5,6 +5,13 @@ registry = minikube:5000
 image_name = bootcamp/reference-service-go-pub
 image_tag = latest
 
+# Autograding related settings
+#TODO - when we create a public repo we need to update the CHART_REPO
+CHART_REPO := my-local-helm-repo
+P2P_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-p2p-autograding
+NFT_OBS_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-nft-obs-autograding
+PUSHGATEWAY_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-pushgateway-autograding
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -63,3 +70,41 @@ docker-build: ## Build and tag the service image
 .PHONY: docker-push
 docker-push: ## Push the service image
 	docker image push $(registry)/$(image_name):$(image_tag)
+
+# Autograding related tasks
+.PHONY: autograde-p2p
+autograde-p2p: ## Run p2p autograding
+	helm repo update
+	helm uninstall bootcamp-p2p-autograding || true
+	sleep 5
+	helm install bootcamp-p2p-autograding $(P2P_AUTOGRADING_CHART)
+	@echo "Waiting for job output.."
+	@slept=0
+	@while ! kubectl -n p2p-autograding get pod -l job-name=p2p-acceptance-tests | grep -q "Running"; do \
+		sleep 1; \
+		((slept=slept+1)); \
+		if [ $$slept -eq 15 ]; then \
+			echo "15 Seconds have elapsed and the job has not run -- something is wrong, exiting.."; \
+			break; \
+		fi; \
+	done; \
+	kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
+
+.PHONY: autograde-nft-obs
+autograde-nft-obs: ## Run nft observability autograding
+	helm repo update
+	helm uninstall bootcamp-nft-obs-autograding || true
+	sleep 5
+	helm install bootcamp-nft-obs-autograding $(NFT_OBS_AUTOGRADING_CHART)
+	@echo "Waiting for job output.."
+	@slept=0
+	@while ! kubectl -n nft-obs-autograding get pod -l job-name=nft-obs-acceptance-tests | grep -q "Running"; do \
+		sleep 1; \
+		((slept=slept+1)); \
+		if [ $$slept -eq 15 ]; then \
+			echo "15 Seconds have elapsed and the job has not run -- something is wrong, exiting.."; \
+			break; \
+		fi; \
+	done; \
+	kubectl -n nft-obs-autograding logs -f job/nft-obs-acceptance-tests
+
