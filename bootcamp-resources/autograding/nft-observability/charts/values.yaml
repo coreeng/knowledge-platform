@@ -1,0 +1,6 @@
+namespace: "nft-obs-autograding"
+job:
+  name: "nft-obs-acceptance-tests"
+  container:
+    name: "nft-obs-acceptance-tests"
+    image: "cecg/nft-obs-autograding"

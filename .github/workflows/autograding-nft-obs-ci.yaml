@@ -1,0 +1,20 @@
+name: Autograding-NFT-observability-CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "bootcamp-resources/autograding/nft-observability/**"
+
+jobs:
+  Build-NFT-observability-Autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Build
+        working-directory: bootcamp-resources/autograding/nft-observability
+        run: |
+          make build
+

@@ -1,0 +1,5 @@
+apiVersion: v2
+version: 0.0.1
+name: bootcamp-pushgateway-autograding
+description: |
+  A Helm chart to run pushgateway for autograding.

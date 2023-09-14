@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pushgateway
-  namespace: pushgateway-autograding
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     app.kubernetes.io/name: pushgateway
