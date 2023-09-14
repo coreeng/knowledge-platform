@@ -14,7 +14,7 @@ metadata:
   name: rolesAndAccountsViewer
 rules:
   - apiGroups: ["rbac.authorization.k8s.io"]
-    resources: ["roleBindings", "serviceAccounts"]
+    resources: ["rolebindings", "serviceaccounts"]
     verbs: ["get", "list"]
 ---
 kind: ClusterRoleBinding

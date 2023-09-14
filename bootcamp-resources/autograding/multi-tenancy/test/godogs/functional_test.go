@@ -18,10 +18,9 @@ import (
 
 var kubernetesClient *kubernetes.Clientset
 var impersonateAccountClient *kubernetes.Clientset
-var accountToImpersonate string
 var namespaces map[string]*corev1.Namespace
 var podPerNamespace map[string]*corev1.PodList
-var propagatedRoleBinding rbacv1.RoleBinding
+var propagatedRoleBindingPerTenant map[string]rbacv1.RoleBinding
 var serviceAccountToImpersonate *corev1.ServiceAccount
 var tenantParentNamespace string
 
@@ -111,26 +110,29 @@ func theNamespaceHasTheSubnamespaces(namespaceName string, subnamespacesNames st
 }
 
 func aRoleBindingExistsInAllMyNamespaces(namespaceNames string) error {
+	if propagatedRoleBindingPerTenant == nil {
+		propagatedRoleBindingPerTenant = make(map[string]rbacv1.RoleBinding)
+	}
 	for _, nsName := range strings.Split(namespaceNames, ",") {
 		_, err := kubernetesClient.CoreV1().Namespaces().Get(context.TODO(), nsName, metav1.GetOptions{})
 		if err != nil {
 			if errors.IsNotFound(err) {
-				return fmt.Errorf("namespae %s is not found", nsName)
+				return fmt.Errorf("namespace %s is not found", nsName)
 			}
 			return fmt.Errorf("error occurred while fetching the %s namespace", nsName)
 		}
 		roleBindings, err := kubernetesClient.RbacV1().RoleBindings(nsName).List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
-			println("----Error")
-			println(err.Error())
 			return fmt.Errorf("error while fetching the role bindings in the namespace %s", nsName)
 		}
-		if propagatedRoleBinding.Name == "" {
-			propagatedRoleBinding = roleBindings.Items[0]
+		if propagatedRoleBindingPerTenant[tenantParentNamespace].Name == "" {
+			// pick the first role binding in the namespace - in the future
+			propagatedRoleBindingPerTenant[tenantParentNamespace] = roleBindings.Items[0]
 		} else {
 			// if the role binding was already found, check that the rest of the namespaces have it as well
 			// in this scenario all the namespaces that belong to a tenant should have the role binding
-			_, err := kubernetesClient.RbacV1().RoleBindings(nsName).Get(context.TODO(), propagatedRoleBinding.Name, metav1.GetOptions{})
+			_, err := kubernetesClient.RbacV1().RoleBindings(nsName).
+				Get(context.TODO(), propagatedRoleBindingPerTenant[tenantParentNamespace].Name, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("the role bindings are not defined in the namespace %s", nsName)
 			}
@@ -153,7 +155,9 @@ func iAmATenantCalled(tenantName string) error {
 }
 
 func theRoleBindingIsAssociatedWithAServiceAccount() error {
-	serviceAccount, err := kubernetesClient.CoreV1().ServiceAccounts(tenantParentNamespace).Get(context.TODO(), propagatedRoleBinding.Subjects[0].Name, metav1.GetOptions{})
+	serviceAccount, err := kubernetesClient.CoreV1().
+		ServiceAccounts(tenantParentNamespace).
+		Get(context.TODO(), propagatedRoleBindingPerTenant[tenantParentNamespace].Subjects[0].Name, metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("error trying to fetch a service account for the tenant %s", tenantParentNamespace)
 	}
@@ -166,9 +170,7 @@ func iImpersonateTheServiceAccount() error {
 	if err != nil {
 		return fmt.Errorf("failed fetching in cluster config, err: %v", err)
 	}
-	println("The service account to impersonate *******")
-	println(serviceAccountToImpersonate)
-	account := fmt.Sprintf("system:serviceaccount:%s", serviceAccountToImpersonate)
+	account := fmt.Sprintf("system:serviceaccount:%s:%s", tenantParentNamespace, serviceAccountToImpersonate.Name)
 	config.Impersonate = rest.ImpersonationConfig{UserName: account}
 	logrus.Info("Attempting to create a kubernetes client after impersonation of account ..")
 	impersonateAccountClient, err = kubernetes.NewForConfig(config)
