@@ -6,6 +6,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -20,6 +21,9 @@ var impersonateAccountClient *kubernetes.Clientset
 var accountToImpersonate string
 var namespaces map[string]*corev1.Namespace
 var podPerNamespace map[string]*corev1.PodList
+var propagatedRoleBinding rbacv1.RoleBinding
+var serviceAccountToImpersonate *corev1.ServiceAccount
+var tenantParentNamespace string
 
 func theKubernetesClientIsSetUp() error {
 	if kubernetesClient == nil {
@@ -106,26 +110,54 @@ func theNamespaceHasTheSubnamespaces(namespaceName string, subnamespacesNames st
 
 }
 
-func iCanAccessTheFollowingNamespaces(namespaces string) error {
-	//TODO - add namespace here from the input
-	pods, err := impersonateAccountClient.CoreV1().Pods("team-a").List(context.TODO(), metav1.ListOptions{})
+func aRoleBindingExistsInAllMyNamespaces(namespaceNames string) error {
+	for _, nsName := range strings.Split(namespaceNames, ",") {
+		_, err := kubernetesClient.CoreV1().Namespaces().Get(context.TODO(), nsName, metav1.GetOptions{})
+		if err != nil {
+			if errors.IsNotFound(err) {
+				return fmt.Errorf("namespae %s is not found", nsName)
+			}
+			return fmt.Errorf("error occurred while fetching the %s namespace", nsName)
+		}
+		roleBindings, err := kubernetesClient.RbacV1().RoleBindings(nsName).List(context.TODO(), metav1.ListOptions{})
+		if err != nil {
+			println("----Error")
+			println(err.Error())
+			return fmt.Errorf("error while fetching the role bindings in the namespace %s", nsName)
+		}
+		if propagatedRoleBinding.Name == "" {
+			propagatedRoleBinding = roleBindings.Items[0]
+		} else {
+			// if the role binding was already found, check that the rest of the namespaces have it as well
+			// in this scenario all the namespaces that belong to a tenant should have the role binding
+			_, err := kubernetesClient.RbacV1().RoleBindings(nsName).Get(context.TODO(), propagatedRoleBinding.Name, metav1.GetOptions{})
+			if err != nil {
+				return fmt.Errorf("the role bindings are not defined in the namespace %s", nsName)
+			}
+		}
+	}
+	return nil
+}
+
+func iAmATenantCalled(tenantName string) error {
+	// check if a namespace with this tenant's name exists
+	_, err := kubernetesClient.CoreV1().Namespaces().Get(context.TODO(), tenantName, metav1.GetOptions{})
 	if err != nil {
-		println("----Error while fetching pods----")
-		println(err.Error())
-		return fmt.Errorf("could not fetch namespaces")
+		if errors.IsNotFound(err) {
+			return fmt.Errorf("the tenant %s has no namespace associated with it", tenantName)
+		}
+		return fmt.Errorf("error occurred while fetching the %s namespace", tenantName)
 	}
-	for _, pod := range pods.Items {
-		println("***Pods***")
-		println(pod.Name)
-	}
+	tenantParentNamespace = tenantName
 	return nil
 }
 
-func iCannotAccessTheFollowingNamespaces(arg1 string) error {
-	return nil
-}
-
-func aServiceAccountForNamespaceAlreadyExists(arg1 string) error {
+func theRoleBindingIsAssociatedWithAServiceAccount() error {
+	serviceAccount, err := kubernetesClient.CoreV1().ServiceAccounts(tenantParentNamespace).Get(context.TODO(), propagatedRoleBinding.Subjects[0].Name, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("error trying to fetch a service account for the tenant %s", tenantParentNamespace)
+	}
+	serviceAccountToImpersonate = serviceAccount
 	return nil
 }
 
@@ -134,18 +166,36 @@ func iImpersonateTheServiceAccount() error {
 	if err != nil {
 		return fmt.Errorf("failed fetching in cluster config, err: %v", err)
 	}
-
-	//TODO - add account to impersonate from input
-	accountToImpersonate = fmt.Sprintf("system:serviceaccount:%s", "team-a:team-a-sa")
-	println("---Account to impersonate")
-	println(accountToImpersonate)
-	config.Impersonate = rest.ImpersonationConfig{UserName: accountToImpersonate}
-	logrus.Info("Attempting to create a kubernetes client after impersonation..")
+	println("The service account to impersonate *******")
+	println(serviceAccountToImpersonate)
+	account := fmt.Sprintf("system:serviceaccount:%s", serviceAccountToImpersonate)
+	config.Impersonate = rest.ImpersonationConfig{UserName: account}
+	logrus.Info("Attempting to create a kubernetes client after impersonation of account ..")
 	impersonateAccountClient, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		return fmt.Errorf("error occured while impersonating service account")
 	}
 	logrus.Info("Impersonation was successful..")
+	return nil
+}
+
+func iCanAccessAllMyNamespaces(namespaceNames string) error {
+	for _, ns := range strings.Split(namespaceNames, ",") {
+		_, err := impersonateAccountClient.CoreV1().Pods(ns).List(context.TODO(), metav1.ListOptions{})
+		if err != nil {
+			return fmt.Errorf("cannot access the pods in the namespace %s", ns)
+		}
+	}
+	return nil
+}
+
+func iCannotAccessOtherTenantsNamespaces(namespaceNames string) error {
+	for _, ns := range strings.Split(namespaceNames, ",") {
+		_, err := impersonateAccountClient.CoreV1().Pods(ns).List(context.TODO(), metav1.ListOptions{})
+		if err == nil {
+			return fmt.Errorf("I can access another tenants's pods in the namespace %s", ns)
+		}
+	}
 	return nil
 }
 
@@ -156,10 +206,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I get the pods in the "([^"]*)" namespace$`, iGetThePodsInTheNamespace)
 	ctx.Step(`^there is a running "([^"]*)" pod in the namespace "([^"]*)"$`, thereIsARunningPod)
 	ctx.Step(`^the "([^"]*)" namespace has the subnamespaces "([^"]*)"$`, theNamespaceHasTheSubnamespaces)
-	ctx.Step(`^I can access the following namespaces: "([^"]*)"$`, iCanAccessTheFollowingNamespaces)
-	ctx.Step(`^I cannot access the following namespaces: "([^"]*)"$`, iCannotAccessTheFollowingNamespaces)
-	ctx.Step(`^a service account for "([^"]*)" already exists$`, aServiceAccountForNamespaceAlreadyExists)
+	ctx.Step(`^a roleBinding exists in all my namespaces: "([^"]*)"$`, aRoleBindingExistsInAllMyNamespaces)
+	ctx.Step(`^I am a tenant called "([^"]*)"$`, iAmATenantCalled)
+	ctx.Step(`^I can access all my namespaces: "([^"]*)"$`, iCanAccessAllMyNamespaces)
+	ctx.Step(`^I cannot access other tenant\'s namespaces: "([^"]*)"$`, iCannotAccessOtherTenantsNamespaces)
+	ctx.Step(`^the roleBinding is associated with a serviceAccount$`, theRoleBindingIsAssociatedWithAServiceAccount)
 	ctx.Step(`^I impersonate the service account$`, iImpersonateTheServiceAccount)
+	ctx.Step(`^I can access all my namespaces: "([^"]*)"$`, iCanAccessAllMyNamespaces)
+	ctx.Step(`^I cannot access other tenant's namespaces: "([^"]*)"$`, iCannotAccessOtherTenantsNamespaces)
 }
 
 func TestFeatures(t *testing.T) {
