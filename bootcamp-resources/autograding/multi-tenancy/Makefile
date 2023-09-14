@@ -46,7 +46,7 @@ upload-charts-locally: ## Upload charts to the local helm chart repo
 install-charts: ## Install charts
 	helm repo update
 	helm uninstall $(CHART_NAME) || true
-	sleep 5
+	sleep 10
 	helm install $(CHART_NAME) $(CHART_REPO_NAME)/$(CHART_NAME)
 
 .PHONY: install
