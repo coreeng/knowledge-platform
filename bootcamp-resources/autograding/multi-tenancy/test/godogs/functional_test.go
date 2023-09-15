@@ -1,19 +1,28 @@
 package godogs
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/cucumber/godog"
 	"github.com/sirupsen/logrus"
+	"io"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
+	"os"
+	"path/filepath"
 	"sigs.k8s.io/hierarchical-namespaces/api/v1alpha2"
 	"strings"
 	"testing"
+	"time"
 )
 
 var kubernetesClient *kubernetes.Clientset
@@ -27,7 +36,17 @@ var tenantParentNamespace string
 func theKubernetesClientIsSetUp() error {
 	if kubernetesClient == nil {
 		logrus.Info("Attempting to fetch in-cluster config..")
-		config, err := rest.InClusterConfig()
+		var config *rest.Config
+		var err error
+		if os.Getenv("RUN_OUTSIDE_CLUSTER") == "true" {
+			config, err = clientcmd.BuildConfigFromFlags(
+				"",
+				filepath.Join(homedir.HomeDir(), ".kube", "config"),
+			)
+		} else {
+			config, err = rest.InClusterConfig()
+		}
+
 		if err != nil {
 			return fmt.Errorf("failed fetching in cluster config, err: %v", err)
 		}
@@ -198,6 +217,117 @@ func iCannotAccessOtherTenantsNamespaces(namespaceNames string) error {
 			return fmt.Errorf("I can access another tenants's pods in the namespace %s", ns)
 		}
 	}
+	return nil
+}
+
+func testPodCreation() error {
+	err := theKubernetesClientIsSetUp()
+	if err != nil {
+		return fmt.Errorf("I cannot create the k8 client")
+	}
+	destinationPod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:   "destination-pod",
+			Labels: map[string]string{"app": "destination-pod"},
+		},
+		Spec: corev1.PodSpec{
+			RestartPolicy: corev1.RestartPolicyNever,
+			Containers: []corev1.Container{
+				{
+					Name:    "main",
+					Image:   "busybox",
+					Command: []string{"sh"},
+					Args:    []string{"-c", "echo \"hello world\" > index.html && /bin/httpd -p 9000 -f"},
+					Ports: []corev1.ContainerPort{
+						{
+							Protocol:      corev1.ProtocolTCP,
+							ContainerPort: 9000,
+						},
+					},
+				},
+			},
+		},
+	}
+	kubernetesClient.CoreV1().Pods("team-a").Create(context.TODO(), destinationPod, metav1.CreateOptions{})
+	//TODO - handle creation errors
+	service := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{Name: "destination-service"},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{
+				{
+					Port:       80,
+					TargetPort: intstr.FromInt32(9000),
+				},
+			},
+			Selector: map[string]string{"app": "destination-pod"},
+		},
+	}
+	service, err = kubernetesClient.CoreV1().Services("team-a").Create(context.TODO(), service, metav1.CreateOptions{})
+	if err != nil {
+		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+	}
+	sourcePod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:   "source-pod",
+			Labels: map[string]string{"app": "source-pod"},
+		},
+		Spec: corev1.PodSpec{
+			RestartPolicy: corev1.RestartPolicyNever,
+			Containers: []corev1.Container{
+				{
+					Name:    "main",
+					Image:   "alpine",
+					Command: []string{"sh"},
+					Args:    []string{"-c", "timeout 3s nc -vz destination-service.team-a 80"},
+					Ports: []corev1.ContainerPort{
+						{
+							Protocol:      corev1.ProtocolTCP,
+							ContainerPort: 9000,
+						},
+					},
+				},
+			},
+		},
+	}
+	_, err = kubernetesClient.CoreV1().Pods("team-a").Create(context.TODO(), sourcePod, metav1.CreateOptions{})
+	if err != nil {
+		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+	}
+
+	// waiting for the source pod to terminate
+	err = wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
+		p, err := kubernetesClient.CoreV1().Pods("team-a").Get(context.Background(), "source-pod", metav1.GetOptions{})
+		if err != nil {
+			return false, err
+		}
+		if len(p.Status.ContainerStatuses) == 0 {
+			return false, nil
+		}
+		state := p.Status.ContainerStatuses[0].State
+		if state.Terminated != nil {
+			_ = state.Terminated.ExitCode
+			return true, nil
+		}
+		return false, nil
+	})
+
+	if err != nil {
+		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+	}
+	req := kubernetesClient.CoreV1().Pods("team-a").GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
+	podLogs, err := req.Stream(context.TODO())
+	if err != nil {
+		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+	}
+	defer podLogs.Close()
+
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, podLogs)
+	if err != nil {
+		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+	}
+	str := buf.String()
+	logrus.Info(fmt.Sprintf("*****Logs: %s", str))
 	return nil
 }
 
