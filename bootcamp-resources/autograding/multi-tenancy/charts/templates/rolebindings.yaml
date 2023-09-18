@@ -27,7 +27,7 @@ subjects:
     namespace: {{ .Values.namespace }}
 roleRef:
   kind: ClusterRole
-  name: view
+  name: edit
   apiGroup: rbac.authorization.k8s.io
 ---
 kind: ClusterRoleBinding

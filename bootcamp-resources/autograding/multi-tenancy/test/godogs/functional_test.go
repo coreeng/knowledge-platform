@@ -32,6 +32,11 @@ var podPerNamespace map[string]*corev1.PodList
 var propagatedRoleBindingPerTenant map[string]rbacv1.RoleBinding
 var serviceAccountToImpersonate *corev1.ServiceAccount
 var tenantParentNamespace string
+var destinationPod *corev1.Pod
+var sourcePod *corev1.Pod
+var destinationNamespaceName string
+var sourceNamespaceName string
+var destinationService *corev1.Service
 
 func theKubernetesClientIsSetUp() error {
 	if kubernetesClient == nil {
@@ -220,15 +225,11 @@ func iCannotAccessOtherTenantsNamespaces(namespaceNames string) error {
 	return nil
 }
 
-func testPodCreation() error {
-	err := theKubernetesClientIsSetUp()
-	if err != nil {
-		return fmt.Errorf("I cannot create the k8 client")
-	}
-	destinationPod := &corev1.Pod{
+func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error {
+	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "destination-pod",
-			Labels: map[string]string{"app": "destination-pod"},
+			Name:   destinationPodName,
+			Labels: map[string]string{"app": destinationPodName},
 		},
 		Spec: corev1.PodSpec{
 			RestartPolicy: corev1.RestartPolicyNever,
@@ -248,28 +249,23 @@ func testPodCreation() error {
 			},
 		},
 	}
-	kubernetesClient.CoreV1().Pods("team-a").Create(context.TODO(), destinationPod, metav1.CreateOptions{})
-	//TODO - handle creation errors
-	service := &corev1.Service{
-		ObjectMeta: metav1.ObjectMeta{Name: "destination-service"},
-		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
-				{
-					Port:       80,
-					TargetPort: intstr.FromInt32(9000),
-				},
-			},
-			Selector: map[string]string{"app": "destination-pod"},
-		},
-	}
-	service, err = kubernetesClient.CoreV1().Services("team-a").Create(context.TODO(), service, metav1.CreateOptions{})
+	pod, err := kubernetesClient.CoreV1().Pods(nsName).Create(context.TODO(), pod, metav1.CreateOptions{})
 	if err != nil {
-		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+		logrus.Info(fmt.Sprintf("***the error was : %s", err.Error()))
+		return fmt.Errorf("error creating destination pod %s in the namespace %s", destinationPodName, nsName)
 	}
-	sourcePod := &corev1.Pod{
+	destinationPod = pod
+	destinationNamespaceName = nsName
+	return nil
+}
+
+func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
+	//TODO - service name and port dynamic
+
+	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   "source-pod",
-			Labels: map[string]string{"app": "source-pod"},
+			Name:   sourcePodName,
+			Labels: map[string]string{"app": sourcePodName},
 		},
 		Spec: corev1.PodSpec{
 			RestartPolicy: corev1.RestartPolicyNever,
@@ -278,7 +274,7 @@ func testPodCreation() error {
 					Name:    "main",
 					Image:   "alpine",
 					Command: []string{"sh"},
-					Args:    []string{"-c", "timeout 3s nc -vz destination-service.team-a 80"},
+					Args:    []string{"-c", fmt.Sprintf("timeout 3s nc -vz destination-service.%s 80", destinationNamespaceName)},
 					Ports: []corev1.ContainerPort{
 						{
 							Protocol:      corev1.ProtocolTCP,
@@ -289,14 +285,19 @@ func testPodCreation() error {
 			},
 		},
 	}
-	_, err = kubernetesClient.CoreV1().Pods("team-a").Create(context.TODO(), sourcePod, metav1.CreateOptions{})
+	pod, err := kubernetesClient.CoreV1().Pods(nsName).Create(context.TODO(), pod, metav1.CreateOptions{})
 	if err != nil {
-		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+		logrus.Info(fmt.Sprintf("*****The error is: %s", err.Error()))
+		return fmt.Errorf("error creating source pod %s in the namespace %s", sourcePodName, nsName)
 	}
+	sourcePod = pod
+	sourceNamespaceName = nsName
+	return nil
+}
 
-	// waiting for the source pod to terminate
-	err = wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
-		p, err := kubernetesClient.CoreV1().Pods("team-a").Get(context.Background(), "source-pod", metav1.GetOptions{})
+func iTryToConnectFromTo(sourcePodName, destinationPodName string) error {
+	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
+		p, err := kubernetesClient.CoreV1().Pods(sourceNamespaceName).Get(context.Background(), sourcePod.Name, metav1.GetOptions{})
 		if err != nil {
 			return false, err
 		}
@@ -310,28 +311,103 @@ func testPodCreation() error {
 		}
 		return false, nil
 	})
-
 	if err != nil {
-		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+		return fmt.Errorf("error occured while connecting from %s to %s", sourcePodName, destinationPodName)
 	}
-	req := kubernetesClient.CoreV1().Pods("team-a").GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
+	return nil
+}
+
+func theAccessIsDenied() error {
+	req := kubernetesClient.CoreV1().Pods(sourceNamespaceName).GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
 	podLogs, err := req.Stream(context.TODO())
 	if err != nil {
-		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+		return fmt.Errorf("error fetching logs from the source pod")
 	}
 	defer podLogs.Close()
 
 	buf := new(bytes.Buffer)
 	_, err = io.Copy(buf, podLogs)
 	if err != nil {
-		logrus.Info(fmt.Sprintf("The following error occured: %s", err.Error()))
+		return fmt.Errorf("error copying logs from the source pod")
 	}
-	str := buf.String()
-	logrus.Info(fmt.Sprintf("*****Logs: %s", str))
+	logs := buf.String()
+
+	if strings.Contains(logs, "open") {
+		return fmt.Errorf("the connection from namespace %s to namespace %s is open", sourceNamespaceName, destinationNamespaceName)
+	}
 	return nil
 }
 
+func thePodHasAServiceCalledInTheNamespace(podName, serviceName, nsName string) error {
+	service := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{Name: serviceName},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{
+				{
+					Port:       80,
+					TargetPort: intstr.FromInt32(9000),
+				},
+			},
+			Selector: map[string]string{"app": podName},
+		},
+	}
+	service, err := kubernetesClient.CoreV1().Services(nsName).Create(context.TODO(), service, metav1.CreateOptions{})
+	if err != nil {
+		return fmt.Errorf("error creating service %s in the namespace %s", serviceName, nsName)
+	}
+	destinationService = service
+	return nil
+}
+
+func cleanupPods(scenario *godog.Scenario) {
+	if sourcePod == nil {
+		return
+	}
+	err := kubernetesClient.CoreV1().Pods(sourceNamespaceName).Delete(context.TODO(), sourcePod.Name, metav1.DeleteOptions{})
+	if err != nil {
+		logrus.Info(fmt.Sprintf("no source pod to delete in namespace %s", sourceNamespaceName))
+	} else {
+		waitUntilPodTerminated(sourcePod.Name, sourceNamespaceName)
+	}
+	err = kubernetesClient.CoreV1().Pods(destinationNamespaceName).Delete(context.TODO(), destinationPod.Name, metav1.DeleteOptions{})
+	if err != nil {
+		logrus.Info(fmt.Sprintf("no destination pod to delete in namespace %s", destinationNamespaceName))
+	} else {
+		waitUntilPodTerminated(destinationPod.Name, destinationNamespaceName)
+	}
+	err = kubernetesClient.CoreV1().Services(destinationNamespaceName).Delete(context.TODO(), destinationService.Name, metav1.DeleteOptions{})
+	if err != nil {
+		logrus.Info(fmt.Sprintf("no destination service to delete in namespace %s", destinationNamespaceName))
+	}
+
+}
+
+func waitUntilPodTerminated(podName string, nsName string) error {
+	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
+		p, err := kubernetesClient.CoreV1().Pods(nsName).Get(context.Background(), podName, metav1.GetOptions{})
+		if err != nil {
+			return false, err
+		}
+		if len(p.Status.ContainerStatuses) == 0 {
+			return false, nil
+		}
+		state := p.Status.ContainerStatuses[0].State
+		if state.Terminated != nil {
+			_ = state.Terminated.ExitCode
+			return true, nil
+		}
+		return false, nil
+	})
+	return err
+
+}
 func InitializeScenario(ctx *godog.ScenarioContext) {
+	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		logrus.Info("Running the after scenario hooks")
+		cleanupPods(sc)
+		return ctx, nil
+	})
+
 	ctx.Step(`^I get the "([^"]*)" namespace$`, iGetTheNamespace)
 	ctx.Step(`^the kubernetes client is setup$`, theKubernetesClientIsSetUp)
 	ctx.Step(`^the namespace "([^"]*)" is returned$`, theNamespaceIsReturned)
@@ -346,6 +422,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I impersonate the service account$`, iImpersonateTheServiceAccount)
 	ctx.Step(`^I can access all my namespaces: "([^"]*)"$`, iCanAccessAllMyNamespaces)
 	ctx.Step(`^I cannot access other tenant's namespaces: "([^"]*)"$`, iCannotAccessOtherTenantsNamespaces)
+	ctx.Step(`^I have a destination pod "([^"]*)" in the namespace "([^"]*)"$`, iHaveADestinationPodInTheNamespace)
+	ctx.Step(`^I have a source pod "([^"]*)" in the namespace "([^"]*)"$`, iHaveASourcePodInTheNamespace)
+	ctx.Step(`^I try to connect from "([^"]*)" to "([^"]*)"$`, iTryToConnectFromTo)
+	ctx.Step(`^the access is denied$`, theAccessIsDenied)
+	ctx.Step(`^the "([^"]*)" has a service called "([^"]*)" in the namespace "([^"]*)"$`, thePodHasAServiceCalledInTheNamespace)
 }
 
 func TestFeatures(t *testing.T) {

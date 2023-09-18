@@ -34,9 +34,9 @@ Feature: Multi tenant kubernetes Acceptance Criteria
       | team-b      | team-b,app-3,team-b-monitoring       | team-a,app-1,app-2,team-a-monitoring |
 
   Scenario Outline: The default deny is applied for all inbound traffic. Inter namespace communication is not allowed
-    Given I have a pod "destination-pod" in the namespace "<dest-namespace>"
-    And the "destination-pod" has a service called "destination-service"
-    And I have a pod labeled "source-pod" in the namespace "<source-namespace>"
+    Given I have a destination pod "destination-pod" in the namespace "<dest-namespace>"
+    And the "destination-pod" has a service called "destination-service" in the namespace "<dest-namespace>"
+    And I have a source pod "source-pod" in the namespace "<source-namespace>"
     When I try to connect from "source-pod" to "destination-pod"
     Then the access is denied
     Examples:
@@ -48,9 +48,9 @@ Feature: Multi tenant kubernetes Acceptance Criteria
       | team-b           | team-b-monitoring |
 
 #  Scenario Outline: The default deny is applied for all inbound traffic. Intra namespace communication is allowed
-#    Given I have a pod labeled "source-pod" running in the namespace: "<namespace>"
-#    And I have a pod labeled "destination-pod" in the same namespace
-#    When I try to connect from "source-pod" to "destination-pod"
+#    Given I have a destination pod "destination-pod" in the namespace "<namespace>"
+#    And the "destination-pod" has a service called "destination-service" in the namespace "<dest-namespace>"
+#    When I have a source pod "source-pod" in the namespace "<namespace>"
 #    Then the access is allowed
 #    Examples:
 #      | namespace         |
