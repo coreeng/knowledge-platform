@@ -1,8 +1,9 @@
-package godogs
+package acceptance
 
 import (
 	"bytes"
 	"context"
+	"embed"
 	"fmt"
 	"github.com/cucumber/godog"
 	"github.com/sirupsen/logrus"
@@ -251,7 +252,6 @@ func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error
 	}
 	pod, err := kubernetesClient.CoreV1().Pods(nsName).Create(context.TODO(), pod, metav1.CreateOptions{})
 	if err != nil {
-		logrus.Info(fmt.Sprintf("***the error was : %s", err.Error()))
 		return fmt.Errorf("error creating destination pod %s in the namespace %s", destinationPodName, nsName)
 	}
 	destinationPod = pod
@@ -260,8 +260,6 @@ func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error
 }
 
 func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
-	//TODO - service name and port dynamic
-
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   sourcePodName,
@@ -274,7 +272,8 @@ func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 					Name:    "main",
 					Image:   "alpine",
 					Command: []string{"sh"},
-					Args:    []string{"-c", fmt.Sprintf("timeout 10s nc -vz destination-service.%s 80", destinationNamespaceName)},
+					Args: []string{"-c", fmt.Sprintf(
+						"timeout 3s nc -vz %s.%s 80", destinationService.Name, destinationNamespaceName)},
 					Ports: []corev1.ContainerPort{
 						{
 							Protocol:      corev1.ProtocolTCP,
@@ -287,7 +286,6 @@ func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 	}
 	pod, err := kubernetesClient.CoreV1().Pods(nsName).Create(context.TODO(), pod, metav1.CreateOptions{})
 	if err != nil {
-		logrus.Info(fmt.Sprintf("*****The error is: %s", err.Error()))
 		return fmt.Errorf("error creating source pod %s in the namespace %s", sourcePodName, nsName)
 	}
 	sourcePod = pod
@@ -426,7 +424,6 @@ func waitUntilPodTerminated(podName string, nsName string) error {
 }
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
-		logrus.Info("Running the after scenario hooks")
 		cleanupPods(sc)
 		return ctx, nil
 	})
@@ -453,13 +450,18 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the "([^"]*)" has a service called "([^"]*)" in the namespace "([^"]*)"$`, thePodHasAServiceCalledInTheNamespace)
 }
 
+//go:embed features/*
+var features embed.FS
+
 func TestFeatures(t *testing.T) {
+
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,
 		Options: &godog.Options{
 			Format:   "pretty",
 			Paths:    []string{"features"},
 			TestingT: t,
+			FS:       features,
 		},
 	}
 

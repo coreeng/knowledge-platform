@@ -30,3 +30,6 @@ tekton/minikube-credentials.yaml
 
 # local helm chart repo storage
 chartstorage
+
+# compiled tests
+*.test

@@ -12,4 +12,6 @@ RUN go mod download
 
 COPY test ./test
 
-CMD ["sh", "-c", "cd test/godogs && go test -v"]
+RUN go test -c ./test/acceptance/.
+
+CMD ["sh", "-c", "./acceptance.test"]
