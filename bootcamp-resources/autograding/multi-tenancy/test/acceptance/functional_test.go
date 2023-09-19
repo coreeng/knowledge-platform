@@ -254,6 +254,7 @@ func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error
 	if err != nil {
 		return fmt.Errorf("error creating destination pod %s in the namespace %s", destinationPodName, nsName)
 	}
+	waitUntilPodInState(pod.Name, nsName, "Running")
 	destinationPod = pod
 	destinationNamespaceName = nsName
 	return nil
@@ -294,21 +295,7 @@ func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 }
 
 func iTryToConnectFromTo(sourcePodName, destinationPodName string) error {
-	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
-		p, err := kubernetesClient.CoreV1().Pods(sourceNamespaceName).Get(context.Background(), sourcePod.Name, metav1.GetOptions{})
-		if err != nil {
-			return false, err
-		}
-		if len(p.Status.ContainerStatuses) == 0 {
-			return false, nil
-		}
-		state := p.Status.ContainerStatuses[0].State
-		if state.Terminated != nil {
-			_ = state.Terminated.ExitCode
-			return true, nil
-		}
-		return false, nil
-	})
+	err := waitUntilPodInState(sourcePodName, sourceNamespaceName, "Terminated")
 	if err != nil {
 		return fmt.Errorf("error occured while connecting from %s to %s", sourcePodName, destinationPodName)
 	}
@@ -351,8 +338,6 @@ func theAccessIsAllowed() error {
 	}
 	logs := buf.String()
 
-	logrus.Info(fmt.Sprintf("******: logs - %s", logs))
-
 	if !strings.Contains(logs, "open") {
 		return fmt.Errorf("the connection between applications in the same namespace is denied")
 	}
@@ -388,13 +373,13 @@ func cleanupPods(scenario *godog.Scenario) {
 	if err != nil {
 		logrus.Info(fmt.Sprintf("no source pod to delete in namespace %s", sourceNamespaceName))
 	} else {
-		waitUntilPodTerminated(sourcePod.Name, sourceNamespaceName)
+		_ = waitUntilPodInState(sourcePod.Name, sourceNamespaceName, "Terminated")
 	}
 	err = kubernetesClient.CoreV1().Pods(destinationNamespaceName).Delete(context.TODO(), destinationPod.Name, metav1.DeleteOptions{})
 	if err != nil {
 		logrus.Info(fmt.Sprintf("no destination pod to delete in namespace %s", destinationNamespaceName))
 	} else {
-		waitUntilPodTerminated(destinationPod.Name, destinationNamespaceName)
+		_ = waitUntilPodInState(destinationPod.Name, destinationNamespaceName, "Terminated")
 	}
 	err = kubernetesClient.CoreV1().Services(destinationNamespaceName).Delete(context.TODO(), destinationService.Name, metav1.DeleteOptions{})
 	if err != nil {
@@ -403,7 +388,7 @@ func cleanupPods(scenario *godog.Scenario) {
 
 }
 
-func waitUntilPodTerminated(podName string, nsName string) error {
+func waitUntilPodInState(podName, nsName, state string) error {
 	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
 		p, err := kubernetesClient.CoreV1().Pods(nsName).Get(context.Background(), podName, metav1.GetOptions{})
 		if err != nil {
@@ -412,9 +397,12 @@ func waitUntilPodTerminated(podName string, nsName string) error {
 		if len(p.Status.ContainerStatuses) == 0 {
 			return false, nil
 		}
-		state := p.Status.ContainerStatuses[0].State
-		if state.Terminated != nil {
-			_ = state.Terminated.ExitCode
+		podState := p.Status.ContainerStatuses[0].State
+
+		if state == "Terminated" && podState.Terminated != nil {
+			return true, nil
+		}
+		if state == "Running" && podState.Running != nil {
 			return true, nil
 		}
 		return false, nil
