@@ -274,7 +274,7 @@ func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 					Name:    "main",
 					Image:   "alpine",
 					Command: []string{"sh"},
-					Args:    []string{"-c", fmt.Sprintf("timeout 3s nc -vz destination-service.%s 80", destinationNamespaceName)},
+					Args:    []string{"-c", fmt.Sprintf("timeout 10s nc -vz destination-service.%s 80", destinationNamespaceName)},
 					Ports: []corev1.ContainerPort{
 						{
 							Protocol:      corev1.ProtocolTCP,
@@ -334,6 +334,29 @@ func theAccessIsDenied() error {
 
 	if strings.Contains(logs, "open") {
 		return fmt.Errorf("the connection from namespace %s to namespace %s is open", sourceNamespaceName, destinationNamespaceName)
+	}
+	return nil
+}
+
+func theAccessIsAllowed() error {
+	req := kubernetesClient.CoreV1().Pods(sourceNamespaceName).GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
+	podLogs, err := req.Stream(context.TODO())
+	if err != nil {
+		return fmt.Errorf("error fetching logs from the source pod")
+	}
+	defer podLogs.Close()
+
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, podLogs)
+	if err != nil {
+		return fmt.Errorf("error copying logs from the source pod")
+	}
+	logs := buf.String()
+
+	logrus.Info(fmt.Sprintf("******: logs - %s", logs))
+
+	if !strings.Contains(logs, "open") {
+		return fmt.Errorf("the connection between applications in the same namespace is denied")
 	}
 	return nil
 }
@@ -426,6 +449,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I have a source pod "([^"]*)" in the namespace "([^"]*)"$`, iHaveASourcePodInTheNamespace)
 	ctx.Step(`^I try to connect from "([^"]*)" to "([^"]*)"$`, iTryToConnectFromTo)
 	ctx.Step(`^the access is denied$`, theAccessIsDenied)
+	ctx.Step(`^the access is allowed$`, theAccessIsAllowed)
 	ctx.Step(`^the "([^"]*)" has a service called "([^"]*)" in the namespace "([^"]*)"$`, thePodHasAServiceCalledInTheNamespace)
 }
 
