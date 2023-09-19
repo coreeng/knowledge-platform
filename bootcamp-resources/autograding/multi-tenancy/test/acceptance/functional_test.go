@@ -229,8 +229,8 @@ func iCannotAccessOtherTenantsNamespaces(namespaceNames string) error {
 func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   destinationPodName,
-			Labels: map[string]string{"app": destinationPodName},
+			GenerateName: destinationPodName,
+			Labels:       map[string]string{"app": destinationPodName},
 		},
 		Spec: corev1.PodSpec{
 			RestartPolicy: corev1.RestartPolicyNever,
@@ -254,7 +254,7 @@ func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error
 	if err != nil {
 		return fmt.Errorf("error creating destination pod %s in the namespace %s", destinationPodName, nsName)
 	}
-	waitUntilPodInState(pod.Name, nsName, "Running")
+	_ = waitUntilPodInState(pod.Name, nsName, "Running")
 	destinationPod = pod
 	destinationNamespaceName = nsName
 	return nil
@@ -263,8 +263,8 @@ func iHaveADestinationPodInTheNamespace(destinationPodName, nsName string) error
 func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   sourcePodName,
-			Labels: map[string]string{"app": sourcePodName},
+			GenerateName: sourcePodName,
+			Labels:       map[string]string{"app": sourcePodName},
 		},
 		Spec: corev1.PodSpec{
 			RestartPolicy: corev1.RestartPolicyNever,
@@ -295,7 +295,7 @@ func iHaveASourcePodInTheNamespace(sourcePodName, nsName string) error {
 }
 
 func iTryToConnectFromTo(sourcePodName, destinationPodName string) error {
-	err := waitUntilPodInState(sourcePodName, sourceNamespaceName, "Terminated")
+	err := waitUntilPodInState(sourcePod.Name, sourceNamespaceName, "Terminated")
 	if err != nil {
 		return fmt.Errorf("error occured while connecting from %s to %s", sourcePodName, destinationPodName)
 	}
@@ -303,19 +303,10 @@ func iTryToConnectFromTo(sourcePodName, destinationPodName string) error {
 }
 
 func theAccessIsDenied() error {
-	req := kubernetesClient.CoreV1().Pods(sourceNamespaceName).GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
-	podLogs, err := req.Stream(context.TODO())
+	logs, err := getLogs(sourceNamespaceName, sourcePod.Name)
 	if err != nil {
-		return fmt.Errorf("error fetching logs from the source pod")
+		return fmt.Errorf("could not retrieve logs from source pod")
 	}
-	defer podLogs.Close()
-
-	buf := new(bytes.Buffer)
-	_, err = io.Copy(buf, podLogs)
-	if err != nil {
-		return fmt.Errorf("error copying logs from the source pod")
-	}
-	logs := buf.String()
 
 	if strings.Contains(logs, "open") {
 		return fmt.Errorf("the connection from namespace %s to namespace %s is open", sourceNamespaceName, destinationNamespaceName)
@@ -324,20 +315,10 @@ func theAccessIsDenied() error {
 }
 
 func theAccessIsAllowed() error {
-	req := kubernetesClient.CoreV1().Pods(sourceNamespaceName).GetLogs(sourcePod.Name, &corev1.PodLogOptions{})
-	podLogs, err := req.Stream(context.TODO())
+	logs, err := getLogs(sourceNamespaceName, sourcePod.Name)
 	if err != nil {
-		return fmt.Errorf("error fetching logs from the source pod")
+		return fmt.Errorf("could not retrieve logs from source pod")
 	}
-	defer podLogs.Close()
-
-	buf := new(bytes.Buffer)
-	_, err = io.Copy(buf, podLogs)
-	if err != nil {
-		return fmt.Errorf("error copying logs from the source pod")
-	}
-	logs := buf.String()
-
 	if !strings.Contains(logs, "open") {
 		return fmt.Errorf("the connection between applications in the same namespace is denied")
 	}
@@ -369,24 +350,12 @@ func cleanupPods(scenario *godog.Scenario) {
 	if sourcePod == nil {
 		return
 	}
-	err := kubernetesClient.CoreV1().Pods(sourceNamespaceName).Delete(context.TODO(), sourcePod.Name, metav1.DeleteOptions{})
-	if err != nil {
-		logrus.Info(fmt.Sprintf("no source pod to delete in namespace %s", sourceNamespaceName))
-	} else {
-		_ = waitUntilPodInState(sourcePod.Name, sourceNamespaceName, "Terminated")
-	}
-	err = kubernetesClient.CoreV1().Pods(destinationNamespaceName).Delete(context.TODO(), destinationPod.Name, metav1.DeleteOptions{})
-	if err != nil {
-		logrus.Info(fmt.Sprintf("no destination pod to delete in namespace %s", destinationNamespaceName))
-	} else {
-		_ = waitUntilPodInState(destinationPod.Name, destinationNamespaceName, "Terminated")
-	}
-	err = kubernetesClient.CoreV1().Services(destinationNamespaceName).Delete(context.TODO(), destinationService.Name, metav1.DeleteOptions{})
-	if err != nil {
-		logrus.Info(fmt.Sprintf("no destination service to delete in namespace %s", destinationNamespaceName))
-	}
-
+	kubernetesClient.CoreV1().Pods(sourceNamespaceName).Delete(context.TODO(), sourcePod.Name, metav1.DeleteOptions{})
+	kubernetesClient.CoreV1().Pods(destinationNamespaceName).Delete(context.TODO(), destinationPod.Name, metav1.DeleteOptions{})
+	kubernetesClient.CoreV1().Services(destinationNamespaceName).Delete(context.TODO(), destinationService.Name, metav1.DeleteOptions{})
 }
+
+// Helper functions
 
 func waitUntilPodInState(podName, nsName, state string) error {
 	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 2*time.Minute, true, func(ctx context.Context) (bool, error) {
@@ -410,6 +379,23 @@ func waitUntilPodInState(podName, nsName, state string) error {
 	return err
 
 }
+
+func getLogs(namespaceName, podName string) (string, error) {
+	req := kubernetesClient.CoreV1().Pods(namespaceName).GetLogs(podName, &corev1.PodLogOptions{})
+	podLogs, err := req.Stream(context.TODO())
+	if err != nil {
+		return "", err
+	}
+	defer podLogs.Close()
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, podLogs)
+	if err != nil {
+		return "", err
+	}
+	logs := buf.String()
+	return logs, nil
+}
+
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
 		cleanupPods(sc)

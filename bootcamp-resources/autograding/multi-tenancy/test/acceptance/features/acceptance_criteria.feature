@@ -56,9 +56,9 @@ Feature: Multi tenant kubernetes Acceptance Criteria
     Examples:
       | namespace         |
       | team-a            |
-#      | app-1             |
-#      | app-2             |
-#      | team-a-monitoring |
-#      | team-b            |
-#      | app-3             |
-#      | team-b-monitoring |
+      | app-1             |
+      | app-2             |
+      | team-a-monitoring |
+      | team-b            |
+      | app-3             |
+      | team-b-monitoring |
