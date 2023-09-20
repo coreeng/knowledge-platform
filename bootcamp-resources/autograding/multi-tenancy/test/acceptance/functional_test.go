@@ -399,6 +399,8 @@ func getLogs(namespaceName, podName string) (string, error) {
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
 		cleanupPods(sc)
+		var scenarioSuccess = err == nil
+		PushScenarioMetric(sc.Name, scenarioSuccess)
 		return ctx, nil
 	})
 
