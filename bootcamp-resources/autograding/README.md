@@ -16,8 +16,6 @@ Each autograding module has its own directory within the `autograding` folder, w
 ## How to run the autograding locally
 
 - go into the autograding module of your choice
-- run `make start-helm-repo-locally` for being able to upload the helm charts to a local repo
-- run `make upload-charts-locally`
 - run `autograde`
 
 If you want to visualise the metrics for the autograding jobs, install pushgateway before running autograde:

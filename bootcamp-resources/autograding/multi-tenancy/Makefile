@@ -29,13 +29,22 @@ build-and-push: ## Build and push the autograding image - this task is used by t
 	docker build -t $(DOCKER_IMAGE_NAME) $(CURRENT_PATH)
 	docker push $(DOCKER_IMAGE_NAME)
 
+.PHONY: install
+install: start-helm-repo-locally upload-charts-locally install-charts cleanup ## Install the autograding helm charts
+
 .PHONY: start-helm-repo-locally
-start-helm-repo-locally: ## Start the local helm chart repo for testing
-	rm -rf ./chartstorage
-	chartmuseum --debug --port=$(CHART_REPO_PORT) --storage="local" --storage-local-rootdir="./chartstorage" > /dev/null
+start-helm-repo-locally:
+	docker run --rm --name chartmuseum -d \
+	  -p 8080:8080 \
+	  -e DEBUG=1 \
+	  -e STORAGE=local \
+	  -e STORAGE_LOCAL_ROOTDIR=/chartstorage \
+	  -v $(CURRENT_PATH)/chartstorage:/chartstorage \
+	  ghcr.io/helm/chartmuseum:v0.16.0 &
 
 .PHONY: upload-charts-locally
-upload-charts-locally: ## Upload charts to the local helm chart repo
+upload-charts-locally:
+	curl --retry 10 --retry-connrefused http://localhost:8080 > /dev/null
 	helm repo add $(CHART_REPO_NAME) $(CHART_REPO) || true
 	cd $(CHART_PATH) && helm package .
 	cd $(CHART_PATH) && curl -X "DELETE" $(CHART_REPO)/api/charts/$(CHART_NAME)/$(CHART_VERSION)
@@ -43,17 +52,14 @@ upload-charts-locally: ## Upload charts to the local helm chart repo
 	cd $(CHART_PATH)  && rm -rf *.tgz
 
 .PHONY: install-charts
-install-charts: ## Install charts
+install-charts:
 	helm repo update
 	helm uninstall $(CHART_NAME) || true
 	sleep 10
 	helm install $(CHART_NAME) $(CHART_REPO_NAME)/$(CHART_NAME)
 
-.PHONY: install
-install: upload-charts-locally install-charts ## Install the autograding helm charts
-
 .PHONY: watch-autograding-job
-watch-autograding-job: ## Watch for the output of the autograding job
+watch-autograding-job:
 	@echo "Waiting for job output.."
 	@slept=0
 	@while ! kubectl -n multi-tenancy-autograding get pod -l job-name=multi-tenancy-acceptance-tests | grep -q "Running"; do \
@@ -65,3 +71,8 @@ watch-autograding-job: ## Watch for the output of the autograding job
 		fi; \
 	done; \
 	kubectl -n multi-tenancy-autograding logs -f job/multi-tenancy-acceptance-tests
+
+.PHONY: cleanup
+cleanup:
+	# Stops the chartmuseum repo for the helm charts
+	docker stop chartmuseum
