@@ -8,7 +8,7 @@ on:
       - "bootcamp-resources/autograding/multi-tenancy/**"
 
 jobs:
-  Build-NFT-observability-Autograding:
+  Build-Multi-Tenancy-Autograding:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
