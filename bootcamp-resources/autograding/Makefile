@@ -1,7 +1,6 @@
 CURRENT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 MODULE :=
-MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE))
-
+SUPPORTED_MODULES := "multi-tenancy nft-onservability p2p"
 
 # Charts related variables
 CHART_REPO_NAME := my-local-helm-repo
@@ -15,13 +14,9 @@ DOCKER_IMAGE_NAME := cecg/$(MODULE)-autograding
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: init-charts-data
-init-charts-data:
-	# This task is run by default - it initialises the value based on the values
-	$(eval CHART_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)/charts))
-	$(eval CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
-	$(eval CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
-	$(eval NAMESPACE := $(shell grep -E '^namespace' $(CHART_PATH)/values.yaml | awk '{printf $$2}'))
+.PHONY: available-modules
+available-modules: ## Retrieve a list of available modules to be used with the make tasks
+	@echo $(SUPPORTED_MODULES)
 
 .PHONY: autograde
 autograde: start-helm-repo-locally build install watch-autograding-job cleanup ## Run multi tenancy autograding. Usage: make MODULE=<module-name> autograde
@@ -29,11 +24,13 @@ autograde: start-helm-repo-locally build install watch-autograding-job cleanup #
 # Public tasks
 .PHONY: build
 build: ## Build the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build
+	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)))
 	@eval $$(minikube docker-env) ;\
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 
 .PHONY: build-and-push
 build-and-push: ## Build and push the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build-and-push
+	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)))
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 	docker push $(DOCKER_IMAGE_NAME)
 
@@ -57,6 +54,13 @@ upload-charts-locally: start-helm-repo-locally ## Upload charts locally. Usage: 
 
 # Private tasks
 
+.PHONY: init-charts-data
+init-charts-data:
+	$(eval CHART_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)/charts))
+	$(eval CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
+	$(eval CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
+	$(eval NAMESPACE := $(shell grep -E '^namespace' $(CHART_PATH)/values.yaml | awk '{printf $$2}'))
+
 .PHONY: start-helm-repo-locally
 start-helm-repo-locally: init-charts-data
 	docker run --rm --name chartmuseum -d \
@@ -78,17 +82,9 @@ install-charts:
 .PHONY: watch-autograding-job
 watch-autograding-job:
 	$(eval NAMESPACE := $(shell grep -E '^namespace' $(CHART_PATH)/values.yaml | awk '{printf $$2}'))
-	@echo "Waiting for job output.."
-	@slept=0
-	@while ! kubectl -n $(NAMESPACE) get pod -l job-name=$(MODULE)-acceptance-tests | grep -q "Running"; do \
-		sleep 1; \
-		((slept=slept+1)); \
-		if [ $$slept -eq 15 ]; then \
-			echo "15 Seconds have elapsed and the job has not run -- something is wrong, exiting.."; \
-			break; \
-		fi; \
-	done; \
-	kubectl -n $(NAMESPACE) logs -f job/$(MODULE)-acceptance-tests
+	@echo "Waiting for the jobs output..."
+	@kubectl wait pods -n $(NAMESPACE) --for condition=Ready --selector=job-name=$(MODULE)-acceptance-tests
+	@kubectl -n $(NAMESPACE) logs -f job/$(MODULE)-acceptance-tests
 
 .PHONY: cleanup
 cleanup:

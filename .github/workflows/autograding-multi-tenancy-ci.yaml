@@ -1,14 +1,14 @@
-name: Autograding-P2P-CI
+name: Autograding-Multi-Tenancy-CI
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - "bootcamp-resources/autograding/p2p/**"
+      - "bootcamp-resources/autograding/multi-tenancy/**"
 
 jobs:
-  Build-P2P-Autograding:
+  Build-NFT-observability-Autograding:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -16,4 +16,5 @@ jobs:
       - name: Build
         working-directory: bootcamp-resources/autograding
         run: |
-          make MODULE=p2p build
+          make MODULE=multi-tenancy build
+

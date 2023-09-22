@@ -14,7 +14,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Build
-        working-directory: bootcamp-resources/autograding/nft-observability
+        working-directory: bootcamp-resources/autograding
         run: |
-          make build
+          make MODULE=nft-observability build
 
