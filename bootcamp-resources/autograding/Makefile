@@ -4,12 +4,9 @@ MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE))
 
 
 # Charts related variables
-#CHART_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)/charts)
 CHART_REPO_NAME := my-local-helm-repo
 CHART_REPO_PORT := 8080
 CHART_REPO := http://localhost:$(CHART_REPO_PORT)
-#CHART_VERSION:=$(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
-#CHART_NAME:=$(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
 
 # Docker related variables
 DOCKER_IMAGE_NAME := cecg/$(MODULE)-autograding
@@ -27,29 +24,41 @@ init-charts-data:
 	$(eval NAMESPACE := $(shell grep -E '^namespace' $(CHART_PATH)/values.yaml | awk '{printf $$2}'))
 
 .PHONY: autograde
-autograde: start-helm-repo-locally build install watch-autograding-job cleanup ## Run multi tenancy autograding
+autograde: start-helm-repo-locally build install watch-autograding-job cleanup ## Run multi tenancy autograding. Usage: make MODULE=<module-name> autograde
 
+# Public tasks
 .PHONY: build
-build: ## Build the autograding image - this task is used by the github actions
+build: ## Build the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build
 	@eval $$(minikube docker-env) ;\
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 
 .PHONY: build-and-push
-build-and-push: ## Build and push the autograding image - this task is used by the github actions
+build-and-push: ## Build and push the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build-and-push
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 	docker push $(DOCKER_IMAGE_NAME)
 
 .PHONY: install
-install: start-helm-repo-locally init-charts-data upload-charts-locally install-charts ## Install the autograding helm charts
+install: start-helm-repo-locally upload-charts-locally install-charts ## Install the autograding helm charts. Usage: make MODULE=<module-name> install
 
 .PHONY: install-pushgateway
 install-pushgateway: MODULE=pushgateway
 install-pushgateway: install ## Install pushgateway
 
-test: install-pushgateway
+.PHONY: port-forward-pushgateway
+port-forward-pushgateway: ## Port forward push gateway
+	kubectl -n pushgateway-autograding port-forward service/pushgateway 9091:9091
+
+.PHONY: upload-charts-locally
+upload-charts-locally: start-helm-repo-locally ## Upload charts locally. Usage: make MODUlE=<module-name> upload-charts-locally.
+	cd $(CHART_PATH) && helm package .
+	cd $(CHART_PATH) && curl -X "DELETE" $(CHART_REPO)/api/charts/$(CHART_NAME)/$(CHART_VERSION)
+	cd $(CHART_PATH) && curl --data-binary "@$(CHART_NAME)-$(CHART_VERSION).tgz" $(CHART_REPO)/api/charts
+	cd $(CHART_PATH)  && rm -rf *.tgz
+
+# Private tasks
 
 .PHONY: start-helm-repo-locally
-start-helm-repo-locally:
+start-helm-repo-locally: init-charts-data
 	docker run --rm --name chartmuseum -d \
 	  -p 8080:8080 \
 	  -e DEBUG=1 \
@@ -60,18 +69,10 @@ start-helm-repo-locally:
 	curl --retry 10 --retry-connrefused http://localhost:8080 > /dev/null
 	helm repo add $(CHART_REPO_NAME) $(CHART_REPO) || true
 
-.PHONY: upload-charts-locally
-upload-charts-locally:
-	cd $(CHART_PATH) && helm package .
-	cd $(CHART_PATH) && curl -X "DELETE" $(CHART_REPO)/api/charts/$(CHART_NAME)/$(CHART_VERSION)
-	cd $(CHART_PATH) && curl --data-binary "@$(CHART_NAME)-$(CHART_VERSION).tgz" $(CHART_REPO)/api/charts
-	cd $(CHART_PATH)  && rm -rf *.tgz
-
 .PHONY: install-charts
 install-charts:
 	helm repo update
-	helm uninstall $(CHART_NAME) || true
-	sleep 10
+	helm uninstall $(CHART_NAME) --wait || true
 	helm install $(CHART_NAME) $(CHART_REPO_NAME)/$(CHART_NAME)
 
 .PHONY: watch-autograding-job
