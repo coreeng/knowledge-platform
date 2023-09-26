@@ -14,8 +14,8 @@ DOCKER_IMAGE_NAME := cecg/$(MODULE)-autograding
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: available-modules
-available-modules: ## Retrieve a list of available modules to be used with the make tasks
+.PHONY: supported-modules
+supported-modules: ## Retrieve a list of supported modules to be used with the make tasks
 	@echo $(SUPPORTED_MODULES)
 
 .PHONY: autograde
@@ -56,6 +56,9 @@ upload-charts-locally: start-helm-repo-locally ## Upload charts locally. Usage: 
 
 .PHONY: init-charts-data
 init-charts-data:
+ifndef MODULE
+	$(error "MODULE variable needs to be defined")
+endif
 	$(eval CHART_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)/charts))
 	$(eval CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
 	$(eval CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
