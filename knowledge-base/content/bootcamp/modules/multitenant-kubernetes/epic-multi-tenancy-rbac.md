@@ -43,11 +43,11 @@ E.g. the output from hns
 ```
 kubectl hns tree cecg                                                                                                                                                         
 cecg (whole org)
-├── tenant-a 
+├── team-a
 │   ├── app-1 <- deploy your reference application here
 │   ├── app-2
 │   └── team-a-monitoring
-└── tenant-b 
+└── team-b
     ├── app-3 <- deploy your reference application here 
     └── team-b-monitoring
 ```

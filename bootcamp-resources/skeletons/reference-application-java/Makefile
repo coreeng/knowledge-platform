@@ -10,9 +10,10 @@ tenant_namespace = tenant-1
 # Autograding related settings
 #TODO - when we create a public repo we need to update the CHART_REPO
 CHART_REPO := my-local-helm-repo
-P2P_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-p2p-autograding
-NFT_OBS_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-nft-obs-autograding
-PUSHGATEWAY_AUTOGRADING_CHART := $(CHART_REPO)/bootcamp-pushgateway-autograding
+P2P_AUTOGRADING_CHART := bootcamp-p2p-autograding
+NFT_OBS_AUTOGRADING_CHART := bootcamp-nft-obs-autograding
+MULTI_TENANCY_AUTOGRADING_CHART := bootcamp-multi-tenancy-autograding
+PUSHGATEWAY_AUTOGRADING_CHART := bootcamp-pushgateway-autograding
 
 .PHONY: help
 help:
@@ -78,38 +79,36 @@ docker-push: ## Push the Docker image to an image registry
 	docker image push $(image_name):$(image_tag)
 
 # Autograding related tasks
+# Autograding related tasks
 .PHONY: autograde-p2p
-autograde-p2p: ## Run p2p autograding
+autograde-p2p: install-autograding-dependencies ## Run autograding for the module "p2p"
 	helm repo update
-	helm uninstall bootcamp-p2p-autograding || true
-	sleep 5
-	helm install bootcamp-p2p-autograding $(P2P_AUTOGRADING_CHART)
+	helm uninstall $(P2P_AUTOGRADING_CHART) --wait || true
+	helm install $(P2P_AUTOGRADING_CHART) $(CHART_REPO)/$(P2P_AUTOGRADING_CHART)
 	@echo "Waiting for job output.."
-	@slept=0
-	@while ! kubectl -n p2p-autograding get pod -l job-name=p2p-acceptance-tests | grep -q "Running"; do \
-		sleep 1; \
-		((slept=slept+1)); \
-		if [ $$slept -eq 15 ]; then \
-			echo "15 Seconds have elapsed and the job has not run -- something is wrong, exiting.."; \
-			break; \
-		fi; \
-	done; \
-	kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
+	@kubectl wait pods -n p2p-autograding --for condition=Ready --selector=job-name=p2p-acceptance-tests
+	@kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
 
 .PHONY: autograde-nft-obs
-autograde-nft-obs: ## Run nft observability autograding
+autograde-nft-obs: install-autograding-dependencies## Run autograding for the module "nft-observability"
 	helm repo update
-	helm uninstall bootcamp-nft-obs-autograding || true
-	sleep 5
-	helm install bootcamp-nft-obs-autograding $(NFT_OBS_AUTOGRADING_CHART)
+	helm uninstall $(NFT_OBS_AUTOGRADING_CHART) --wait || true
+	helm install $(NFT_OBS_AUTOGRADING_CHART) $(CHART_REPO)/$(NFT_OBS_AUTOGRADING_CHART)
 	@echo "Waiting for job output.."
-	@slept=0
-	@while ! kubectl -n nft-obs-autograding get pod -l job-name=nft-obs-acceptance-tests | grep -q "Running"; do \
-		sleep 1; \
-		((slept=slept+1)); \
-		if [ $$slept -eq 15 ]; then \
-			echo "15 Seconds have elapsed and the job has not run -- something is wrong, exiting.."; \
-			break; \
-		fi; \
-	done; \
-	kubectl -n nft-obs-autograding logs -f job/nft-obs-acceptance-tests
+	@kubectl wait pods -n nft-observability-autograding --for condition=Ready --selector=job-name=nft-observability-acceptance-tests
+	@kubectl -n nft-observability-autograding logs -f job/nft-observability-acceptance-tests
+
+.PHONY: autograde-multi-tenancy
+autograde-multi-tenancy: install-autograding-dependencies## Run autograding for the module "multi-tenancy"
+	helm repo update
+	helm uninstall $(MULTI_TENANCY_AUTOGRADING_CHART) --wait || true
+	helm install $(MULTI_TENANCY_AUTOGRADING_CHART) $(CHART_REPO)/$(MULTI_TENANCY_AUTOGRADING_CHART)
+	@echo "Waiting for job output.."
+	@kubectl wait pods -n multi-tenancy-autograding --for condition=Ready --selector=job-name=multi-tenancy-acceptance-tests
+	@kubectl -n multi-tenancy-autograding logs -f job/multi-tenancy-acceptance-tests
+
+.PHONY: install-autograding-dependencies
+install-autograding-dependencies:
+	helm repo update
+	helm uninstall bootcamp-pushgateway-autograding --wait || true
+	helm install $(PUSHGATEWAY_AUTOGRADING_CHART) $(CHART_REPO)/$(PUSHGATEWAY_AUTOGRADING_CHART)

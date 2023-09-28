@@ -214,18 +214,17 @@ SERVICE_ENDPOINT="http://localhost:8080" k6 run ./nft/ramp-up/test.js
 ### How to run autograding jobs
 
 Pre-requisites:
-- You have a local k8 cluster running
+- k8 cluster running locally
+- make
+- kubectl
 
-Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules.
+Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules. Let's assume
+you want to run the job for a module. 
 
-*Note*: At the moment we don't have a mechanism to publish the autograding help charts on a public repo so
-in order to run the autograding jobs you need to first upload the existing charts into a local helm repo.
-This dependency will be removed as soon as the publishing task is tackled.
-
-Into the autograding module of your choice in [autograding](/bootcamp-resources/autograding): 
-- run `make start-helm-repo-locally` (**removed when helm charts published remotely**)
-- run `make upload-charts-locally` to upload the respective modules charts (**removed when helm charts published remotely**)
-- run `make build` (**removed when image published on the cecg public repo**)
+*Note*: Until the helm charts and docker images are published you need to run the following tasks from [autograding](/bootcamp-resources/autograding):
+- `make MODULE=pushgateway upload-charts-locally`
+- `make MODULE=<module> upload-charts-locally` (For a list of available modules run `make available-modules`)
+- `make MODULEMODULE=<module> =build` 
 
 Then into this directory run:
 - run `make autograde-<module>`.
