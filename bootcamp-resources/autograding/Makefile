@@ -56,9 +56,6 @@ upload-charts-locally: start-helm-repo-locally ## Upload charts locally. Usage: 
 
 .PHONY: init-charts-data
 init-charts-data:
-ifndef MODULE
-	$(error "MODULE variable needs to be defined")
-endif
 	$(eval CHART_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)/charts))
 	$(eval CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
 	$(eval CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
@@ -86,7 +83,7 @@ install-charts:
 watch-autograding-job:
 	$(eval NAMESPACE := $(shell grep -E '^namespace' $(CHART_PATH)/values.yaml | awk '{printf $$2}'))
 	@echo "Waiting for the jobs output..."
-	@kubectl wait pods -n $(NAMESPACE) --for condition=Ready --selector=job-name=$(MODULE)-acceptance-tests
+	@kubectl wait pods -n $(NAMESPACE) --for condition=Ready --selector=job-name=$(MODULE)-acceptance-tests || true
 	@kubectl -n $(NAMESPACE) logs -f job/$(MODULE)-acceptance-tests
 
 .PHONY: cleanup

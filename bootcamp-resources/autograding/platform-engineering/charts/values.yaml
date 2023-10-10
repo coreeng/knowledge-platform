@@ -1,0 +1,6 @@
+namespace: "platform-engineering-autograding"
+job:
+  name: "platform-engineering-acceptance-tests"
+  container:
+      name: "platform-engineering-acceptance-tests"
+      image: "cecg/platform-engineering-autograding"
