@@ -4,8 +4,6 @@ RUN apk update && apk add --no-cache build-base && apk add curl
 
 WORKDIR /autograding
 
-RUN go install github.com/cucumber/godog/cmd/godog@latest
-
 COPY go.mod go.sum ./
 
 RUN go mod download
