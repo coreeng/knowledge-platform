@@ -41,7 +41,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 rules:
   - apiGroups:
-      - canary.cecg.com
+      - canary.cecg.io
     resources:
       - canariedapps
     verbs:

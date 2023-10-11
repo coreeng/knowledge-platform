@@ -1,4 +1,4 @@
-apiVersion: canary.cecg.com/v1
+apiVersion: canary.cecg.io/v1
 kind: CanariedApp
 metadata:
   name: {{.name}}

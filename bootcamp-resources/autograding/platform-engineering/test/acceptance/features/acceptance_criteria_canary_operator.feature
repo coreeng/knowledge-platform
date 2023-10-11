@@ -13,8 +13,8 @@ Feature: Canary Operator Acceptance Criteria
 
   Scenario: A custom resource definition for "CanariedApp" exists
     Given the kubernetes api extension client exists
-    When I get the custom resource definition "canariedapps.canary.cecg.com"
-    Then the custom resource definition "canariedapps.canary.cecg.com" exists
+    When I get the custom resource definition "canariedapps.canary.cecg.io"
+    Then the custom resource definition "canariedapps.canary.cecg.io" exists
 
   Scenario: When I update the version of my app deployed using the CR "CanariedApp", a canary deployment is created
     Given I have a namespace "platform-engineering-autograding"
