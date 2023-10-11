@@ -17,7 +17,7 @@ Feature: Canary Operator Acceptance Criteria
     Then the custom resource definition "canariedapps.canary.cecg.com" exists
 
   Scenario: When I update the version of my app deployed using the CR "CanariedApp", a canary deployment is created
-    Given I have a namespace "canary-operator-autograding"
+    Given I have a namespace "platform-engineering-autograding"
     And I have the following CR:
       | Kind  | CanariedApp             |
       | name  | canariedapp-autograding |

@@ -35,9 +35,10 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   name: canariedapp-editor-role
+  namespace: {{ .Values.namespace }}
 rules:
   - apiGroups:
       - canary.cecg.com
@@ -53,15 +54,16 @@ rules:
       - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   name: canariedapp-editor
+  namespace: {{ .Values.namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
     namespace: {{ .Values.namespace }}
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: canariedapp-editor-role
   apiGroup: rbac.authorization.k8s.io
 ---

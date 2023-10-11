@@ -41,8 +41,10 @@ var features embed.FS
 
 func getConfig() (*rest.Config, error) {
 	logrus.Info("Attempting to fetch in-cluster config.")
-	var config *rest.Config
-	var err error
+	var (
+		config *rest.Config
+		err    error
+	)
 	if os.Getenv("RUN_OUTSIDE_CLUSTER") == "true" {
 		config, err = clientcmd.BuildConfigFromFlags(
 			"",
@@ -159,7 +161,7 @@ func theCanaryDeploymentIsCreated(ctx context.Context, deploymentName string) (c
 		func() error {
 			_, err := kubernetesClient.
 				AppsV1().
-				Deployments(ctx.Value(autogradingNsCtxKey{}).(*corev1.Namespace).Name).Get(context.TODO(), deploymentName, metav1.GetOptions{})
+				Deployments(ctx.Value(autogradingNsCtxKey{}).(string)).Get(context.TODO(), deploymentName, metav1.GetOptions{})
 			return err
 		},
 	); err != nil {
@@ -170,13 +172,11 @@ func theCanaryDeploymentIsCreated(ctx context.Context, deploymentName string) (c
 }
 
 func iHaveANamespace(ctx context.Context, namespaceName string) (context.Context, error) {
-	ns := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: namespaceName}}
-	_, err := kubernetesClient.CoreV1().Namespaces().Create(context.TODO(), ns, metav1.CreateOptions{})
+	_, err := kubernetesClient.CoreV1().Namespaces().Get(context.TODO(), namespaceName, metav1.GetOptions{})
 	if err != nil {
-		logrus.Info(err.Error())
-		return ctx, fmt.Errorf("error creating the namespace %s", namespaceName)
+		return ctx, fmt.Errorf("error retrieve %s", namespaceName)
 	}
-	return context.WithValue(ctx, autogradingNsCtxKey{}, ns), nil
+	return context.WithValue(ctx, autogradingNsCtxKey{}, namespaceName), nil
 }
 
 func iHaveTheFollowingCR(ctx context.Context, data *godog.Table) (context.Context, error) {
@@ -197,8 +197,7 @@ func iHaveTheFollowingCR(ctx context.Context, data *godog.Table) (context.Contex
 
 	tmpl.Execute(crManifestFile, substitutionValues)
 
-	output, err := exec.Command("kubectl", "apply", "-n", ctx.Value(autogradingNsCtxKey{}).(*corev1.Namespace).Name, "-f", crManifestFile.Name()).Output()
-	logrus.Info(fmt.Sprintf("Command ouput: %s", output))
+	_, err = exec.Command("kubectl", "apply", "-n", ctx.Value(autogradingNsCtxKey{}).(string), "-f", crManifestFile.Name()).Output()
 	if err != nil {
 		logrus.Info(err.Error())
 		return ctx, fmt.Errorf("error creating the custom resource")
@@ -212,13 +211,11 @@ func iUpdateTheCRWith(ctx context.Context, data *godog.Table) (context.Context, 
 
 // cleanup functions
 
-func cleanupNamespace(ctx context.Context) error {
+func cleanupCrs(ctx context.Context) error {
 	if ctx.Value(autogradingNsCtxKey{}) != nil {
-		nsName := ctx.Value(autogradingNsCtxKey{}).(*corev1.Namespace).Name
-		err := kubernetesClient.CoreV1().Namespaces().Delete(context.TODO(), nsName, metav1.DeleteOptions{})
-		if err != nil {
-			return fmt.Errorf("error deleting namespace %s", nsName)
-		}
+		output, err := exec.Command("kubectl", "-n", ctx.Value(autogradingNsCtxKey{}).(string), "delete", "canariedapps", "--all").Output()
+		logrus.Info(output)
+		return err
 	}
 	return nil
 
@@ -235,7 +232,7 @@ func cleanupManifests(ctx context.Context) error {
 }
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
-		e := cleanupNamespace(ctx)
+		e := cleanupCrs(ctx)
 		if e != nil {
 			return ctx, e
 		}
