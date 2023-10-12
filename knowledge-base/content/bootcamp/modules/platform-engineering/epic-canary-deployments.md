@@ -33,8 +33,9 @@ chapter = false
 
 ## Deliverables (For Epic)
 
+- Deploy a version of the reference application in a namespace called `canary`.
 - Publish a custom metric that can be used for the canary check. Do via prometheus compatible library.
 - Change the prometheus configuration to scrape the reference application. Have this alert defined as code.
-- Validate the health of the canary metrics via an alert manager alert.
+- Validate the health of the canary metrics via an alert manager alert, called `CanaryHealthCheck`.
 - Successfully deploy the canary pod carrying the new version
 - Successfully roll out the canary version to other pods when deemed healthy based on the custom metric
