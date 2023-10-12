@@ -1,12 +1,14 @@
+{{- if and .Values.module (eq .Values.module "platform-engineering") }}
+{{- $namespace := print .Values.module "-autograding" -}}
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: read-cluster-role-binding-{{ .Values.namespace }}
+  name: read-cluster-role-binding-{{ $namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: ClusterRole
   name: view
@@ -28,7 +30,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: ClusterRole
   name: crd-admin-role
@@ -38,7 +40,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: canariedapp-editor-role
-  namespace: {{ .Values.namespace }}
+  namespace: {{ $namespace }}
 rules:
   - apiGroups:
       - canary.cecg.io
@@ -57,12 +59,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: canariedapp-editor
-  namespace: {{ .Values.namespace }}
+  namespace: {{ $namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: Role
   name: canariedapp-editor-role
-  apiGroup: rbac.authorization.k8s.io
+  apiGroup: rbac.authorization.k8s.io  
+{{- end }}

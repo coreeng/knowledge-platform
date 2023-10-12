@@ -217,22 +217,3 @@ You can also pass the registry at runtime as an argument to Makefile, for ex:
 ```
 REGISTRY=minikube:5000 make <target you want to execute>
 ```
-
-
-### How to run autograding jobs
-
-Pre-requisites:
-- k8 cluster running locally
-- make
-- kubectl
-
-Autograding jobs are an automated way of validating the acceptance criteria for bootcamp modules. Let's assume
-you want to run the job for a module.
-
-*Note*: Until the helm charts and docker images are published you need to run the following tasks from [autograding](/bootcamp-resources/autograding):
-- `make MODULE=pushgateway upload-charts-locally`
-- `make MODULE=<module> upload-charts-locally` (For a list of available modules run `make available-modules`)
-- `make MODULEMODULE=<module> =build`
-
-Then into this directory run:
-- run `make autograde-<module>`.

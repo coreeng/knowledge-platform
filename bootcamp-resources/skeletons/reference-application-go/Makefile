@@ -5,14 +5,6 @@ registry = minikube:5000
 image_name = bootcamp/reference-service-go-pub
 image_tag = latest
 
-# Autograding related settings
-#TODO - when we create a public repo we need to update the CHART_REPO
-CHART_REPO := my-local-helm-repo
-P2P_AUTOGRADING_CHART := bootcamp-p2p-autograding
-NFT_OBS_AUTOGRADING_CHART := bootcamp-nft-obs-autograding
-MULTI_TENANCY_AUTOGRADING_CHART := bootcamp-multi-tenancy-autograding
-PUSHGATEWAY_AUTOGRADING_CHART := bootcamp-pushgateway-autograding
-
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/^.*Makefile://' | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -74,35 +66,11 @@ docker-push: ## Push the service image
 
 # Autograding related tasks
 .PHONY: autograde-p2p
-autograde-p2p: install-autograding-dependencies ## Run autograding for the module "p2p"
-	helm repo update
-	helm uninstall $(P2P_AUTOGRADING_CHART) --wait || true
-	helm install $(P2P_AUTOGRADING_CHART) $(CHART_REPO)/$(P2P_AUTOGRADING_CHART)
-	@echo "Waiting for job output.."
-	@kubectl wait pods -n p2p-autograding --for condition=Ready --selector=job-name=p2p-acceptance-tests
-	@kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
+autograde-p2p: ## Run autograding for the module "p2p"
+	echo "Not implemented yet"
 
 .PHONY: autograde-nft-obs
-autograde-nft-obs: install-autograding-dependencies## Run autograding for the module "nft-observability"
-	helm repo update
-	helm uninstall $(NFT_OBS_AUTOGRADING_CHART) --wait || true
-	helm install $(NFT_OBS_AUTOGRADING_CHART) $(CHART_REPO)/$(NFT_OBS_AUTOGRADING_CHART)
-	@echo "Waiting for job output.."
-	@kubectl wait pods -n nft-observability-autograding --for condition=Ready --selector=job-name=nft-observability-acceptance-tests
-	@kubectl -n nft-observability-autograding logs -f job/nft-observability-acceptance-tests
+autograde-nft-obs: ## Run autograding for the module "nft-observability"
+	echo "Not implemented yet"
 
-.PHONY: autograde-multi-tenancy
-autograde-multi-tenancy: install-autograding-dependencies## Run autograding for the module "multi-tenancy"
-	helm repo update
-	helm uninstall $(MULTI_TENANCY_AUTOGRADING_CHART) --wait || true
-	helm install $(MULTI_TENANCY_AUTOGRADING_CHART) $(CHART_REPO)/$(MULTI_TENANCY_AUTOGRADING_CHART)
-	@echo "Waiting for job output.."
-	@kubectl wait pods -n multi-tenancy-autograding --for condition=Ready --selector=job-name=multi-tenancy-acceptance-tests
-	@kubectl -n multi-tenancy-autograding logs -f job/multi-tenancy-acceptance-tests
-
-.PHONY: install-autograding-dependencies
-install-autograding-dependencies:
-	helm repo update
-	helm uninstall bootcamp-pushgateway-autograding --wait || true
-	helm install $(PUSHGATEWAY_AUTOGRADING_CHART) $(CHART_REPO)/$(PUSHGATEWAY_AUTOGRADING_CHART)
 
