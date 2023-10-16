@@ -1,3 +1,5 @@
+{{- if and .Values.module (eq .Values.module "multi-tenancy") }}
+{{- $namespace := print .Values.module "-autograding" -}}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -20,11 +22,11 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: read-cluster-rb-{{ .Values.namespace }}
+  name: read-cluster-rb-{{ $namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: ClusterRole
   name: edit
@@ -33,11 +35,11 @@ roleRef:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: impersonator-cluster-rb-{{ .Values.namespace }}
+  name: impersonator-cluster-rb-{{ $namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: ClusterRole
   name: impersonator
@@ -46,12 +48,13 @@ roleRef:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: role-bindings-accounts-rb-{{ .Values.namespace }}
+  name: role-bindings-accounts-rb-{{ $namespace }}
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: {{ .Values.namespace }}
+    namespace: {{ $namespace }}
 roleRef:
   kind: ClusterRole
   name: rolesAndAccountsViewer
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

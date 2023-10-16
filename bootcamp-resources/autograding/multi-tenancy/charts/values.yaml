@@ -1,6 +1,0 @@
-namespace: "multi-tenancy-autograding"
-job:
-  name: "multi-tenancy-acceptance-tests"
-  container:
-      name: "multi-tenancy-acceptance-tests"
-      image: "cecg/multi-tenancy-autograding"

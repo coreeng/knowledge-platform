@@ -1,0 +1,6 @@
+{{- $module := .Values.module | required ".Values.module is required." -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $module }}-autograding
