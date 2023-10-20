@@ -8,7 +8,7 @@ CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$
 CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
 
 # Docker related variables
-DOCKER_IMAGE_NAME := cecg/$(MODULE)-autograding
+DOCKER_IMAGE_NAME := coreeng/$(MODULE)-autograding
 
 .PHONY: help
 help:

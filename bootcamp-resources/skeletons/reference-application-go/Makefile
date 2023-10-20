@@ -67,10 +67,18 @@ docker-push: ## Push the service image
 # Autograding related tasks
 .PHONY: autograde-p2p
 autograde-p2p: ## Run autograding for the module "p2p"
-	echo "Not implemented yet"
+	helm uninstall p2p-autograding --wait || true
+	helm install --set module=p2p p2p-autograding oci://ghcr.io/coreeng/cecg-bootcamp-autograding
+	@echo "Waiting for the jobs output..."
+	@kubectl wait pods -n p2p-autograding --for condition=Ready --selector=job-name=p2p-acceptance-tests || true
+	@kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
 
 .PHONY: autograde-nft-obs
 autograde-nft-obs: ## Run autograding for the module "nft-observability"
-	echo "Not implemented yet"
+	helm uninstall nft-observability-autograding --wait || true
+	helm install --set module=nft-observability nft-observability-autograding oci://ghcr.io/coreeng/cecg-bootcamp-autograding
+	@echo "Waiting for the jobs output..."
+	@kubectl wait pods -n nft-observability-autograding --for condition=Ready --selector=job-name=nft-observability-acceptance-tests || true
+	@kubectl -n nft-observability-autograding logs -f job/nft-observability-acceptance-tests
 
 
