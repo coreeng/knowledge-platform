@@ -1,0 +1,13 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-ingress-monitoring-team-a
+  namespace: team-a-monitoring
+spec:
+  endpointSelector: { }
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": "app-1"
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": "app-2"
