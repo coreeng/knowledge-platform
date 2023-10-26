@@ -1,3 +1,4 @@
+# hadolint ignore=DL3006
 FROM cecg/knowledge-platform
 
 # Copies your custom content -- the destination (/site/content/bootcamp/modules) needs to remain the same as that is

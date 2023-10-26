@@ -25,6 +25,7 @@ var response resty.Response
 var owner string
 
 func theKubernetesClientIsSetUp() error {
+	// Test
 	if kubernetesClient == nil {
 		logrus.Info("Attempting to fetch in-cluster config..")
 		config, err := rest.InClusterConfig()

@@ -14,5 +14,5 @@ spec:
       restartPolicy: Never
       containers:
         - name: {{ $module }}-acceptance-tests
-          image: cecg/{{ $module }}-autograding
+          image: ghcr.io/coreeng/{{ $module }}-autograding
           imagePullPolicy: Never

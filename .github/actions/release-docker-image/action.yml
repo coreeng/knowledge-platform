@@ -1,0 +1,67 @@
+name: release-docker-image
+description: Release a new version of a docker image.
+
+inputs:
+  image-name:
+    description: The name of the image to be released
+    required: true
+  image-description:
+    description: The description of the image to be released
+    required: true
+  context:
+    description: The context of the dockerfile to be used
+    required: true
+  registry:
+    description: The registry to release the image to
+    required: true
+  git-token:
+    description: The GitHub Token to use
+    required: true
+  image-tag:
+    description: The tag image
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - id: docker-setup-buildx
+      name: Setup Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - id: docker-login
+      name: Login to the registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.repository_owner }}
+        password: ${{ inputs.git-token }}
+
+    - id: metadata
+      name: Metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ inputs.image-name }}
+        labels: |
+          org.opencontainers.image.description=${{ inputs.image-description }}
+
+    - id: build-push
+      name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.context }}/Dockerfile
+        push: true
+        build-args: |
+          RELEASE_VERSION=${{ steps.metadata.outputs.version }}
+          RELEASE_REVISION=${{ steps.metadata.outputs.revision }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
+          ${{ env.REGISTRY }}/${{ inputs.image-name }}:latest
+        labels: ${{ steps.metadata.outputs.labels }}
+        cache-from: type=registry,ref=${{ fromJSON(steps.metadata.outputs.json).tags[0] }}
+        cache-to: type=inline
+        # https://github.com/orgs/community/discussions/45969
+        provenance: false
+        sbom: false
+
+
+

@@ -1,0 +1,112 @@
+name: Bootcamp Resources CD
+
+# This workflow contains jobs that publish artifacts.
+# Those jobs are run only if the Action variable "SHOULD_PUSH_BOOTCAMP_ARTIFACTS" is set true on the repository.
+
+on:
+  push:
+    branches:
+      - autograding-images-gh-action
+    paths:
+      - "bootcamp-resources/**"
+
+jobs:
+  # This job decides which other jobs are run when a subdirectory of `bootcamp-resources` is changed.
+  changes:
+    runs-on: ubuntu-latest
+    if: ${{ vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true'}}
+    outputs:
+      bootcamp-resources: ${{ steps.filter.outputs.bootcamp-resources }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            bootcamp-resources:
+              - 'bootcamp-resources/**' 
+
+  get-version:
+    name: get-version
+    needs: [changes]
+    if: ${{ needs.changes.outputs.bootcamp-resources == 'true' && vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true'}}
+    uses: ./.github/workflows/get-artifact-version.yaml
+    secrets:
+      git_token: ${{secrets.GITHUB_TOKEN}}
+
+  create-tag:
+    name: create-tag
+    runs-on: ubuntu-latest
+    if: ${{ vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true'}}
+    needs: [get-version]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        id: create_tag
+        with:
+          tag: v${{ needs.get-version.outputs.version }}
+          tag_exists_error: true
+
+  helm-charts:
+    name: helm-charts
+    uses: ./.github/workflows/helm.yaml
+    needs: [get-version, create-tag, changes]
+    if: ${{ needs.changes.outputs.bootcamp-resources == 'true' && vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true' }}
+    with:
+      action: push
+      path: bootcamp-resources/helm-charts
+      registry: ghcr.io
+      chart-version: ${{ needs.get-version.outputs.version }}
+
+  release-autograding-images:
+    name: release-autograding-images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs: [get-version, create-tag, changes]
+    if: ${{ needs.changes.outputs.bootcamp-resources == 'true' && vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true' }}
+    env:
+      REGISTRY: ghcr.io
+    steps:
+      - uses: actions/checkout@v4
+      - name: Release autograding p2p image
+        id: autograding-p2p
+        uses: ./.github/actions/release-docker-image
+        with:
+          image-name: coreeng/p2p-autograding
+          image-description: The image used for running the CECG P2P autograding.
+          image-tag: ${{ needs.get-version.outputs.version }}
+          context: ./bootcamp-resources/autograding/p2p
+          registry: ${{ env.REGISTRY }}
+          git-token: ${{ secrets.GIT_TOKEN }}
+      - name: Release autograding nft & obs image
+        id: autograding-nft-observability
+        uses: ./.github/actions/release-docker-image
+        with:
+          image-name: coreeng/nft-observability-autograding
+          image-description: The image used for running the CECG NFT & Observability autograding.
+          image-tag: ${{ needs.get-version.outputs.version }}
+          context: ./bootcamp-resources/autograding/nft-observability
+          registry: ${{ env.REGISTRY }}
+          git-token: ${{ secrets.GIT_TOKEN }}
+      - name: Release autograding multi tenancy image
+        id: autograding-multi-tenancy
+        uses: ./.github/actions/release-docker-image
+        with:
+          image-name: coreeng/multi-tenancy-autograding
+          image-description: The image used for running the CECG multi tenancy autograding.
+          image-tag: ${{ needs.get-version.outputs.version }}
+          context: ./bootcamp-resources/autograding/multi-tenancy
+          registry: ${{ env.REGISTRY }}
+          git-token: ${{ secrets.GIT_TOKEN }}
+      - name: Release autograding platform engineering image
+        id: autograding-platform-engineering
+        uses: ./.github/actions/release-docker-image
+        with:
+          image-name: coreeng/platform-engineering-autograding
+          image-description: The image used for running the CECG platform engineering autograding.
+          image-tag: ${{ needs.get-version.outputs.version }}
+          context: ./bootcamp-resources/autograding/platform-engineering
+          registry: ${{ env.REGISTRY }}
+          git-token: ${{ secrets.GIT_TOKEN }}

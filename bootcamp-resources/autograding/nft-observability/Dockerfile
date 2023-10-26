@@ -1,6 +1,6 @@
 FROM golang:1.21-alpine3.18
 
-RUN apk update && apk add --no-cache build-base
+RUN apk update && apk add --no-cache build-base=0.5-r3
 
 WORKDIR /autograding
 

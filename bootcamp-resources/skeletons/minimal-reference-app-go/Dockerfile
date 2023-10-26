@@ -5,7 +5,7 @@ COPY . /app
 RUN go build -o server /app/cmd/main.go
 
 FROM alpine:3.18.4
-
+WORKDIR /
 COPY --from=builder /app/server ./
 
 CMD ["./server"]

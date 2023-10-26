@@ -1,0 +1,46 @@
+name: bump-version
+description: Bump the version of the artifact - artifacts can be helm charts or docker images.
+
+inputs:
+  git-token:
+    description: The GitHub Token to use
+    required: true
+outputs:
+  version:
+    value: ${{ steps.getversion.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Get Previous tag
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: 0.0.0
+      env:
+        GITHUB_TOKEN: "${{ inputs.git-token }}"
+
+    - name: get previous version from tag
+      id: previousversion
+      shell: bash
+      run: |
+        echo "version=$(echo ${{ steps.previoustag.outputs.tag }} | cut -d'-' -f 2)" >> "$GITHUB_OUTPUT"
+
+    - name: Get nextversion
+      id: semvers
+      uses: "WyriHaximus/github-action-next-semvers@v1"
+      with:
+        version: ${{ steps.previousversion.outputs.version }}
+
+    - name: Get version
+      id: getversion
+      shell: bash
+      run: |
+        VERSION=${{ steps.semvers.outputs.minor }}
+        echo "version=$VERSION"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+    
+

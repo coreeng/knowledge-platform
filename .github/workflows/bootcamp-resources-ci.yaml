@@ -1,0 +1,41 @@
+name: Bootcamp Resources CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "bootcamp-resources/**"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      helm-charts: ${{ steps.filter.outputs.helm-charts }}
+      bootcamp-resources: ${{ steps.filter.outputs.bootcamp-resources }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            helm-charts:
+              - 'bootcamp-resources/helm-charts/**'
+            autograding:
+              - 'bootcamp-resources/**'
+
+  helm-charts:
+    name: helm-charts
+    uses: ./.github/workflows/helm.yaml
+    needs: [changes]
+    if: ${{ needs.changes.outputs.helm-charts == 'true' }}
+    with:
+      action: package
+      path: bootcamp-resources/helm-charts
+      registry: ghcr.io
+
+  dockerfiles:
+    name: dockerfiles
+    uses: ./.github/workflows/dockerfiles.yaml
+    with:
+      action: lint

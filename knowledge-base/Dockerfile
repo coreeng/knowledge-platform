@@ -14,6 +14,7 @@ RUN tar -zxvf hugo.tar.gz && \
     chmod +x /usr/local/bin/hugo
 
 # We add git to the build stage, because Hugo needs it with --enableGitInfo
+# hadolint ignore=DL3018
 RUN apk add --no-cache git
 
 # Set the working directory

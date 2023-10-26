@@ -22,6 +22,8 @@ To see the metrics for the autograding tests:
 - `make port-forward-pushagateway`
 - go to http://localhost:9091
 
+
+
 Note: at the moment, when building locally, the image is pushed to the minikube repo. Have a look at the `build` task. 
 If you have a different setup make sure you build and push the image to the respective repo.
 

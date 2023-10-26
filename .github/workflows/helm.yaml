@@ -1,0 +1,80 @@
+name: Helm
+
+on:
+  workflow_call:
+    inputs:
+      action:
+        required: true
+        type: string
+      path:
+        required: true
+        type: string
+      chart-version:
+        required: false
+        type: string
+        default: "0.0.0"
+      registry:
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: helm
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.path }}
+    env:
+      REGISTRY: ${{ inputs.registry }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Helm lint
+        id: helm-lint
+        run: |
+          find -L . -name "Chart.yaml" | xargs -n1 sh -c ' \
+          CHARTFILE="$1" ; \
+          CHART=$(basename $(dirname "$CHARTFILE")) ; \
+          echo "* helm lint ${CHART}" ; \
+            helm lint --quiet "$( dirname $CHARTFILE )" ; ' 'helm-lint'
+
+      - name: Set previous versions in Charts
+        id: setversion
+        shell: bash
+        run: |
+          ls -la
+          find -L . -name "Chart.yaml" -maxdepth 3 -exec sed -i -e 's|^version:.*|version: ${{ inputs.chart-version }}|' {} \;
+
+      - name: Helm package
+        id: helm-package
+        run: |
+          find -L . -name "Chart.yaml" | xargs -n1 sh -c ' \
+            CHARTFILE="$1" ; \
+            CHART_DIR=$(dirname "$CHARTFILE") ; \
+            CHART_PATH=$(realpath -s --relative-to=./ $( dirname "$CHART_DIR" )) ; \
+            VERSION="$(yq .version $CHARTFILE)" ; \
+            CHART="$(yq .name $CHARTFILE)" ; \
+            echo "* helm package ${CHART_PATH}" ; \
+            TMPDIR=/tmp/helm-deterministic-repackaging.$$ && \
+            mkdir -p "${TMPDIR}" && \
+            helm package "$CHART_DIR" --version "${VERSION}" --destination "$TMPDIR" && \
+            PACKAGE_FILENAME=${CHART}-${VERSION}.tgz ; \
+            tar xzm -C "${TMPDIR}/" -f ${TMPDIR}/$PACKAGE_FILENAME ; \
+            find -L ${TMPDIR} -exec touch -amt 200101010101.01 {} \; ; \
+            tar cz  -C "${TMPDIR}/" -f ./$PACKAGE_FILENAME "$CHART" ; \
+            rm -rf "${TMPDIR}" ' 'helm-package'
+
+      - name: Helm push
+        id: helm-push
+        if: inputs.action == 'push'
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ inputs.registry }} --username ${{ github.repository_owner }} --password-stdin ; \
+          find -L ./ -name '*.tgz' | xargs -I {} helm push {} "oci://${{ inputs.registry }}/${{ github.repository_owner }}"
