@@ -27,7 +27,7 @@ In order to validate the onboarding manifests:
 - run `make validate-onboarding-manifests`
 
 In order to onboard a new tenant:
-- add your tenant configuration in [tenant config](/bootcamp-resources/references/multi-tenancy/reference/onboard/tenant_config.cue)
+- add your tenant configuration in [tenant config](/bootcamp-resources/modules/multi-tenancy/reference/reference/onboard/tenant_config.cue)
 - `make run`
 
 ## How to run some tests locally

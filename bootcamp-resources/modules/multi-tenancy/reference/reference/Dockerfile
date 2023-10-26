@@ -2,9 +2,9 @@ FROM golang:1.21-alpine3.18
 
 # Install kubectl
 RUN apk update &&  \
-    apk add --no-cache build-base &&  \
-    apk add --no-cache curl  && \
-    apk add --no-cache openssh && \
+    apk add --no-cache build-base=0.5-r3 &&  \
+    apk add --no-cache curl=8.4.0-r0 && \
+    apk add --no-cache openssh=~9.3 && \
     curl -LO "https://dl.k8s.io/release/v1.26.1/bin/linux/amd64/kubectl"
 RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 

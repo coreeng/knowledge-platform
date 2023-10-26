@@ -29,8 +29,8 @@ If you have a different setup make sure you build and push the image to the resp
 
 ## How to create your own autograding module
 
-- Create a new directory under `autograding`
-- Create a Dockerfile that packages your autograding functionality. Have a look at the examples in `autograding`, at the moment
+- Create a new directory under `autograding/modules`
+- Create a Dockerfile that packages your autograding functionality. Have a look at the examples in `autograding/modules`, at the moment
   we have acceptance tests used for autograding some bootcamp standard modules. 
 - Create the helm charts needed for installation of the module
 - Create a deployment pipeline for validating and publishing the image and the helm charts.

@@ -54,7 +54,7 @@ jobs:
     if: ${{ needs.changes.outputs.bootcamp-resources == 'true' && vars.SHOULD_PUSH_BOOTCAMP_ARTIFACTS == 'true' }}
     with:
       action: push
-      path: bootcamp-resources/helm-charts
+      path: bootcamp-resources/autograding/helm-charts
       registry: ghcr.io
       chart-version: ${{ needs.get-version.outputs.version }}
 

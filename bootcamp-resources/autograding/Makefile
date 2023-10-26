@@ -1,9 +1,9 @@
 CURRENT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 MODULE :=
-SUPPORTED_MODULES := "multi-tenancy nft-onservability p2p"
+SUPPORTED_MODULES := "multi-tenancy nft-onservability p2p platform-engineering"
 
-CHART_PATH := $(realpath $(CURRENT_PATH)/../helm-charts/autograding)
+CHART_PATH := $(realpath $(CURRENT_PATH)/helm-charts/autograding)
 CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
 CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
 
@@ -24,13 +24,13 @@ autograde: build install watch-autograding-job ## Run multi tenancy autograding.
 # Public tasks
 .PHONY: build
 build: ## Build the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build
-	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)))
+	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/modules/$(MODULE)))
 	@eval $$(minikube docker-env) ;\
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 
 .PHONY: build-and-push
 build-and-push: ## Build and push the autograding image (Used by Github actions). Usage: make MODULE=<module-name> build-and-push
-	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/$(MODULE)))
+	$(eval MODULE_PATH := $(realpath $(CURRENT_PATH)/modules/$(MODULE)))
 	docker build -t $(DOCKER_IMAGE_NAME) $(MODULE_PATH)
 	docker push $(DOCKER_IMAGE_NAME)
 
