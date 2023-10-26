@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: minimal-reference-app-go-canary-servicemonitor
+  namespace: platform-engineering-autograding
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+    path: /metrics
+  selector:
+    matchLabels:
+      app: canariedapp-autograding-canary

@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    release: kube-prometheus-stack
+  name: canaryapp-rules
+  namespace: platform-engineering-autograding
+spec:
+  groups:
+  - name: ./canaryapp.rules
+    rules:
+    - alert: Canary App returning 500 codes
+      expr: sum by (handler, code) (rate(http_request_duration_seconds_count{code="500",handler="/canaryTest"}[3m])) > 0

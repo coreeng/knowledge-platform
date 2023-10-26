@@ -47,6 +47,13 @@ install: ## Installs the helm charts for a module. Usage: make MODUlE=<module-na
 	helm repo update
 	helm uninstall $(CHART_NAME)-$(MODULE) --wait || true
 	helm install --set module=$(MODULE) $(CHART_NAME)-$(MODULE) $(CHART_PATH)
+# Temporary workaround to install monitoring stack as dependency until we find alternative solution
+ifeq ($(MODULE), platform-engineering)
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	helm repo update
+	helm uninstall kube-prometheus-stack --wait || true
+	helm install -n platform-engineering-autograding kube-prometheus-stack --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false prometheus-community/kube-prometheus-stack
+endif
 
 .PHONY: watch-autograding-job
 watch-autograding-job:

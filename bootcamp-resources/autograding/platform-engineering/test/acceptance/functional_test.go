@@ -19,9 +19,11 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 	"k8s.io/client-go/util/retry"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -174,39 +176,180 @@ func theCanaryDeploymentIsCreated(ctx context.Context, deploymentName string) (c
 func iHaveANamespace(ctx context.Context, namespaceName string) (context.Context, error) {
 	_, err := kubernetesClient.CoreV1().Namespaces().Get(context.TODO(), namespaceName, metav1.GetOptions{})
 	if err != nil {
-		return ctx, fmt.Errorf("error retrieve %s", namespaceName)
+		return ctx, fmt.Errorf("error retrieve %s namespace", namespaceName)
 	}
 	return context.WithValue(ctx, autogradingNsCtxKey{}, namespaceName), nil
 }
 
 func iHaveTheFollowingCR(ctx context.Context, data *godog.Table) (context.Context, error) {
 	pwd, err := os.Getwd()
+	if err != nil {
+		return ctx, fmt.Errorf("getting current working directory: %w", err)
+	}
 	workingDirPath, err := filepath.Abs(pwd)
-	manifestsPath := filepath.Join(workingDirPath, "test/acceptance/manifests/")
-	templatePath := filepath.Join(manifestsPath, "cr-template.yaml")
-	tmpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		return ctx, fmt.Errorf("getting absolute path of working directory: %w", err)
+	}
+	manifestsPath := filepath.Join(workingDirPath)
+	tmpl, err := template.ParseFiles(workingDirPath + "/manifests/cr-template.yaml")
 	if err != nil {
 		logrus.Info(err.Error())
-		return ctx, fmt.Errorf("error parsing the CR template")
+		return ctx, fmt.Errorf("error parsing the CR template: %w", err)
 	}
 	substitutionValues, err := assistdog.NewDefault().ParseMap(data)
 	if err != nil {
-		return ctx, fmt.Errorf("error parsing the data table from the step")
+		return ctx, fmt.Errorf("error parsing the data table from the step: %w", err)
 	}
-	crManifestFile, _ := os.Create(filepath.Join(manifestsPath, "cr.yaml"))
-
+	path := filepath.Join(manifestsPath, "cr.yaml")
+	crManifestFile, err := os.Create(path)
+	if err != nil {
+		return ctx, fmt.Errorf("creating cr.yaml file: %w", err)
+	}
 	tmpl.Execute(crManifestFile, substitutionValues)
 
 	_, err = exec.Command("kubectl", "apply", "-n", ctx.Value(autogradingNsCtxKey{}).(string), "-f", crManifestFile.Name()).Output()
 	if err != nil {
 		logrus.Info(err.Error())
-		return ctx, fmt.Errorf("error creating the custom resource")
+		return ctx, fmt.Errorf("error creating the custom resource: %w", err)
 	}
 	return context.WithValue(ctx, manifestCrKey{}, crManifestFile.Name()), nil
 }
 
 func iUpdateTheCRWith(ctx context.Context, data *godog.Table) (context.Context, error) {
 	return iHaveTheFollowingCR(ctx, data)
+}
+
+func trafficGoesThroughBothCanaryAndNoncanaryDeployments() error {
+	ctx := context.Background()
+	resp, err := getMetrics(ctx, "http_request_duration_seconds_count{handler='/canaryTest',service='canariedapp-autograding-canary'}")
+	if err != nil {
+		return fmt.Errorf("getting ingress metric: %w\n", err)
+	}
+	weightedTraffic, err := strconv.Atoi(resp)
+	if err != nil {
+		return fmt.Errorf("getting prometheus metric value: %w\n", err)
+	}
+
+	if weightedTraffic < 1 {
+		return fmt.Errorf("canary deployment receiving less traffic than expected weight distribution. received %v%%", weightedTraffic)
+	}
+
+	return nil
+}
+
+func myDeploymentIsUpgradedToTheCanaryVersion() error {
+	deployment := "canariedapp-autograding"
+	namespace := "platform-engineering-autograding"
+	res, err := kubernetesClient.AppsV1().Deployments(namespace).Get(context.Background(), deployment, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("getting deployment: %w\n", err)
+	}
+	expected := "cecg/minimal-ref-app:v2"
+	actual := res.Spec.Template.Spec.Containers[0].Image
+	if actual != expected {
+		return fmt.Errorf("expected deployment to be promoted to image: %s but got %s", expected, actual)
+	}
+
+	return nil
+
+}
+
+func mySmokeTestsProduceAAlert(alertname string) error {
+	// Send a request to create a unhealthy deployment
+	url := "http://minimalapp.cecg.io/canaryTest"
+
+	for i := 0; i <= 30; i++ {
+		resp, err := http.Get(url)
+		if err != nil {
+			return fmt.Errorf("smoke test produce alert: :%w", err)
+		}
+
+		if resp.StatusCode != 500 {
+			return fmt.Errorf("received status code: %v from canary deployment. Expected 500", resp.StatusCode)
+		}
+	}
+	// Sleep to give alertmanager time to POST alert
+	logrus.Info("waiting for canary alert to trigger...")
+	time.Sleep(time.Second * 90)
+
+	ctx := context.Background()
+
+	query := fmt.Sprintf("ALERTS{handler='/canaryTest',alertname='%s',alertstate='firing'}", alertname)
+	resp, err := getMetrics(ctx, query)
+	if err != nil {
+		return fmt.Errorf("getting ingress metric: %w\n", err)
+	}
+
+	if resp == "" {
+		return fmt.Errorf("smoke test produce alert: canary alert is not firing but expected it to")
+	}
+
+	alertFiring, err := strconv.Atoi(resp)
+	if err != nil {
+		return fmt.Errorf("convert string to integer: %w\n", err)
+	}
+
+	if alertFiring == 0 {
+		return fmt.Errorf("smoke test produce alert: canary alert is not firing but expected it to")
+	}
+
+	return nil
+}
+
+func trafficGoesThroughNoncanaryDeployments() error {
+	app := "canariedapp-autograding"
+	ingressName := fmt.Sprintf("%s-canary", app)
+	ingress, err := kubernetesClient.NetworkingV1().Ingresses("platform-engineering-autograding").Get(context.TODO(), ingressName, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("getting ingress: %w", err)
+	}
+
+	var weightDistribution string
+	for k, v := range ingress.Annotations {
+		if k == "nginx.ingress.kubernetes.io/canary-weight" {
+			weightDistribution = v
+		}
+	}
+
+	val, err := strconv.Atoi(weightDistribution)
+	if err != nil {
+		return fmt.Errorf("getting ingress: %w", err)
+	}
+
+	if val != 0 {
+		return fmt.Errorf("expected canary-weight value to be 0 but got %d", val)
+	}
+
+	query := "rate(http_request_duration_seconds_count{handler='/canaryTest',service='canariedapp-autograding-canary'}[1m])"
+	interval := time.Now().Add(-time.Minute)
+	weightedTraffic, err := getMetricsRate(context.Background(), query, interval)
+
+	if err != nil {
+		return fmt.Errorf("getting prometheus metric value: %w\n", err)
+	}
+
+	if weightedTraffic != 0 {
+		return fmt.Errorf("unhealthy canary deployment still receiving traffic. Expected no traffic")
+	}
+
+	return nil
+}
+
+func mySmokeTestsViaIngressPass() error {
+	url := "http://minimalapp.cecg.io/canaryTest?status=healthy"
+
+	for i := 0; i <= 50; i++ {
+		resp, err := http.Get(url)
+		if err != nil {
+			return fmt.Errorf("simulate requests: :%w", err)
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("received status code: %v from canary deployment", resp.StatusCode)
+		}
+	}
+
+	return nil
 }
 
 // cleanup functions
@@ -232,17 +375,14 @@ func cleanupManifests(ctx context.Context) error {
 }
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
-		e := cleanupCrs(ctx)
-		if e != nil {
-			return ctx, e
+		if err := cleanupCrs(ctx); err != nil {
+			return ctx, err
 		}
-
-		e = cleanupManifests(ctx)
-		if e != nil {
-			return ctx, e
+		if err := cleanupManifests(ctx); err != nil {
+			return ctx, err
 		}
-		var scenarioSuccess = err == nil
-		PushScenarioMetric(sc.Name, scenarioSuccess)
+		//var scenarioSuccess = err == nil
+		//PushScenarioMetric(sc.Name, scenarioSuccess)
 		return ctx, err
 	})
 	ctx.Step(`^I get the "([^"]*)" namespace$`, iGetTheNamespace)
@@ -257,6 +397,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^I have a namespace "([^"]*)"$`, iHaveANamespace)
 	ctx.Step(`^I have the following CR:$`, iHaveTheFollowingCR)
 	ctx.Step(`^I update the CR with:$`, iUpdateTheCRWith)
+	ctx.Step(`^my deployment is upgraded to the canary version$`, myDeploymentIsUpgradedToTheCanaryVersion)
+	ctx.Step(`^my smoke tests produce a "([^"]*)" alert$`, mySmokeTestsProduceAAlert)
+	ctx.Step(`^my smoke tests via ingress pass$`, mySmokeTestsViaIngressPass)
+	ctx.Step(`^traffic goes through both canary and non-canary deployments$`, trafficGoesThroughBothCanaryAndNoncanaryDeployments)
+	ctx.Step(`^traffic goes through non-canary deployments$`, trafficGoesThroughNoncanaryDeployments)
 }
 
 func TestFeatures(t *testing.T) {

@@ -28,30 +28,29 @@ Feature: Canary Operator Acceptance Criteria
       | image | cecg/minimal-ref-app:v2 |
     Then the canary deployment "canariedapp-autograding-canary" is created
 
-#  @wip
-#  Scenario: When the new canary deployment is stable, traffic through ingress goes through both deployments
-#    Given I have a namespace "canary-operator-autograding"
-#    And I have the following CR:
-#      | Kind  | CanariedApp             |
-#      | name  | canariedapp-autograding |
-#      | image | cecg/minimal-ref-app:v1 |
-#    And I update the CR with:
-#      | Kind  | CanariedApp             |
-#      | name  | canariedapp-autograding |
-#      | image | cecg/minimal-ref-app:v2 |
-#    When my smoke tests via ingress pass
-#    Then traffic goes through both canary and non-canary deployments
-#
-#  @wip
-#  Scenario: When the new canary deployment is not stable, no traffic is going through the canary deployment
-#    Given I have a namespace "canary-operator-autograding"
-#    And I have the following CR:
-#      | Kind  | CanariedApp             |
-#      | name  | canariedapp-autograding |
-#      | image | cecg/minimal-ref-app:v1 |
-#    And I update the CR with:
-#      | Kind  | CanariedApp             |
-#      | name  | canariedapp-autograding |
-#      | image | cecg/minimal-ref-app:v2 |
-#    When my smoke tests produce a "CanaryHealthCheck" alert
-#    Then traffic goes through both canary and non-canary deployments
+  Scenario: When the new canary deployment is stable, traffic through ingress goes through both deployments
+    Given I have a namespace "platform-engineering-autograding"
+    And I have the following CR:
+      | Kind  | CanariedApp             |
+      | name  | canariedapp-autograding |
+      | image | cecg/minimal-ref-app:v1 |
+    And I update the CR with:
+      | Kind  | CanariedApp             |
+      | name  | canariedapp-autograding |
+      | image | cecg/minimal-ref-app:v2 |
+    When my smoke tests via ingress pass
+    Then traffic goes through both canary and non-canary deployments
+    Then my deployment is upgraded to the canary version
+
+  Scenario: When the new canary deployment is not stable, no traffic is going through the canary deployment
+    Given I have a namespace "platform-engineering-autograding"
+    And I have the following CR:
+      | Kind  | CanariedApp             |
+      | name  | canariedapp-autograding |
+      | image | cecg/minimal-ref-app:v1 |
+    And I update the CR with:
+      | Kind  | CanariedApp             |
+      | name  | canariedapp-autograding |
+      | image | cecg/minimal-ref-app:v2 |
+    When my smoke tests produce a "Canary App returning 500 codes" alert
+    Then traffic goes through non-canary deployments
