@@ -1,0 +1,11 @@
+apiVersion: canary.cecg.io/v1
+kind: CanariedApp
+metadata:
+  name: canariedapp-sample
+spec:
+  replicas: 1
+  image: cecg/minimal-ref-app:v2
+  canary-spec:
+    weight: 25
+    replicas: 1
+
