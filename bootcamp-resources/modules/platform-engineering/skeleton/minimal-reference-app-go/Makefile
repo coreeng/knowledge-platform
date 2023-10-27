@@ -21,3 +21,6 @@ ifndef IMAGE_TAG
 endif
 	docker build -t $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG) .
 	docker push $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+run:
+	go run cmd/main.go

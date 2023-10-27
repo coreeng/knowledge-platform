@@ -23,7 +23,7 @@ metadata:
   name: canariedapp-sample
 spec:
   replicas: 1
-  image: bootcamp/minimal-ref-app:unstable-v1
+  image: docker.io/cecg/minimal-ref-app:v1
   canary-spec:
     weight: 25
     replicas: 1
@@ -44,21 +44,17 @@ After the minikube cluster is up and running, run:
 
 ### Step 3 - Build the ref app images needed by the operator
 
-You will need:
-- an image with a "stable" minimal reference application
-- an image with a "broken" minimal reference application
-
-In order to build some test images for the minimal reference app go into the `minimal-reference-app` directory
-in this repo, modify the test endpoint as required by returning for example a different http status code and 
-re-build the image using `make docker-build`. 
+In order to build some test images for the minimal reference app go into the `skeleton/minimal-reference-app-go` directory
+in this repo, modify the test endpoint as required by returning for example a different http status code and re-build the image using 
+`make IMAGE_TAG=v1 build && make IMAGE_TAG=v2 build`. 
 
 In order 
 To check that minikube has access to the above built images, run:
 `minikube image list`
 
 ### Step 3 - Install your CRD and your operator into your cluster
-
 ```
+cd src
 make install
 ```
 
