@@ -7,7 +7,8 @@ pre = "<b></b>"
 +++
 
 ## Motivation
-Give corproate functions visibility into applications running on the containers platform
+
+* Give corporate functions visibility into applications running on the containers platform
 
 ## Requirements
 

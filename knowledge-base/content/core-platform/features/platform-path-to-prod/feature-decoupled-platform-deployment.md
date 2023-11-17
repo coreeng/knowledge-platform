@@ -1,5 +1,5 @@
 +++
-title = "Decoupled Platform Deployment"
+title = "Multiple Platform Lifecycles"
 date = 2022-01-15T11:50:10+02:00
 weight = 2
 chapter = false

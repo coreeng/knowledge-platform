@@ -8,7 +8,7 @@ pre = "<b></b>"
 
 ## Motivation
 
-- Use an organisation's standard group management to control access in the core platform.
+- Use an organisation's standard group management to control who has access to what in the clusters 
 - Delegate to the tenants the membership of their groups.
 
 ## Requirements

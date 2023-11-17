@@ -65,7 +65,7 @@ What is delivered? Exposing of services using a shared set of ingress controller
 
 #### Examples
 
-##### NLBs to Ingress Controller pods on AWS exaple
+##### NLBs to Ingress Controller pods on AWS example 
 
 
 {{< figure src="/images/reference/platform/core-platform-aws-usecase-one.png" >}}

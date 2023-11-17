@@ -7,7 +7,8 @@ pre = "<b></b>"
 +++
 
 ## Motivation
-Lack of confidence in who can do what in clusters.
+
+* Address lack of confidence in who can do what in clusters.
 
 Reports for team owners to understand who can do what in a cluster.
 

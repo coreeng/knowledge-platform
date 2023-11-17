@@ -8,9 +8,9 @@ pre = "<b></b>"
 
 ## Motivation
 
-Have enough core platform environments to implement a P2P for the platform that can safely test, stage, then promote 
+* Have enough core platform environments to implement a P2P for the platform that can safely test, stage, then promote 
 changes to tenant facing environments.
-Treat any environment used by an end user aka tenant as a production environment.
+* Treat any environment used by an end user aka tenant as a production environment.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ For each core platform the environments can change based on requirements. The st
   * Stages platform changes.
 * Dev:
   * Tenanted environment
-* Pre-Prod:
+* Pre-Prod (optional):
   * Tenanted environment
   * Stages tenant changes
   * Prod like
