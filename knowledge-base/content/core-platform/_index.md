@@ -1,5 +1,5 @@
 +++
-title = "Core Developer Platform"
+title = "Developer Platform Roadmap"
 date = 2022-12-27T17:50:10+02:00
 weight = 200
 chapter = false 
