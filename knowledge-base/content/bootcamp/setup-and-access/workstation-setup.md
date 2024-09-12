@@ -20,7 +20,7 @@ Tools to install:
         * If you don’t do this jenv won’t work correctly
         * on Archlinux the `jenv` works without the symlink
 * jEnv: [jEnv - Manage your Java environment](https://www.jenv.be/)
-    * Install jEnv with the following command brew install jenv
+    * Install jEnv with the following command `brew install jenv`
     * Add the path in your `.bash_profile` and `init` jEnv by following the “Installation” instructions in the jEnv site. Remember to reload your bash profile (with `source .bash_profile` or opening a new terminal window.
     * Run `jenv add /opt/homebrew/Cellar/openjdk@17/17.0.5`  (might be a different minor version, and you may have to escape the @)
     * jEnv should output:
@@ -30,15 +30,16 @@ Tools to install:
       ```
 * Docker: [Install on Mac](https://docs.docker.com/desktop/install/mac-install/)
     * After installing, run the Docker application and give permissions. This will install `docker` and `docker-compose`
-* IntelliJ: [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac). Please check with your manager if you can access an IntelliJ IDEA Ultimate licence
-    * If an Ultimate licence is available for you, download and install the IntelliJ IDEA Ultimate binaries
-      * Make sure you have the Go plugin which can be installed from the IntelliJ interface under **Preferences -> Plugins**. Also make sure that the **Enable** go modules integration is checked :white_check_mark: under **Preferences -> Languages and Frameworks -> Go -> Go modules**
-    * Alternatively, download and install IntelliJ IDEA Community Edition
-      * Also download [VSCode](https://code.visualstudio.com/download)
-      * Set up VSCode for Go development [Configure Visual Studio Code for Go development](https://learn.microsoft.com/en-us/azure/developer/go/configure-visual-studio-code)
+* Code Editors (your preferred)
+    * [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=mac) Please check with your manager if you can access an IntelliJ IDEA Ultimate licence
+        * If an Ultimate licence is available for you, download and install the IntelliJ IDEA Ultimate binaries
+        * Make sure you have the Go plugin which can be installed from the IntelliJ interface under **Preferences -> Plugins**. Also make sure that the **Enable** go modules integration is checked :white_check_mark: under **Preferences -> Languages and Frameworks -> Go -> Go modules**
+        * Alternatively, download and install IntelliJ IDEA Community Edition
+    * [Visual Studio Code](https://code.visualstudio.com/download)
+        * [Configure Visual Studio Code for Go development](https://learn.microsoft.com/en-us/azure/developer/go/configure-visual-studio-code)
 * Terminal
     * iTerm: [iTerm2 - macOS Terminal Replacement](https://iterm2.com/)  (or your preferred)
-* Minikube & Kubernetes Tooling
+* Kubernetes Tooling
     * Install with brew: [minikube](https://formulae.brew.sh/formula/minikube)
         * `brew install minikube`
     * Install with brew: [kubernetes-cli](https://formulae.brew.sh/formula/kubernetes-cli)

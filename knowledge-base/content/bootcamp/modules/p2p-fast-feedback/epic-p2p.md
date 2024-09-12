@@ -4,8 +4,6 @@ weight = 6
 chapter = false
 +++
 
-{{% watermark image="/images/logo.png" %}}
-
 ## Motivation
 
 Understand how the same P2P can be used for application that use difference tech stacks.
@@ -13,12 +11,12 @@ Understand how the same P2P can be used for application that use difference tech
 ## Requirements
 
 * Share the same P2P between the Java and Go reference applications 
-  * Have both copied into your own private repository, or one copied twice
+  * Have both cloned into your own private repository, or one cloned twice
 * Custom steps for each application should be in the Make file rather than in the pipeline definition so we achieve a single action used across different apps with specific implementation living in the app itself
 
 ## Questions / Defuzz / Decisions
 
-The approach for this should be the "Automatically generated as a platform engineering service" as described in [consolidated P2P](/core-p2p/p2p-consolidation).
+The approach for this should be the "Automatically generated as a platform engineering service" as described in [consolidated P2P]({{% ref "/roadmaps/core-p2p/p2p-consolidation/" %}}).
 
 #### Tekton
 

@@ -1,16 +1,14 @@
 +++
 title = "Bootcamp"
 date = 2022-12-22T05:07:10+02:00
-weight = 100
+weight = 2000
 chapter = false 
 pre = ""
 +++
 
 #### Introduction
 
-Welcome to the CECG Platform Engineering bootcamp. A quick tour of everything you need to effectively
-work in a Platform Engineering team focussing on building a Kubernetes based bespoke [PaaS aka a Core Platform](/core-platform/)
-and a [consolidated Path to Production](/bootcamp/modules/p2p-fast-feedback/epic-p2p/) for how users of the platform deploy applications to production.
+Welcome to the CECG Platform Engineering bootcamp. A quick tour of everything you need to effectively work in a Platform Engineering team focussing on building a Kubernetes based bespoke [PaaS aka a Core Platform] and a [consolidated Path to Production](/bootcamp/modules/p2p-fast-feedback/epic-p2p/) for how users of the platform deploy applications to production.
 
 #### Prerequsites
 

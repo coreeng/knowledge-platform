@@ -17,12 +17,15 @@ chapter = false
 
 ### Additional Information
 
-There is a handy helm chart that installs all three. Unfortunately it doesn’t quite work with the latest version of minikube and Kubernetes. 
+There is a handy helm chart that installs all three. It also includes predefined grafana dashboards where you can find stats for the reference application.
+Unfortunately it doesn’t quite work with the latest version of minikube and Kubernetes. 
 We have a fork in CECG that does. GitHub - coreeng/helm-charts: [Prometheus community Helm charts](https://github.com/coreeng/helm-charts)
 
 ```bash
 git clone git@github.com:coreeng/helm-charts.git
 cd helm-charts/charts/kube-prometheus-stack
+helm repo add prom https://prometheus-community.github.io/helm-charts
+helm dependency build
 helm repo add grafana https://grafana.github.io/helm-charts
 helm install prom ./ --set prometheus.prometheusSpec.enableRemoteWriteReceiver=true
 ```

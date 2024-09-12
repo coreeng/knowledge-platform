@@ -26,7 +26,7 @@ chapter = false
 
 * What tools will you use to do the various Kubernetes updates? Helm? Kustomize?
   * Think about the user interface
-  * Create an [ADR](/core-engineer/adrs/) with your decision
+  * Create an [ADR](../../../knowledge/foundational-practices/adrs) with your decision
 * How do you deploy replicas without them receiving production traffic?
 * How will you deploy prometheus with custom configuration?
     * Maybe a folder in your repo with a script that deploys the helm chart and overrides configuration

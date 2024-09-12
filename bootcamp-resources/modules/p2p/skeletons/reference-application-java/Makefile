@@ -1,8 +1,8 @@
 projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 os := $(shell uname)
 VERSION ?= $(shell git rev-parse --short HEAD)
-## localhost by default, can be overridden at runtime when running make target e.g REGISTRY=minikube:5000 make <target_name>
-REGISTRY ?= localhost:5000
+SERVICE_ENDPOINT = http://service:8080
+registry = minikube:5000
 image_name = reference-service
 image_tag = latest
 tenant_namespace = tenant-1
@@ -39,11 +39,11 @@ local-stubbed-nft: ## Run non-functional tests locally
 
 .PHONY: stubbed-functional
 stubbed-functional: ## Perform functional tests against stubs
-	docker compose run --rm gradle_build sh -c 'SERVICE_ENDPOINT="http://service:8080" gradle --no-daemon functional:clean functional:test'
+	docker compose run --rm gradle_build sh -c 'SERVICE_ENDPOINT="$(SERVICE_ENDPOINT)" gradle --no-daemon functional:clean functional:test'
 
 .PHONY: stubbed-nft
 stubbed-nft: ## Perform non-functional tests against stubs
-	docker compose run --rm k6 run ./nft/ramp-up/test.js
+	docker compose run --rm k6 run -e SERVICE_ENDPOINT="$(SERVICE_ENDPOINT)" ./nft/ramp-up/test.js
 
 .PHONY: extended-stubbed-nft
 extended-stubbed-nft: ## Perform extended non-functional tests against stubs
@@ -65,25 +65,25 @@ run-local: ## Run the reference application locally
 
 .PHONY: docker-build
 docker-build: ## Build the reference application, and package as a Docker image
-	docker build --file Dockerfile.service --tag $(image_name):$(image_tag) .
+	docker build --file Dockerfile.service --tag $(registry)/$(image_name):$(image_tag) .
 
 .PHONY: docker-push
 docker-push: ## Push the Docker image to an image registry
-	docker image push $(image_name):$(image_tag)
+	docker image push $(registry)/$(image_name):$(image_tag)
 
 # Autograding related tasks
 .PHONY: autograde-p2p
 autograde-p2p: ## Run autograding for the module "p2p"
-	helm uninstall p2p-autograding --wait || true
-	helm install --set module=p2p p2p-autograding oci://ghcr.io/coreeng/cecg-bootcamp-autograding
+	helm uninstall cecg-bootcamp-autograding-p2p --wait || true
+	helm install --set module=p2p cecg-bootcamp-autograding-p2p oci://ghcr.io/coreeng/cecg-bootcamp-autograding
 	@echo "Waiting for the jobs output..."
 	@kubectl wait pods -n p2p-autograding --for condition=Ready --selector=job-name=p2p-acceptance-tests || true
 	@kubectl -n p2p-autograding logs -f job/p2p-acceptance-tests
 
 .PHONY: autograde-nft-obs
 autograde-nft-obs: ## Run autograding for the module "nft-observability"
-	helm uninstall nft-observability-autograding --wait || true
-	helm install --set module=nft-observability nft-observability-autograding oci://ghcr.io/coreeng/cecg-bootcamp-autograding
+	helm uninstall cecg-bootcamp-autograding-nft-observability --wait || true
+	helm install --set module=nft-observability cecg-bootcamp-autograding-nft-observability oci://ghcr.io/coreeng/cecg-bootcamp-autograding
 	@echo "Waiting for the jobs output..."
 	@kubectl wait pods -n nft-observability-autograding --for condition=Ready --selector=job-name=nft-observability-acceptance-tests || true
 	@kubectl -n nft-observability-autograding logs -f job/nft-observability-acceptance-tests

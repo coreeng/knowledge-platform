@@ -15,11 +15,11 @@ chapter = false
 The requirements should be implemented as features in the repo added as part of the Multi Tenancy RBAC Epic:
 `bootcamp-multi-tenancy-<github handle>`.
 
-Implement the following set of [Kubernetes Network](/core-platform/features/kubernetes-network/) features:
+Implement the following set of [Kubernetes Network]({{% ref "/roadmaps/core-platform/features/kubernetes-network/" %}}) features:
 
-* [CNI](/core-platform/features/kubernetes-network/feature-cni/)
-* [Tenant Managed Firewalls](/core-platform/features/kubernetes-network/feature-tenant-managed-firewalls)
-* [Default Deny](/core-platform/features/kubernetes-network/feature-default-deny/)
+* [CNI]({{% ref "/roadmaps/core-platform/features/kubernetes-network/feature-cni/" %}})
+* [Tenant Managed Firewalls]({{% ref "/roadmaps/core-platform/features/kubernetes-network/feature-tenant-managed-firewalls" %}})
+* [Default Deny]({{% ref "/roadmaps/core-platform/features/kubernetes-network/feature-default-deny" %}})
 
 ### Specific requirements for the features above
 
@@ -30,7 +30,7 @@ Implement the following set of [Kubernetes Network](/core-platform/features/kube
 #### Default deny
 
 Platform responsibilities - when a tenant is onboarded the following rules apply:
-* [Default deny](/core-platform/features/kubernetes-network/feature-default-deny/) for inbound network traffic
+* [Default deny]({{% ref "/roadmaps/core-platform/features/kubernetes-network/feature-default-deny/" %}}) for inbound network traffic
 * Applications in the same namespace can, by default, communicate with each other
 * Applications in different namespaces can, by default, not communicate with each other (Application 1 cannot communicate with application 3 - use the applications deployed in the multi tenancy RBAC epic)
 

@@ -6,11 +6,9 @@ chapter = false
 pre = "<b>1.3. </b>"
 +++
 
-Time to get started!
-
 Each module is made up of:
-* Learning plan epic: Work with your Scrum Master, Mentor and Product Owner to decide what external courses and reading you need to do.
-* Project: A set of epics to complete. The epics are included in the module description and imported to your GitHub repo.
+* <strong>Learning plan epic:</strong> Work with your Scrum Master, Mentor and Product Owner to decide what external courses and reading you need to do.
+* <strong>Project:</strong> A set of epics to complete. The epics are included in the module description and imported to your GitHub repo.
 
 Once you've read through the background and the epics 
 schedule a [module planning session](../ways-of-working/rituals-artfifacts#module-planning).

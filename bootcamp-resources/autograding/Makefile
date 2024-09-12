@@ -3,12 +3,13 @@ CURRENT_PATH := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 MODULE :=
 SUPPORTED_MODULES := "multi-tenancy nft-onservability p2p platform-engineering"
 
+PUSHGATEWAY_CHART_PATH = $(realpath $(CURRENT_PATH)/helm-charts/pushgateway)
 CHART_PATH := $(realpath $(CURRENT_PATH)/helm-charts/autograding)
 CHART_NAME := $(shell grep -E '^name' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}')
 CHART_VERSION := $(shell grep -E '^version' $(CHART_PATH)/Chart.yaml | awk '{printf $$2}'))
 
 # Docker related variables
-DOCKER_IMAGE_NAME := coreeng/$(MODULE)-autograding
+DOCKER_IMAGE_NAME := ghcr.io/coreeng/$(MODULE)-autograding
 
 .PHONY: help
 help:
@@ -35,8 +36,10 @@ build-and-push: ## Build and push the autograding image (Used by Github actions)
 	docker push $(DOCKER_IMAGE_NAME)
 
 .PHONY: install-pushgateway
-install-pushgateway: MODULE=pushgateway
-install-pushgateway: install ## Install pushgateway
+install-pushgateway:
+	helm repo update
+	helm uninstall bootcamp-pushgateway-autograding --wait || true
+	helm install bootcamp-pushgateway-autograding $(PUSHGATEWAY_CHART_PATH)
 
 .PHONY: port-forward-pushgateway
 port-forward-pushgateway: ## Port forward push gateway
@@ -46,7 +49,7 @@ port-forward-pushgateway: ## Port forward push gateway
 install: ## Installs the helm charts for a module. Usage: make MODUlE=<module-name> install
 	helm repo update
 	helm uninstall $(CHART_NAME)-$(MODULE) --wait || true
-	helm install --set module=$(MODULE) $(CHART_NAME)-$(MODULE) $(CHART_PATH)
+	helm install --set module=$(MODULE) --set localMode=true $(CHART_NAME)-$(MODULE) $(CHART_PATH)
 # Temporary workaround to install monitoring stack as dependency until we find alternative solution
 ifeq ($(MODULE), platform-engineering)
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts

@@ -6,18 +6,18 @@ chapter = false
 
 ### Architecture Decision Records
 
-We'll be introducing a new engineering process as part of this module: [Architecture Decision Records](/core-engineer/adrs/).
+We'll be introducing a new engineering process as part of this module: [Architecture Decision Records]({{% ref "/knowledge/foundational-practices/adrs" %}}).
 You can store the ADRs for the rest of the bootcamp in your GitHub repo.
-We suggest using the ADR tool recommended in [ADRs](/core-engineer/adrs/).
+We suggest using the ADR tool recommended in [ADRs]({{% ref "/knowledge/foundational-practices/adrs" %}}).
 
 ### Background material 
 
 Review what a Core Platform is vs regular Kubernetes:
-* [Core Platform](/core-platform/)
+* [Core Platform]({{% ref "/roadmaps/core-platform" %}})
 
 Understand about deployment models and promotion:
-* [Promotion](/core-p2p/promotion)
-* [Deployment Models](/core-p2p/deployment-models)
+* [Promotion]({{% ref "/knowledge/continuous-delivery/promotion" %}})
+* [Deployment Models]({{% ref "/knowledge/continuous-delivery/deployment-models" %}})
 
 #### Cloud Guru
 
@@ -31,7 +31,7 @@ Kubernetes tooling:
 To implement parts of canary deployments:
  * [Prometheus and Java](https://learn.acloud.guru/handson/bcd8596c-9c70-4106-afe3-fe78db13f090) 
 
-#### Plurasight 
+#### Pluralsight 
 
 * [Kubernetes Core Concepts](https://www.pluralsight.com/courses/kubernetes-developers-core-concepts)
 * Any parts of [Certified Kubernetes Administrator](https://www.pluralsight.com/paths/certified-kubernetes-administrator)

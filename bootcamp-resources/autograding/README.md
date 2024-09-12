@@ -11,7 +11,11 @@ At the moment we do autograding using BDD testing in Go, using [GoDog](https://g
 Each autograding module has its own directory within the `autograding` folder, which contains:
     - the Go BDD tests packaged in a docker image
     - the helm charts for installing the necessary infrastructure
- 
+
+## Note
+
+Makefile will use minikube's docker daemon for building and storing images.
+
 ## How to run the autograding locally
 
 - `make install-pushgateway`
@@ -19,7 +23,7 @@ Each autograding module has its own directory within the `autograding` folder, w
 - `make MODULE=<module-name> autograde`
 
 To see the metrics for the autograding tests:
-- `make port-forward-pushagateway`
+- `make port-forward-pushgateway`
 - go to http://localhost:9091
 
 Note: at the moment, when building locally, the image is pushed to the minikube repo. Have a look at the `build` task. 

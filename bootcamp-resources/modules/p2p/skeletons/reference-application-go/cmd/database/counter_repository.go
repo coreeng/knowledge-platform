@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/coreeng/core-reference-application-go/cmd/structs"
 	log "github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func IncrementCounterValue(counterName string) structs.Counter {
 
 	insertQuery := buildInsertToCounterTableQuery(nameColumn, counterColumn, counterName, counter.Counter)
 
-	_, err := database.Query(insertQuery)
+	_, err := database.Exec(insertQuery)
 	if err != nil {
 		log.Errorf("Error occurred while inserting into the counter table, error: %v", err)
 	}
@@ -45,9 +46,9 @@ func findOrCreateCounter(counterName string) structs.Counter {
 	query := fmt.Sprintf(SelectFromCounterTable, counterName)
 	row := database.QueryRow(query)
 	err := row.Scan(&counter.Name, &counter.Counter)
-	if err != nil && err == sql.ErrNoRows {
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
 		return structs.Counter{Name: counterName, Counter: 0}
-	} else {
+	} else if err != nil {
 		log.Errorf("Error occurred while selecting counter, error: %v", err)
 	}
 
