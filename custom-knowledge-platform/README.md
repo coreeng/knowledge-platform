@@ -49,7 +49,7 @@ Inside the customisation folder, you'll discover samples of components that you 
 the config (`config.toml`) file. Additionally, you'll find a `theme-cecg.css` file, which serves as a customizable CSS file.
 This `theme-cecg.css` file is the default one utilized in the base image.
 
-In the [config.toml](customisation/hugo.toml) file, you'll notice that the themeVariant is currently set to `cecg`. If you wish to 
+In the [config.toml](customisation/config.toml) file, you'll notice that the themeVariant is currently set to `cecg`. If you wish to 
 replace the default `cecg` CSS file with your own custom `.css` file in the `Dockerfile`, it's important to follow the 
 naming convention: `theme-<yourThemeName>.css`. Afterwards, you can reference your custom CSS file in the `themeVariant` field
 of the `config.toml` by using the name after the `theme-` prefix. For example, if you name your file `theme-example.css`,
