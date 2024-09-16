@@ -12,8 +12,8 @@ chapter = false
 **What should you {{< colour green understand >}} at the end of the module?**
 
 * The later stages of a mature Path to Production 
-  * [Promotion: Gates, steps](/core-p2p/promotion)
-  * [Extended testing](/core-p2p/testing-strategy/)
+  * [Promotion: Gates, steps]({{% ref "/knowledge/continuous-delivery/promotion" %}})
+  * [Extended testing]({{% ref "/knowledge/foundational-practices/testing" %}})
   * Promotion based on time in environments, alerts, monitoring etc
 * Monitoring and alerting
   * Metrics, aggregated logs, tracing

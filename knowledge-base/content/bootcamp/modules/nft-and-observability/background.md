@@ -12,7 +12,7 @@ chapter = false
 
 #### Cloud Guru 
  
-* **Highly recommended** on [Prometheus, Alert Manager, and Grafana](https://acloudguru.com/course/devops-monitoring-deep-dive): [DevOps Monitoring Deep Dive](https://acloudguru.com/course/devops-monitoring-deep-dive)
+* **Highly recommended** on [Prometheus, Alert Manager, and Grafana](https://learn.acloud.guru/course/852a204f-8dff-4196-bcf8-922a25cc5a64/overview): [DevOps Monitoring Deep Dive](https://learn.acloud.guru/course/852a204f-8dff-4196-bcf8-922a25cc5a64/dashboard)
 
 #### Plurasight
 

@@ -10,20 +10,20 @@ Learn about the steps for a mature path to production via the bootcamp reference
 
 ## Requirements
 
-* Copy either the Java or Go bootcamp reference application as a private repo in the same organisation with the name `reference-application-(java|go)-<github handle>`
+* Copy the  Java (bootcamp-resources/skeletons/reference-application-java) or Go (bootcamp-resources/skeletons/reference-application-go) bootcamp reference applications as a private repo in the same organisation with the name `reference-application-(java|go)-<github handle>`
 * Checkout and verify workstation setup by running it locally, including building, running functional and non-functional tests 
-* Update the registry to one that that can be used by your local cluster
+* Update the registry to one that can be used by your local cluster
 * Deploy the application to a local Kubernetes cluster and run the functional tests 
-* Complete the CI for the reference application
-  * Branch protected for the `main` branch 
-    * No force pushes to main
-  * Pull-requests are required for merging to main
-    * At least one peer review :eyes:
-    * “Local testing” taken place :test_tube:
-  * On merge to main
-    * Versioned image built
-    * Deployed functional tests run
-    * Deployed NFT tests run
+* Complete the CI requirements for the reference application
+  1. Branch protected for the `main` branch 
+      * No force pushes to main branch
+  2. Pull-requests are required for merging to main branch
+      * At least one peer review :eyes:
+      * “Local testing” taken place :test_tube:
+  3. On merge to main branch, the following should be enforced:
+      * Versioned image built
+      * Deployed functional tests run
+      * Deployed NFT tests run
 
 
 ## Questions / Defuzz / Decisions
@@ -34,9 +34,9 @@ There are two technologies that can be used for the P2P:
 
 Agree with your product owner which to use for this epic.
 
-**Q: What is "local" testing?** Any test that can be run without the need for a real environment. See [Testing Strategy](/core-p2p/testing-strategy/).
+**Q: What is "local" testing?** Any test that can be run without the need for a real environment. See [Testing Strategy]({{% ref "/knowledge/foundational-practices/testing/" %}}).
 
-**Q: What is deployed testing?** See [Deployed vs non-Deployed tests](/core-p2p/testing-strategy/#deployed-vs-non-deployed-tests)
+**Q: What is deployed testing?** See [Deployed vs non-Deployed tests]({{% ref "/knowledge/foundational-practices/testing#deployed-vs-non-deployed-tests" %}})
 
 **Q: What registry can be used?**
 * Dockerhub
@@ -45,8 +45,8 @@ Agree with your product owner which to use for this epic.
 
 ### Tekton
 
-Get a locally running [Tekton Cluster for this epic](/bootcamp/setup-and-access/epic-tekton/).
-For deployed testing the applicaiton can be deployed to your local cluster.
+Get a locally running [Tekton Cluster for this epic](https://tekton.dev/docs/getting-started/).
+For deployed testing the application can be deployed to your local cluster.
 
 ### GitHub Actions
 

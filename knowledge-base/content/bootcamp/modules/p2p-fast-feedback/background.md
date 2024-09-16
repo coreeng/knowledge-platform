@@ -69,7 +69,7 @@ BDD style tests are used by applications that are deployed to the core platform 
       {{% /expand%}}
 
 ### Local build setup
-* Three amigos (Make, Docker, & Compose) [3 Musketeers](https://3musketeers.io/guide/)
+* Three amigos (Make, Docker, & Compose) [3 Musketeers](https://amaysim.engineering/the-3-musketeers-how-make-docker-and-compose-enable-us-to-release-many-times-a-day-e92ca816ef17)
     * We’ll use this to run commands with make and Docker
 
 

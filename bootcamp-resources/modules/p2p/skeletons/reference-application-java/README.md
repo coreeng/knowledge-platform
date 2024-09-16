@@ -3,7 +3,7 @@
 ## Path to Production (P2P) Interface
 
 The P2P interface is how the generated pipelines interact with the repo.
-For the CECG reference this follows the [3 musketeers pattern](https://3musketeers.io/) of using:
+For the CECG reference this follows the [3 musketeers pattern](https://amaysim.engineering/the-3-musketeers-how-make-docker-and-compose-enable-us-to-release-many-times-a-day-e92ca816ef17) of using:
 
 * Make
 * Docker

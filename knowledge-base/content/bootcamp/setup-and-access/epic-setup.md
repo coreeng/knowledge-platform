@@ -16,7 +16,7 @@ chapter = false
 * Ensure you've been created a repo with all the epics
 * Learn to use the board view in GitHub Projects
 * Create a GitHub project named Bootcamp-<handle> where handle is your github name (this may have already been created for you)
-* Add project to your bootcamp repo's project view
+* Add project to your bootcamp repo's project view (in your repository `Projects->Link a project`)
 * Add the epics (GitHub issues) to the project board (there is a field in each issue that can be set)
 * Get the Scrum Master to arrange your first planning session with the Product Owner and Mentor to discuss which tasks you'll work on in the next week
 * Create any tasks that are required and link them in the deliverables section

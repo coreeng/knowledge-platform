@@ -15,10 +15,10 @@ chapter = false
 * Everything to meet these requirements should be in a separate repo you create in the organisation `bootcamp-multi-tenancy-<github handle>`
 * Tenants can onboard to the platform with a single action e.g. a PR
 
-* We're going to implement the following [RBAC](/core-platform/features/multi-tenant-access/) features:
+* We're going to implement the following [RBAC]({{% ref "/roadmaps/core-platform/features/multi-tenant-access/" %}}) features:
 
-  * [Tenant Kubernetes access](/core-platform/features/multi-tenant-access/feature-tenant-kubernetes-access/) (partially)
-  * [Cluster Resource Creation](/core-platform/features/multi-tenant-access/feature-cluster-resource-creation)
+  * [Tenant Kubernetes access]({{% ref "/roadmaps/core-platform/features/multi-tenant-access/feature-tenant-kubernetes-access/" %}}) (partially)
+  * [Cluster Resource Creation]({{% ref "/roadmaps/core-platform/features/multi-tenant-access/feature-cluster-resource-creation" %}})
 
 ### Specific requirements for the features above
 
@@ -95,6 +95,6 @@ How would this be deployed for the bootcamp versus in a more realistic setup?
   * CI: Validates any configuration against a schema. Versions the configuration. 
   * CD: Deploys the resources to the first environment then promotes through other environments. Quality Gates are in place. 
 
-Key decisions requiring [ADRs](/core-engineer/adrs/):
+Key decisions requiring [ADRs]({{% ref "/knowledge/foundational-practices/adrs/" %}}):
 
 * How are Kubernetes resources deployed?

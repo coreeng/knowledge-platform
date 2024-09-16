@@ -72,7 +72,7 @@ cat ~/.ssh/id_ed25519 | base64
 Put the base64 private key and known hosts file into a secret called `git-credentials`. You can use the template below
 
 You can use the existing known hosts base64 within `git-credentials-template.yaml` which includes the GitHub IPs.
-After creating the secret it should be applied to the Minikube cluster, e.g. `kubectl apply -f tekton/git-credentials.yaml`
+After creating the secret it should be applied to the Minikube cluster, e.g. `kubectl apply -f tekton/git-credentials-template.yaml`
 
 ```
 apiVersion: v1
@@ -95,7 +95,7 @@ You can use the existing `minikube-credetials-template.yaml` file, replacing `MI
 Get the base64 client key:  cat ~/.minikube/profiles/minikube/client.key | base64
 Get the base64 client crt:  cat ~/.minikube/profiles/minikube/client.crt | base64
 ```
-After updating the secret it should be applied to the Minikube cluster, e.g. `kubectl apply -f tekton/minikube-credentials.yaml`
+After updating the secret it should be applied to the Minikube cluster, e.g. `kubectl apply -f tekton/minikube-credentials-template.yaml`
 
 ## Create a web hook on your GitHub fork repo
 

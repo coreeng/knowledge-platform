@@ -13,10 +13,10 @@ This page serves to clarify terms around backlogs and rituals.
 
 We break work into deliverables, small pieces of work that can be done by 1 person or a pair of people. 
 Large parts of work are delivered as part of an epic.
-For an epic or a deliverable a defuzz meeting can be scheduled that gets everyone together to define the 
+For an epic or a deliverable a [defuzz meeting](#epic-defuzz) can be scheduled that gets everyone together to define the 
 epic or deliverable before work starts.
 
-#### Epic 
+#### Epic
 
 An epic is a large chunk of work that can’t be captured in a single deliverable a.k.a. task in 1-2 weeks.
 An epics should:
