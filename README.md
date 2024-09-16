@@ -1,10 +1,9 @@
-# CECG Knowledge Platform
+# CECG Training Platform
 
-The CECG Knowledge Platform is how we train our platform engineers and assist our clients to train their platform engineers.
+The CECG Training Platform is how we train our platform engineers and assist our clients to train their platform engineers.
 
 It is made up of:
 
-* Our, client agnostic, approach to [platform engineering](./knowledge-base) aka our [Knowledge Base](./knowledge-base/). Specifically around building [developer platforms](./knowledge-base/content/core-platform/) and [consoldiated Path to Production](./knowledge-base/content/core-p2p/) for the tenants of the developer platform.
 * [Our Bootcamp](./knowledge-base/content/bootcamp/), a hands on, intensive training that all CECG engineers go through.
 * [Custom Knowledge Platform](./custom-knowledge-platform/): The ability for you to host your own version of the knowledge platform, including custom bootcamp modules specific to your setup and custom knowledge articles.
 
@@ -28,4 +27,4 @@ See [Running your own Knowledge Platform](./custom-knowledge-platform/README.md)
 
 ## Running locally
 
-See [running the Knowledge Platform](./knowledge-base/) without customisation.
+See [running the Training Platform](./knowledge-base/) without customisation.

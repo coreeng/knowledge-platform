@@ -2,21 +2,32 @@
 
 The knowledge base is made up of:
 
-* Industry platform engineering modules on [Developer Platforms](./content/core-platform/) & [Consolidated P2P (paved paths)](./content/core-p2p/)
 * Hands on [bootcamp](./content/bootcamp/)
 
-## Running Locally
+## Running the Site Locally
 
-The site can be run locally with Docker:
+You can run the site locally using the following methods:
 
-Build the docker image:
+### Docker
 
+**Prerequisites:**  
+Make sure Docker is installed on your system. If not, you can download it [here](https://www.docker.com/products/docker-desktop/).
+
+```sh
+make run-local
 ```
-docker build . -t knowledge-platform
+
+> **_NOTE:_** You will see your changes live as you make them.
+
+### Hugo
+
+**Prerequisites:**  
+Install Hugo by following the instructions [here](https://gohugo.io/installation/).
+
+Start the Hugo server with:
+
+```sh
+hugo serve
 ```
 
-Then run it locally:
-
-```
-docker run -d -p 8080:8080 knowledge-platform
-```
+> **_NOTE:_** With Hugo, you can see your changes live as you make them.
