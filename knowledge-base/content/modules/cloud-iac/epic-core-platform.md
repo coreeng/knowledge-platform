@@ -12,10 +12,10 @@ chapter = false
 
 Implement the following Core Platform features.
 
-* [Connected Kubernetes: Basic Clusters]({{% ref "/roadmaps/core-platform/features/connected-kubernetes/feature-basic-cluster/" %}})
-* [Connected Kubernetes: Node Pools]({{% ref "/roadmaps/core-platform/features/connected-kubernetes/feature-node-pools/" %}})
-* [Kubernetes Network: CNI]({{% ref "/roadmaps/core-platform/features/kubernetes-network/feature-cni/" %}})
-* [Ingress: Platform Ingress]({{% ref "/roadmaps/core-platform/features/ingress/feature-platform-ingress/" %}})
+* Connected Kubernetes: Basic Clusters
+* Connected Kubernetes: Node Pools
+* Kubernetes Network: CNI
+* Ingress: Platform Ingress
 * An end-to-end test (preferably Golang) of Ingress that:
   * Deploys an application
   * Exposes the service via ingress

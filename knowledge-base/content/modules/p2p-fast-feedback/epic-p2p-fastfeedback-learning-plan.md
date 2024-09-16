@@ -18,7 +18,7 @@ Create a learning plan for Path to Production Fast Feedback.
 
 ## Deliverables (For Epic)
 
-- [P2P Reference]({{% ref "/roadmaps/core-p2p/" %}})
+- P2P Reference
 - [Tekton Tutorial](https://tekton.dev/docs/getting-started/)
 - ...
 

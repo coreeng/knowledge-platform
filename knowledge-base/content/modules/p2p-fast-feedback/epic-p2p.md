@@ -16,7 +16,7 @@ Understand how the same P2P can be used for application that use difference tech
 
 ## Questions / Defuzz / Decisions
 
-The approach for this should be the "Automatically generated as a platform engineering service" as described in [consolidated P2P]({{% ref "/roadmaps/core-p2p/p2p-consolidation/" %}}).
+The approach for this should be the "Automatically generated as a platform engineering service" as described in consolidated P2P.
 
 #### Tekton
 

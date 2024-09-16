@@ -1,9 +1,9 @@
 +++
 title = "Modules"
 date = 2022-12-22T05:07:10+02:00
-weight = 33
+weight = 30
 chapter = false 
-pre = "<b>1.3. </b>"
+pre = ""
 +++
 
 Each module is made up of:

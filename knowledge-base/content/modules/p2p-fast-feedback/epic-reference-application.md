@@ -34,9 +34,9 @@ There are two technologies that can be used for the P2P:
 
 Agree with your product owner which to use for this epic.
 
-**Q: What is "local" testing?** Any test that can be run without the need for a real environment. See [Testing Strategy]({{% ref "/knowledge/foundational-practices/testing/" %}}).
+**Q: What is "local" testing?** Any test that can be run without the need for a real environment. See Testing Strategy.
 
-**Q: What is deployed testing?** See [Deployed vs non-Deployed tests]({{% ref "/knowledge/foundational-practices/testing#deployed-vs-non-deployed-tests" %}})
+**Q: What is deployed testing?** See Deployed vs non-Deployed tests
 
 **Q: What registry can be used?**
 * Dockerhub

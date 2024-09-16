@@ -1,16 +1,16 @@
 +++
 title = "Ways of Working"
 date = 2022-12-22T05:07:18+02:00
-weight = 2
+weight = 10
 chapter = false
-pre = "<b>1.1. </b>"
+pre = ""
 +++
 
 
 ## Agile in Practice
 
 The Bootcamp is run like as an agile project. You'll be working off an epic level backlog but how you implement
-each epic is up to you. This is to encourage the principle of [solutionising should be led by engineering teams]({{% ref "/knowledge/delivery/delivery-principles/#solutionising-should-be-led-by-engineering-teams" %}})
+each epic is up to you. This is to encourage the principle of solutionising should be led by engineering teams.
 
 
 

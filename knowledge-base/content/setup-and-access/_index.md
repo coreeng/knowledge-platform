@@ -1,9 +1,9 @@
 +++
 title = "Setup and Access"
 date = 2022-12-22T05:07:18+02:00
-weight = 3
+weight = 20
 chapter = false
-pre = "<b>1.2. </b>"
+pre = ""
 +++
 
 ## Systems

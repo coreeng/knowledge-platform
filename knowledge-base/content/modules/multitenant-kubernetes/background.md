@@ -6,18 +6,18 @@ chapter = false
 
 ### Architecture Decision Records
 
-We'll be introducing a new engineering process as part of this module: [Architecture Decision Records]({{% ref "/knowledge/foundational-practices/adrs" %}}).
+We'll be introducing a new engineering process as part of this module: Architecture Decision Records.
 You can store the ADRs for the rest of the bootcamp in your GitHub repo.
-We suggest using the ADR tool recommended in [ADRs]({{% ref "/knowledge/foundational-practices/adrs" %}}).
+We suggest using the ADR tool recommended in ADRs.
 
 ### Background material 
 
 Review what a Core Platform is vs regular Kubernetes:
-* [Core Platform]({{% ref "/roadmaps/core-platform" %}})
+* Core Platform
 
 Understand about deployment models and promotion:
-* [Promotion]({{% ref "/knowledge/continuous-delivery/promotion" %}})
-* [Deployment Models]({{% ref "/knowledge/continuous-delivery/deployment-models" %}})
+* Promotion
+* Deployment Models
 
 #### Cloud Guru
 
