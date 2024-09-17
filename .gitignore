@@ -3,6 +3,7 @@
 .*lock
 
 initialisation/initialisation
+knowledge-base/public
 
 .gradle
 build

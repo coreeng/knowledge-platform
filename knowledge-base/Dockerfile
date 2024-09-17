@@ -1,7 +1,7 @@
 FROM alpine:3.9
 
 # The Hugo version
-ARG HUGO_VERSION=0.111.3
+ARG HUGO_VERSION=0.132.1
 
 # Add a non-root user
 RUN addgroup -S hugo && adduser -S -G hugo hugo
@@ -31,4 +31,4 @@ USER hugo
 
 # Run Hugo
 ENTRYPOINT ["hugo"]
-CMD ["serve", "--bind", "0.0.0.0", "--port", "8080", "--verbose", "--verboseLog"]
+CMD ["serve", "--bind", "0.0.0.0", "--port", "8080", "--logLevel=debug"]
