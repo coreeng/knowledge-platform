@@ -13,9 +13,30 @@ on:
       - "knowledge-base/**"
 
 jobs:
+  get-version:
+    name: get-version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/get-artifact-version.yaml
+    secrets:
+      git_token: ${{secrets.GITHUB_TOKEN}}
+  
+  create-tag:
+    name: create-tag
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [get-version]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        id: create_tag
+        with:
+          tag: v${{ needs.get-version.outputs.version }}
+          tag_exists_error: true
+
   release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.SHOULD_PUSH == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [create-tag]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -34,7 +55,7 @@ jobs:
           context: knowledge-base/.
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: cecg/knowledge-platform:latest
+          tags: cecg/knowledge-platform:v${{ needs.get-version.outputs.version }}
 
   repository-dispatch:
     runs-on: ubuntu-latest
