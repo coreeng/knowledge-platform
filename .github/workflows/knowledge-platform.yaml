@@ -36,6 +36,8 @@ jobs:
 #    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build]
     steps:
+      - name: Print tag
+        run: echo ${{ needs.build.outputs.new_tag }}
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up QEMU
@@ -53,7 +55,7 @@ jobs:
           context: knowledge-base/.
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: cecg/knowledge-platform:v${{ needs.build.outputs.new_tag }}
+          tags: cecg/knowledge-platform:${{ needs.build.outputs.new_tag }}
 
   repository-dispatch:
     runs-on: ubuntu-latest
