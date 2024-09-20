@@ -15,7 +15,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'    
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'    
     outputs:
       new_tag: ${{ steps.tag_version.outputs.new_tag }}
     steps:
@@ -25,6 +25,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: minor
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
