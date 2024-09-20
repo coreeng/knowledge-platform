@@ -34,7 +34,7 @@ hugo serve
 
 ## Versioning and releasing
 
-We use semantic versioning: `v{major}.{minor}.{patch}`.
+We use semantic versioning: `v{major}.{minor}.{patch}`, e.g. `v0.1.0`.
 
 Merging a pull request will generate a new **minor** version, and a **tag** will be automatically created in the repository.
 
