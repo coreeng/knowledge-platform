@@ -31,3 +31,11 @@ hugo serve
 ```
 
 > **_NOTE:_** With Hugo, you can see your changes live as you make them.
+
+## Versioning and releasing
+
+We use semantic versioning: `v{major}.{minor}.{patch}`, e.g. `v0.1.0`.
+
+Merging a pull request will generate a new **minor** version, and a **tag** will be automatically created in the repository.
+
+Next, an image will be built and pushed to the Docker repository with the new version.
