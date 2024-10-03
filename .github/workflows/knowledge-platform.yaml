@@ -1,16 +1,16 @@
-name: Knowledge-platform-CI
+name: CI/CD
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "knowledge-base/**"
   pull_request:
     branches:
       - main
-    paths:
-      - "knowledge-base/**"
+
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
   build:
@@ -57,3 +57,24 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: cecg/knowledge-platform:${{ needs.build.outputs.new_tag }}
+
+  fastfeedback:
+    needs: [build]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
+    with:
+      version: ${{ needs.build.outputs.new_tag }}
+      working-directory: ./
+
+  extended-test:
+    needs: [build, fastfeedback]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
+    with:
+      version: ${{ needs.build.outputs.new_tag }}
+      working-directory: ./
+
+  prod:
+    needs: [build, extended-test]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@v1
+    with:
+      version: ${{ needs.build.outputs.new_tag }}
+      working-directory: ./
