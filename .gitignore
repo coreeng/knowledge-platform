@@ -2,7 +2,7 @@
 *.iml
 .*lock
 
-initialisation/initialisation
+initialisation/initialisation-tool
 knowledge-base/public
 
 .gradle

@@ -57,14 +57,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: cecg/knowledge-platform:${{ needs.build.outputs.new_tag }}
-
-  repository-dispatch:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.SHOULD_PUSH == 'false'
-    steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
-          repository: coreeng/cecg-knowledge-platform-deployment
-          event-type: dispatch-event
