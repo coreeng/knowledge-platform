@@ -9,8 +9,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "knowledge-base/**"
 
 jobs:
   build:
@@ -56,15 +54,15 @@ jobs:
           context: knowledge-base/.
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: cecg/knowledge-platform:${{ needs.build.outputs.new_tag }}
+          tags: cecg/knowledge-platform:latest,cecg/knowledge-platform:${{ needs.build.outputs.new_tag }}
 
   repository-dispatch:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.SHOULD_PUSH == 'false'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GIT_TOKEN }}
-          repository: coreeng/cecg-knowledge-platform-deployment
+          repository: coreeng/cecg-training-platform-deployment
           event-type: dispatch-event
