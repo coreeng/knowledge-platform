@@ -27,3 +27,4 @@ The bootcamp is split into modules, designed to take roughly 1 week, covering:
 * [Platform Engineering with Golang](/modules/platform-engineering/)
 * [Cloud, IaC, and Managed Kubernetes](/modules/cloud-iac/)
 * [Debugging in Linux, Containers, and Kubernetes](/modules/debugging-containers/)
+* [Networking: Life of a request](/modules/life-of-a-request/)
