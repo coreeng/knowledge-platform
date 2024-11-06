@@ -28,6 +28,8 @@ This module is split into 3 sections, each describing a part of the journey:
 
 There is also the [Appendix](appendix) section containing extended details about specific topics that were intentionally skipped during the journey description to keep the reader focused.
 
+#### Reference system architecture {#reference}
+
 Now let’s take a deeper look into the architecture of the system that will handle the request.
 
 ![Reference system architecture](/images/loar/0-2.png)

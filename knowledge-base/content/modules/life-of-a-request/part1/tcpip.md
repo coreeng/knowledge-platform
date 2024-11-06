@@ -14,7 +14,7 @@ Both **TCP** (Transmission Control Protocol) and **UDP** (User Datagram Protocol
 
 Every device on the Internet has an **IP address**, which is used as an identifier to route packets between devices. This address allows devices to identify each other and facilitates the routing of packets between them.
 
-**TCP**
+##### TCP
 
 TCP is a connection-oriented protocol that provides reliable, ordered, and error-checked data transmission between devices.
 
@@ -32,7 +32,7 @@ _Figure 1-5. Three-way TCP handshake_
 
 Use TCP when reliability is more important than speed, such as when transmitting web pages, emails, or files.
 
-**UDP**
+##### UDP
 
 UDP is a lightweight, connectionless protocol that provides fast, but less reliable, data transmission between devices over a network. It is designed for speed and efficiency, making it an ideal choice for applications where performance is critical and where the occasional loss of data packets can be tolerated.
 
@@ -40,7 +40,7 @@ Applications like live video, audio streaming, and gaming use UDP to ensure low 
 
 DNS uses UDP for name resolution queries because it involves simple request-response transactions where speed is more critical than guaranteed delivery. If a DNS query fails, the client can easily resend the request.
 
-**IP Address**
+##### IP Address
 
 The Internet address is also called an **IP address**. There are 2 versions: **IPv4** and **IPv6**.
 
@@ -50,25 +50,25 @@ IPv6 addresses are 128-bit numbers written in hexadecimal format, separated by c
 
 **IPv4 addresses are widely used, but IPv6 is becoming more common due to the shortage of IPv4 addresses.**
 
-**Subnets**
+##### Subnets
 
 Subnets are smaller network segments within a larger network, allowing organisations to divide their IP address space for better traffic management, security, and resource allocation.
 
 A subnet mask works alongside an IP address to define the subnet of the network. It masks the IP address to differentiate between the network and host portions. For instance, a subnet mask of **255.255.255.0** indicates that the first 24 bits (three octets) represent the network portion, leaving the last 8 bits for host addresses within the subnet.
 
-**CIDR**
+##### CIDR
 
 CIDR (Classless Inter-Domain Routing) notation represents IP addresses and their associated network masks. For example, **192.168.1.0/24** specifies an IP range where **/24** indicates that the first 24 bits are used for the network portion, leaving 8 bits for hosts.
 
 In Kubernetes, CIDR is used primarily for managing IP address allocation within clusters and facilitating networking between pods and services.
 
-**Ports**
+##### Ports
 
 IP address represents a host computer that can be running multiple services such as a web server and a mail server. To make a request to a specific service we need to specify its **port**.
 
 In TCP/IP, ports are logical endpoints used to identify specific processes or services on a device. They are essential for network communication, enabling different applications and services to interact over the internet or local networks. Ports are represented by numbers ranging from 0 to 65535, and they are used by both TCP and UDP.
 
-See [Appendix D](../appendix/#d) for more information about port numbers.  
+See [Appendix D](../../appendix/d) for more information about port numbers.  
 
 ![Connecting to a service by its port](/images/loar/1-6.png) 
 _Figure 1-6. Connecting to a service by its port_
@@ -77,7 +77,7 @@ When we get a URL like `https://cecg.io` we assume that we will be making a conn
 
 A service may be running on a different port than it is normally expected, in this case a port can be explicitly overridden in the URL, e.g. `https://cecg.io:8433`.
 
-**Socket**
+##### Sockets
 
 A network socket is the representation of an IP address and a port through which a network connection can be activated.
 
@@ -113,7 +113,7 @@ If the host is unreachable, you’ll receive a timeout or unreachable error.
 
 **Note:** **ping** uses **ICMP** protocol to communicate with the target host. Unfortunately, some providers block ICMP traffic due to security reasons. It may seem that the host is unreachable, but in fact it is only ICMP traffic that is blocked, but TCP/UDP traffic is allowed.
 
-See [Appendix E](../appendix/#e) for more information about the **ping** command.
+See [Appendix E](../../appendix/e) for more information about the **ping** command.
 
 ##### Traceroute
 
@@ -165,7 +165,7 @@ traceroute to cecg.io (75.2.60.5), 30 hops max, 60 byte packets
  2  acd89244c803f7181.awsglobalaccelerator.com (75.2.60.5)  61.390 ms  60.019 ms  51.133 ms
 ```
 
-See [Appendix F](../appendix/#f) for more information about the **traceroute** command.
+See [Appendix F](../../appendix/f) for more information about the **traceroute** command.
 
 ##### Check Ports
 
@@ -190,7 +190,7 @@ Trying 75.2.60.5...
 telnet: Unable to connect to remote host: Connection refused
 ```
 
-See **Appendix H** for more information about the **telnet** command.
+See [Appendix H](../../appendix/h) for more information about the **telnet** command.
 
 Alternatively, use **nc** (Netcat):
 
@@ -208,11 +208,11 @@ $ nc -zv cecg.io 444
 cecg.io [75.2.60.5] 444 (snpp) : Connection refused
 ```
 
-See [Appendix G](../appendix/#g) for more information about the **nc** command.
+See [Appendix G](../../appendix/g) for more information about the **nc** command.
 
 Another option is **nmap** (Network Mapper), a powerful network scanning tool.
 
-See [Appendix J](../appendix/#j) for more information about the **nmap** command.
+See [Appendix J](../../appendix/j) for more information about the **nmap** command.
 
 ##### Check Firewalls
 

@@ -13,7 +13,7 @@ DNS, or Domain Name System, is a crucial component of the Internet, translating 
 ![Example of the Internet address resolution for the domain](/images/loar/1-2.png)
 _Figure 1-2. Example of the Internet address resolution for the domain_
 
-Check the [Appendix B](../appendix/#b) section for the detailed description of DNS server types.
+Check the [Appendix B](../../appendix/b) section for the detailed description of DNS server types.
 
 When a user enters **cecg.io** into the web browser, it first checks whether this domain was resolved recently and if the response is cached locally which it can reuse. If not, then the request is sent to a DNS server provided by an Internet service provider (ISP) or a public DNS server. DNS servers do recursive resolution by querying root and top-level domain (TLD) servers.
 
@@ -81,7 +81,7 @@ $ dig cecgfoobar.io TXT
 ;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
 ```
 
-Check [Appendix C](../appendix/#c) section for more details about **dig** output.
+Check [Appendix C](../../appendix/c) section for more details about **dig** output.
 
 For a simple DNS lookup you can use **\+short** flag to ignore the details.
 
@@ -386,7 +386,7 @@ Request timeout for icmp_seq 2
 
 If the server is unreachable, you need to debug further to understand the reason for packet loss.
 
-See [Appendix E](../appendix/#e) for more information about the **ping** command.  
+See [Appendix E](../../appendix/e) for more information about the **ping** command.  
 A typical DNS server is running on port **53**, your firewall rules should allow outgoing connections to port **53**. You can use **nc** to check connectivity:
 
 ```
@@ -404,7 +404,7 @@ nc: connectx to 8.8.8.8 port 54 (tcp) failed: Operation timed out
 ```
 
 
-See [Appendix G](../appendix/#g) for more information about the **nc** command.
+See [Appendix G](../../appendix/g) for more information about the **nc** command.
 
 ##### Local overrides
 
