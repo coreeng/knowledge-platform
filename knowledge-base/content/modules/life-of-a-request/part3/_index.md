@@ -11,4 +11,6 @@ The request from the **web-app** successfully reached the **user-api** pod. In o
 ![User API is calling external OAuth Service](/images/loar/3-1.png)
 Figure 3-1. User API is calling external OAuth Service
 
-### WIP
+- [More about Network Policies](netpol)
+- [What is NAT?](nat)
+- [What is Timeout?](timeout)
