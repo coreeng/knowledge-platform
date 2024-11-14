@@ -99,7 +99,7 @@ $ dig microsoft.com +short
 20.76.201.171
 ```
 
-Yes, there can be several records of the same type. Having several **A** records for the domain is typically used for round-robin load balancing.
+Yes, there can be several records of the same type. Having several **A** records for the domain is typically used for load balancing.
 
 The Internet address that you get from the DNS is the destination where the client application will be sending the request.
 
@@ -122,48 +122,6 @@ Ref:            https://rdap.arin.net/registry/ip/75.2.0.0
 ```
 
 Based on the output we can assume that this address belongs to Amazon.
-
-#### ExternalDNS
-
-[ExternalDNS](https://github.com/kubernetes-sigs/external-dns) is a Kubernetes add-on that automates the management of DNS records for Kubernetes services. It allows you to dynamically create DNS records for services or Ingress resources in Kubernetes, making it easier to manage external access to applications running in your cluster.
-
-![Example of external-dns annotation for Ingress](/images/loar/1-3.png)
-_Figure 1-3. Example of external-dns annotation for Ingress_
-
-ExternalDNS monitors your Kubernetes cluster for changes to Ingresses and Services (of **type=LoadBalancer**). When an Ingress or Service is created, updated, or deleted, ExternalDNS uses the respective DNS cloud provider’s API to create, update, or remove DNS records.
-
-ExternalDNS can be configured using annotations on Kubernetes resources to specify how DNS records should be managed.   
-In the below example **external-dns.alpha.kubernetes.io/hostname** specifies the hostname for a given service:
-
-```
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: myapp.cecg.io
-    external-dns.alpha.kubernetes.io/target: cecg.io
-  name: cecg-training-platform
-spec:
-  ingressClassName: traefik
-  rules:
-    - host: myapp.cecg.io
-      http:
-        paths:
-          - backend:
-              service:
-                name: myapp
-                port:
-                  number: 80
-            path: /
-            pathType: ImplementationSpecific
-```
-
-ExternalDNS will request a DNS provider (e.g. Cloud DNS) to create a record for this domain.
-
-![Example of a type A record created in CloudDNS for myapp.cecg.io](/images/loar/1-4.png)
-_Figure 1-4. Example of a type A record created in CloudDNS for myapp.cecg.io_
-
-ExternalDNS simplifies the management of DNS records for Kubernetes services, automating the creation and updating of DNS entries as your infrastructure evolves. It’s especially useful for dynamic environments where services and their endpoints may change frequently.
 
 #### Troubleshooting
 
@@ -275,6 +233,8 @@ The server can become slow if it is overloaded with lots of requests. DNS server
 
 Higher TTLs reduce the load on DNS servers and increase performance for end-users by avoiding unnecessary DNS queries. Lower TTLs provide flexibility during DNS record changes, ensuring that updates propagate faster.
 
+##### Recursive lookups
+
 Another reason is recursive lookups. If a server needs to perform recursive lookups (querying other DNS servers on the internet), it can take additional time.
 
 **dig \+trace** is a useful command in DNS troubleshooting as it allows you to see the path taken by a query as it traverses the DNS hierarchy, starting from the root servers.
@@ -355,52 +315,20 @@ nameserver 213.140.213.232
 
 In the example above, you can see 2 nameservers provided by an ISP.
 
-You can use **ping** to check if a server is reachable:
-
-```
-$ ping 213.140.209.239
-
-PING 213.140.209.239 (213.140.209.239): 56 data bytes
-64 bytes from 213.140.209.239: icmp_seq=0 ttl=61 time=12.354 ms
-64 bytes from 213.140.209.239: icmp_seq=1 ttl=61 time=15.396 ms
-64 bytes from 213.140.209.239: icmp_seq=2 ttl=61 time=12.329 ms
-64 bytes from 213.140.209.239: icmp_seq=3 ttl=61 time=14.652 ms
-^C
---- 213.140.209.239 ping statistics ---
-4 packets transmitted, 4 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 12.329/13.683/15.396/1.367 ms
-```
-
-All packets received, nothing lost, the ping was successful.
-
-In the below example the server is not reachable:
-
-```
-$ ping 213.140.209.240
-
-PING 213.140.209.240 (213.140.209.240): 56 data bytes
-Request timeout for icmp_seq 0
-Request timeout for icmp_seq 1
-Request timeout for icmp_seq 2
-```
-
-If the server is unreachable, you need to debug further to understand the reason for packet loss.
-
-See [Appendix E](../../appendix/e) for more information about the **ping** command.  
 A typical DNS server is running on port **53**, your firewall rules should allow outgoing connections to port **53**. You can use **nc** to check connectivity:
 
 ```
-$ nc -vz 8.8.8.8 53
+$ nc -vz 213.140.209.239 53
 
-Connection to 8.8.8.8 port 53 [tcp/domain] succeeded!
+Connection to 213.140.209.239 port 53 [tcp/domain] succeeded!
 ```
 
 In case of a closed port, the command will hang and the request will time out:
 
 ```
-$ nc -vz 8.8.8.8 54
+$ nc -vz 213.140.209.239 54
 
-nc: connectx to 8.8.8.8 port 54 (tcp) failed: Operation timed out
+nc: connectx to 213.140.209.239 port 54 (tcp) failed: Operation timed out
 ```
 
 

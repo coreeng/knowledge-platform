@@ -20,17 +20,43 @@ TCP is a connection-oriented protocol that provides reliable, ordered, and error
 
 All TCP connections begin with a three-way handshake. Before the client or the server can exchange any application data, they must agree on starting packet sequence numbers, as well as a number of other connection specific variables, from both sides. The sequence numbers are picked randomly from both sides for security reasons.
 
-![Three-way TCP handshake](/images/loar/1-5.png)
-_Figure 1-5. Three-way TCP handshake_
+![Three-way TCP handshake](/images/loar/1-3.png)
+_Figure 1-3. Three-way TCP handshake_
 
 
-1. **SYN** \- Client picks a random sequence number and sends a SYN packet, which may also include additional TCP flags and options.
+1. **SYN** - Client picks a random sequence number and sends a SYN packet, which may also include additional TCP flags and options.
 
-2. **SYN ACK** \- Server increments the client’s number by one, picks its own random sequence number, appends its own set of flags and options, and dispatches the response.
+2. **SYN ACK** - Server increments the client’s number by one, picks its own random sequence number, appends its own set of flags and options, and dispatches the response.
 
-3. **ACK** \- Client increments both numbers by one and completes the handshake by dispatching the last ACK packet in the handshake.
+3. **ACK** - Client increments both numbers by one and completes the handshake by dispatching the last ACK packet in the handshake.
 
 Use TCP when reliability is more important than speed, such as when transmitting web pages, emails, or files.
+
+##### TCP Connection States
+
+A connection progresses through a series of states during its lifetime. The states are: LISTEN, SYN-SENT, SYNRECEIVED, ESTABLISHED, FIN-WAIT-1, FIN-WAIT-2, CLOSE-WAIT, CLOSING, LAST-ACK, TIME-WAIT, and the fictional state CLOSED.   
+Briefly the meanings of the states are:
+
+| State        | Description                                                                                                                                                                                |
+|:-------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| LISTEN       | represents waiting for a connection request from any remote TCP and port.                                                                                                                  |
+| SYN-SENT     | represents waiting for a matching connection request after having sent a connection request.                                                                                               |
+| SYN-RECEIVED | represents waiting for a confirming connection request acknowledgment after having both received and sent a connection request.                                                            |
+| ESTABLISHED  | represents an open connection, data received can be delivered to the user. The normal state for the data transfer phase of the connection.                                                 |
+| FIN-WAIT-1   | represents waiting for a connection termination request from the remote TCP, or an acknowledgment of the connection termination request previously sent.                                   |
+| FIN-WAIT-2   | represents waiting for a connection termination request from the remote TCP.                                                                                                               |
+| CLOSE-WAIT   | represents waiting for a connection termination request from the local user.                                                                                                               |
+| CLOSING      | represents waiting for a connection termination request acknowledgment from the remote TCP.                                                                                                |
+| LAST-ACK     | represents waiting for an acknowledgment of the connection termination request previously sent to the remote TCP (which includes an acknowledgment of its connection termination request). |
+| TIME-WAIT    | represents waiting for enough time to pass to be sure the remote TCP received the acknowledgment of its connection termination request.                                                    |
+| CLOSED       | represents no connection state at all.                                                                                                                                                     |
+
+
+![TCP State Transition Diagram](/images/loar/1-4.png)
+_Figure 1-4. TCP State Transition Diagram._
+
+_Reprinted from TCP/IP Illustrated, Volume 2: The Implementation by Gary R. Wright and W. Richard Stevens, Copyright © 1995 by Addison-Wesley Publishing Company, Inc._
+
 
 ##### UDP
 
@@ -226,6 +252,6 @@ Try to access the target from another host or network to determine whether the i
 
 #### Further Reading
 
-- [RFC 791 \- Internet Protocol](https://datatracker.ietf.org/doc/html/rfc791)
-- [RFC 9293 \- Transmission Control Protocol (TCP)](https://datatracker.ietf.org/doc/html/rfc9293)
-- [RFC 792 \- Internet Control Message Protocol](https://datatracker.ietf.org/doc/html/rfc792)
+- [RFC 791 - Internet Protocol](https://datatracker.ietf.org/doc/html/rfc791)
+- [RFC 9293 - Transmission Control Protocol (TCP)](https://datatracker.ietf.org/doc/html/rfc9293)
+- [RFC 792 - Internet Control Message Protocol](https://datatracker.ietf.org/doc/html/rfc792)

@@ -214,7 +214,7 @@ If the output shows no endpoints, the Service cannot find any matching Pods.
 If you’re unable to connect to the Service from within the cluster, you can test connectivity using a temporary Pod:
 
 ```
-$ kubectl run mycurlpod --image=curlimages/curl -i --tty -- sh
+$ kubectl run mycurlpod --image=busybox -i --tty -- sh
 ```
 
 Then, try to **curl** to **\<service-name\>.\<namespace\>.svc.cluster.local:\<port\>**:

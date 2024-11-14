@@ -44,7 +44,7 @@ The Ingress capabilities are implemented by Ingress Controllers, like Traefik of
 
 Our applications are stateless, they are deployed as multiple Pods behind a Service.
 
-Web App is a backend application that serves HTML pages and provides REST API endpoints. It is deployed into the **frontend** namespace. The application exposes an HTTP endpoint which we want to make accessible from the outside world. To generate a response it needs to retrieve user details from the User API which is located in another namespace.
+Web App is a frontend application that serves HTML pages and provides REST API endpoints. It is deployed into the **frontend** namespace. The application exposes an HTTP endpoint which we want to make accessible from the outside world. To generate a response it needs to retrieve user details from the User API which is located in another namespace.
 
 User API is a backend application that exposes a REST API endpoint returning a list of users. It is deployed into the **backend** namespace. The application exposes an HTTP endpoint which we don’t want to be accessible from the outside world (internet). The application returns user data based on the provided user token. The token needs to be validated against the third-party OAuth Service that is deployed outside of the cluster.
 

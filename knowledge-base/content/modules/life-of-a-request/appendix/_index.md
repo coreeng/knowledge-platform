@@ -16,4 +16,3 @@ chapter = false
 - [K - Using OpenSSL](k)
 - [L - Nginx configuration](l)
 - [M - Getting Unix tools on Windows](m)
-- [FAQ](faq)
