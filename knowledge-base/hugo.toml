@@ -1,0 +1,26 @@
+baseURL = "https://learn.cecg.io/"
+languageCode = "en-us"
+title = "CECG Knowledge Base"
+theme = "hugo-theme-relearn"
+enableEmoji = true
+
+[outputs]
+home = [ "html", "rss", "print", "search", "searchpage"]
+page = ['html', 'rss', 'print']
+section = ['html', 'rss', 'print']
+
+# Documentation for these params can be found here: https://mcshelby.github.io/hugo-theme-relearn/basics/configuration/index.html
+[params]
+themeVariant = "cecg"
+editURL = "https://github.com/coreeng/knowledge-platform-internal/tree/main/knowledge-base/content/"
+disableLandingPageButton = true
+alwaysopen = false
+collapsibleMenu = true
+disableRootBreadcrumb = false
+disableExplicitIndexURLs = false
+mermaidZoom = true
+# throw build error on broken links (warning for image linking as it's broken atm)
+include.errorlevel = "warning"
+link.errorlevel = "warning"
+openapi.errorlevel = "warning"
+image.errorlevel = "warning"
