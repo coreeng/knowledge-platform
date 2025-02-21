@@ -6,8 +6,6 @@ chapter = false
 pre = ""
 +++
 
-# Training Platform
-
 Welcome to the CECG Platform Engineering bootcamp. A quick tour of everything you need to effectively work in a Platform Engineering team focussing on building a Kubernetes based bespoke [PaaS aka a Core Platform] and a [consolidated Path to Production](/modules/p2p-fast-feedback/epic-p2p/) for how users of the platform deploy applications to production.
 
 #### Prerequsites
@@ -27,3 +25,4 @@ The bootcamp is split into modules, designed to take roughly 1 week, covering:
 * [Platform Engineering with Golang](/modules/platform-engineering/)
 * [Cloud, IaC, and Managed Kubernetes](/modules/cloud-iac/)
 * [Debugging in Linux, Containers, and Kubernetes](/modules/debugging-containers/)
+* [Networking: Life of a request](/modules/life-of-a-request/)
