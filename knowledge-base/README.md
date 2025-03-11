@@ -11,7 +11,8 @@ You can run the site locally using the following methods:
 ### Docker
 
 **Prerequisites:**  
-Make sure Docker is installed on your system. If not, you can download it [here](https://www.docker.com/products/docker-desktop/).
+* Docker is installed on your system. If not, you can download it [here](https://www.docker.com/products/docker-desktop/).
+* Make is installed on your system. If on a MAC, you can download it via `brew install make`
 
 ```sh
 make run-local

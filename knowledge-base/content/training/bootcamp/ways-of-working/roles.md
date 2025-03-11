@@ -17,7 +17,7 @@ interacting with: a Scrum Master, a Product Owner, and a Mentor.
 ### Product Owner
 
 The [Product Owner](https://www.scrum.org/resources/what-is-a-product-owner) of the bootcamp will work with you on the motivation and requirements of your 
-[epics](./rituals-artfifacts.md#epic). 
+[epics](rituals-artfifacts.md#epic). 
 
 The Scrum Master will invite them to your [planning](./rituals-artfifacts#module-planning) and any [epic defuzz](./rituals-artfifacts#epic-defuzz) sessions. 
 

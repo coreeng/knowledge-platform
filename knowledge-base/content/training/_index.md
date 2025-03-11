@@ -9,6 +9,6 @@ Welcome to the CECG Training Platform.
 
 The training platform currently consists of:
 
-* [The Bootcamp](training/bootcamp)
+* [The Bootcamp](bootcamp)
 
-* [Networking: Life of a request](training/life-of-a-request)
+* [Networking: Life of a request](life-of-a-request)
