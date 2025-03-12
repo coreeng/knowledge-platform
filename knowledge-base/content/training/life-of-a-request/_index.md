@@ -1,7 +1,7 @@
 +++
 title = "Networking: Life of a request"
 date = 2024-11-06T12:13:10+02:00
-weight = 7
+weight = 2000
 chapter = false
 +++
 

@@ -16,12 +16,12 @@ each epic is up to you. This is to encourage the principle of solutionising shou
 
 For each module you should arrange a planning meeting with:
 
-* [Scrum Master](./roles.md#scrum-master)
-* [Mentor](./roles.md#mentor): Your assigned mentor. Don’t have one? Ask your Scrum Master.
+* [Scrum Master](roles.md#scrum-master)
+* [Mentor](roles.md#mentor): Your assigned mentor. Don’t have one? Ask your Scrum Master.
 
 Check their calendars for availability.
 
-You’ll agree the work you need to do and create the next [deliverables](./rituals-artfifacts.md#deliverable) for the in progress epics.
+You’ll agree the work you need to do and create the next [deliverables](rituals-artfifacts.md#deliverable) for the in progress epics.
 Epics for each module will already be imported into your repository.
 
 During the week you should keep all your tasks up to date with progress.
