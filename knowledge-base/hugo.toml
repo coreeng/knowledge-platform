@@ -12,7 +12,7 @@ section = ['html', 'rss', 'print']
 # Documentation for these params can be found here: https://mcshelby.github.io/hugo-theme-relearn/basics/configuration/index.html
 [params]
 themeVariant = "cecg"
-editURL = "https://github.com/coreeng/knowledge-platform-internal/tree/main/knowledge-base/content/"
+editURL = "https://github.com/coreeng/knowledge-platform/tree/main/knowledge-base/content/"
 disableLandingPageButton = true
 alwaysopen = false
 collapsibleMenu = true
