@@ -6,14 +6,14 @@ chapter = false
 pre = ""
 +++
 
-Welcome to the CECG Platform Engineering bootcamp. A quick tour of everything you need to effectively work in a Platform Engineering team focussing on building a Kubernetes based bespoke [PaaS aka a Core Platform] and a [consolidated Path to Production](/modules/p2p-fast-feedback/epic-p2p/) for how users of the platform deploy applications to production.
+Welcome to the CECG Platform Engineering bootcamp. A quick tour of everything you need to effectively work in a Platform Engineering team focusing on building a Kubernetes based bespoke [PaaS aka a Core Platform] and a [consolidated Path to Production](/modules/p2p-fast-feedback/epic-p2p/) for how users of the platform deploy applications to production.
 
 #### Prerequsites
 
 The bootcamp is targeted at experienced technologies practitioners with the following backgrounds:
 
 * Software Engineer looking to get into Platform Engineering
-* Infrastructure Engineer looking to see how they can apply Software Engineering to Infrastructure Engineering
+* Infrastructure Engineer looking to adopt a software-centric approach to infrastructure
 
 #### Overview
 
